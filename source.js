@@ -1,8 +1,3 @@
-var React = require('react');
-var _ = require('underscore');
-var validator = require('validator');
-var classNames = require('classnames');
-
 validator.extend('isRequired', function(str) {
     return validator.trim(str).length;
 });

@@ -3,8 +3,8 @@ var _ = require('underscore');
 var validator = require('validator');
 var classNames = require('classnames');
 
-var ERRORS = {
-    DEFAULT_MESSAGE: 'validation error',
+var errors = {
+    defaultMessage: 'validation error',
     isValid: {
         className: 'ui-input_state_invalid'
     },
@@ -53,9 +53,9 @@ var Validation = {
 
                 if (!validator[rule](component.state.value)) {
                     isValid = false;
-                    classes[ERRORS.isValid.className] = true;
-                    classes[ERRORS[rule].className] = true;
-                    errorMessage = component.props.errorMessage || ERRORS[rule].message || ERRORS.DEFAULT_MESSAGE;
+                    classes[errors.isValid.className] = true;
+                    classes[errors[rule].className] = true;
+                    errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
 
                     break;
                 }
@@ -206,7 +206,11 @@ var Validation = {
                 <input disabled={this.state.isDisabled} {...this.props}/>
             );
         }
-    })
+    }),
+
+    extendErrors: function(obj) {
+        _.extend(errors, obj)
+    }
 };
 
 module.exports = Validation;

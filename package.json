@@ -2,7 +2,7 @@
   "name": "react-validation",
   "version": "1.0.1",
   "description": "validation components",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "test": "test"
   },

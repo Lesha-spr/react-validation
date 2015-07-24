@@ -66,7 +66,7 @@ var Validation = {
 
             className = classNames(className);
 
-            if (component.state.isUsed) {
+            if (component.state.isUsed && component.state.isChanged) {
                 _.extend(state, {
                     className: className,
                     errorMessage: errorMessage || null
@@ -145,6 +145,7 @@ var Validation = {
             return {
                 type: 'text',
                 placeholder: 'placeholder',
+                className: 'ui-input',
                 invalidClassName: 'ui-input_state_invalid'
             }
         },
@@ -155,12 +156,14 @@ var Validation = {
                 className: this.props.className || '',
                 isValid: true,
                 isUsed: false,
+                isChanged: false,
                 errorMessage: null
             }
         },
 
         setValue: function(event) {
             this.setState({
+                isChanged: true,
                 value: event.currentTarget.value
             }, function() {
                 (this.props.blocking || _.noop)(this);
@@ -171,9 +174,11 @@ var Validation = {
         },
 
         onBlur: function(event) {
-            if (!this.state.isUsed) {
-                this.props.validate(this);
-            }
+            this.setState({
+                isUsed: true
+            }, function() {
+                (this.props.validate || _.noop)(this);
+            });
 
             (this.props.onBlur || _.noop)(event);
         },
@@ -196,6 +201,7 @@ var Validation = {
         getDefaultProps: function() {
             return {
                 type: 'submit',
+                className: 'ui-button',
                 disabledClassName: 'ui-button_state_disabled'
             }
         },

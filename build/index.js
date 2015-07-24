@@ -24,7 +24,7 @@ var Validation = {
     Form: React.createClass({displayName: "Form",
         componentWillMount: function() {
             this.inputs = {
-                validation: [],
+                validations: {},
                 blocking: {
                     inputs: {},
                     buttons: []
@@ -41,34 +41,41 @@ var Validation = {
         },
 
         validate: function(component) {
-            var rules = component.props.validations;
-            var isValid = true;
-            var classes = {};
+            var validations = component.props.validations;
+            var state = {
+                isValid: true,
+                isUsed: true
+            };
+            var className = {};
             var errorMessage;
 
-            classes[component.props.className] = true;
+            className[component.props.className] = true;
 
-            for (var i = 0; i < rules.length; i++) {
-                var rule = rules[i];
+            for (var i = 0; i < validations.length; i++) {
+                var rule = validations[i];
 
                 if (!validator[rule](component.state.value)) {
-                    isValid = false;
-                    classes[errors.isValid.className] = true;
-                    classes[errors[rule].className] = true;
+                    state.isValid = false;
+                    className[component.props.invalidClassName] = true;
+                    className[errors[rule].className] = true;
                     errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
 
                     break;
                 }
             }
 
-            var className = classNames(classes);
+            className = classNames(className);
 
-            component.setState({
-                isValid: isValid,
-                isUsed: true,
-                className: className,
-                errorMessage: errorMessage || null
-            });
+            if (component.state.isUsed && component.state.isChanged) {
+                _.extend(state, {
+                    className: className,
+                    errorMessage: errorMessage || null
+                });
+            }
+
+            component.setState(state);
+
+            this.inputs.validations[component.props.name] = state.isValid;
         },
 
         blocking: function(component) {
@@ -105,7 +112,7 @@ var Validation = {
 
                 if (shouldValidate) {
                     childProps.validate = this.validate;
-                    this.inputs.validation.push(child);
+                    this.inputs.validations[child.props.name] = false;
                 }
 
                 if (child.props.blocking === 'input') {
@@ -137,7 +144,9 @@ var Validation = {
         getDefaultProps: function() {
             return {
                 type: 'text',
-                placeholder: 'placeholder'
+                placeholder: 'placeholder',
+                className: 'ui-input',
+                invalidClassName: 'ui-input_state_invalid'
             }
         },
 
@@ -147,28 +156,29 @@ var Validation = {
                 className: this.props.className || '',
                 isValid: true,
                 isUsed: false,
+                isChanged: false,
                 errorMessage: null
             }
         },
 
         setValue: function(event) {
             this.setState({
+                isChanged: true,
                 value: event.currentTarget.value
             }, function() {
                 (this.props.blocking || _.noop)(this);
-
-                if (this.state.isUsed) {
-                    this.props.validate(this);
-                }
+                (this.props.validate || _.noop)(this);
             });
 
             (this.props.onChange || _.noop)(event);
         },
 
         onBlur: function(event) {
-            if (!this.state.isUsed) {
-                this.props.validate(this);
-            }
+            this.setState({
+                isUsed: true
+            }, function() {
+                (this.props.validate || _.noop)(this);
+            });
 
             (this.props.onBlur || _.noop)(event);
         },
@@ -190,7 +200,9 @@ var Validation = {
 
         getDefaultProps: function() {
             return {
-                type: 'submit'
+                type: 'submit',
+                className: 'ui-button',
+                disabledClassName: 'ui-button_state_disabled'
             }
         },
 
@@ -201,9 +213,14 @@ var Validation = {
         },
 
         render: function() {
+            var className = {};
+            className[this.props.className] = true;
+            className[this.props.disabledClassName] = this.state.isDisabled;
+            className = classNames(className);
+
             // NOTE: Disabled state would be override by passing 'disabled' prop
             return (
-                React.createElement("input", React.__spread({disabled: this.state.isDisabled},  this.props))
+                React.createElement("input", React.__spread({disabled: this.state.isDisabled},  this.props, {className: className}))
             );
         }
     }),

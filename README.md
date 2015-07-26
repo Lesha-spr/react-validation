@@ -19,7 +19,7 @@ var Validation = require('react-validation');
 var validator = require('validator');
 
 validator.extend('isRequired', function(str) {
-    return Boolean(validator.trim(str).length);
+    return Boolean(validator.trim(str));
 });
 
 var Form = React.createClass({

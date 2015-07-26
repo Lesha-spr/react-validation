@@ -16,6 +16,11 @@ npm install react-validation
 
 ```
 var Validation = require('react-validation');
+var validator = require('validator');
+
+validator.extend('isRequired', function(str) {
+    return Boolean(validator.trim(str).length);
+});
 
 var Form = React.createClass({
   onSubmit: function(event) {

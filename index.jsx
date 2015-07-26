@@ -24,6 +24,7 @@ var Validation = {
     Form: React.createClass({
         componentWillMount: function() {
             this.inputs = {
+                submit: [],
                 validations: {},
                 blocking: {
                     inputs: {},
@@ -98,7 +99,7 @@ var Validation = {
         },
 
         isValidForm: function() {
-            return _.contains(this.inputs.validations, false);
+            return !(_.contains(this.inputs.validations, false));
         },
 
         blocking: function(component) {
@@ -222,6 +223,8 @@ var Validation = {
         },
 
         render: function() {
+            // TODO: rework hint appearance
+
             return (
                 <div>
                     <input {...this.props} className={this.state.className} value={this.state.value} onChange={this.setValue} onBlur={this.onBlur}/>

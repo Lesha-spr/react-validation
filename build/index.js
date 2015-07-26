@@ -51,25 +51,19 @@ var Validation = {
 
             className[component.props.className] = true;
 
-            function setErrors(rule) {
-                className[component.props.invalidClassName] = true;
-                className[errors[rule].className] = true;
-                errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
-            }
-
             for (var i = 0; i < validations.length; i++) {
                 var rule = validations[i];
 
                 if (isCheckbox) {
                     state.isValid = component.state.checked;
                     if (!state.isValid) {
-                        setErrors(rule);
+                        setErrorState(rule);
                     }
                 }
 
                 if (!validator[rule](component.state.value)) {
                     state.isValid = false;
-                    setErrors(rule);
+                    setErrorState(rule);
 
                     break;
                 }
@@ -87,24 +81,49 @@ var Validation = {
             component.setState(state);
 
             this.inputs.validations[component.props.name] = state.isValid;
+            this.toggleSubmitButtons();
+
+            function setErrorState(rule) {
+                className[component.props.invalidClassName] = true;
+                className[errors[rule].className] = true;
+                errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
+            }
+        },
+
+        toggleSubmitButtons: function() {
+            var buttons = this.inputs.submit;
+            var isValidForm = this.isValidForm();
+
+            this._setButtonsState(buttons, !isValidForm);
+        },
+
+        isValidForm: function() {
+            return _.contains(this.inputs.validations, false);
         },
 
         blocking: function(component) {
             var _this = this;
             var buttons = _this.inputs.blocking.buttons;
             var hasBlocking = false;
-            var i;
 
             _this.inputs.blocking.inputs[component.props.name] = Boolean(validator.trim(component.state.value));
 
-            Object.keys(_this.inputs.blocking.inputs).forEach(function(key) {
-                if (!_this.inputs.blocking.inputs[key]) {
-                    hasBlocking = true;
-                }
-            });
+            if (_this.inputs.blocking.inputs.length) {
+                Object.keys(_this.inputs.blocking.inputs).forEach(function(key) {
+                    if (!_this.inputs.blocking.inputs[key]) {
+                        hasBlocking = true;
+                    }
+                });
+            }
+
+            this._setButtonsState(buttons, hasBlocking);
+        },
+
+        _setButtonsState: function(buttons, hasBlocking) {
+            var i;
 
             for (i = 0; i < buttons.length; i++) {
-                this.refs[this.inputs.blocking.buttons[i]].setState({
+                this.refs[buttons[i]].setState({
                     isDisabled: hasBlocking
                 });
             }
@@ -126,13 +145,19 @@ var Validation = {
                     this.inputs.validations[child.props.name] = false;
                 }
 
+                if (child.props.type === 'submit') {
+                    childProps.ref = child.props.ref || child.props.type + $idx;
+                    $idx++;
+                    this.inputs.submit.push(childProps.ref);
+                }
+
                 if (child.props.blocking === 'input') {
                     childProps.blocking = this.blocking;
                     this.inputs.blocking.inputs[child.props.name] = false;
                 }
 
                 if (child.props.blocking === 'button') {
-                    childProps.ref = child.props.blocking + $idx;
+                    childProps.ref = child.props.ref || child.props.blocking + $idx;
                     $idx++;
                     this.inputs.blocking.buttons.push(childProps.ref);
                 }

@@ -42,23 +42,34 @@ var Validation = {
 
         validate: function(component) {
             var validations = component.props.validations;
+            var isCheckbox = component.props.type === 'checkbox';
             var state = {
-                isValid: true,
-                isUsed: true
+                isValid: true
             };
             var className = {};
-            var errorMessage;
+            var errorMessage = null;
 
             className[component.props.className] = true;
+
+            function setErrors(rule) {
+                className[component.props.invalidClassName] = true;
+                className[errors[rule].className] = true;
+                errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
+            }
 
             for (var i = 0; i < validations.length; i++) {
                 var rule = validations[i];
 
+                if (isCheckbox) {
+                    state.isValid = component.state.checked;
+                    if (!state.isValid) {
+                        setErrors(rule);
+                    }
+                }
+
                 if (!validator[rule](component.state.value)) {
                     state.isValid = false;
-                    className[component.props.invalidClassName] = true;
-                    className[errors[rule].className] = true;
-                    errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
+                    setErrors(rule);
 
                     break;
                 }
@@ -66,10 +77,10 @@ var Validation = {
 
             className = classNames(className);
 
-            if (component.state.isUsed && component.state.isChanged) {
+            if (isCheckbox || (component.state.isUsed && component.state.isChanged)) {
                 _.extend(state, {
                     className: className,
-                    errorMessage: errorMessage || null
+                    errorMessage: errorMessage
                 });
             }
 
@@ -154,6 +165,7 @@ var Validation = {
             return {
                 value: this.props.value || '',
                 className: this.props.className || '',
+                checked: this.props.checked || false,
                 isValid: true,
                 isUsed: false,
                 isChanged: false,
@@ -164,7 +176,8 @@ var Validation = {
         setValue: function(event) {
             this.setState({
                 isChanged: true,
-                value: event.currentTarget.value
+                value: event.currentTarget.value,
+                checked: !this.state.checked
             }, function() {
                 (this.props.blocking || _.noop)(this);
                 (this.props.validate || _.noop)(this);

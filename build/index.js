@@ -7,16 +7,6 @@ var errors = {
     defaultMessage: 'validation error',
     isValid: {
         className: 'ui-input_state_invalid'
-    },
-
-    isRequired: {
-        className: 'ui-input_state_empty',
-        message: 'required'
-    },
-
-    isEmail: {
-        className: 'ui-input_state_email-pattern-failed',
-        message: 'should be email'
     }
 };
 
@@ -159,7 +149,7 @@ Validation.Form = React.createClass({displayName: "Form",
             }
 
             if (child.props.blocking === 'button') {
-                childProps.ref = child.props.ref || child.props.blocking + $idx;
+                childProps.ref = childProps.ref || child.props.ref || child.props.blocking + $idx;
                 $idx++;
                 this.inputs.blocking.buttons.push(childProps.ref);
             }

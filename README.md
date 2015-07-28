@@ -27,10 +27,6 @@ validator.extend('isNotOneStr', function(str) {
 });
 
 Validation.extendErrors({
-    isNotOneStr: {
-        className: 'ui-input_state_not-one',
-        message: 'not equal to "1"'
-    },
     isRequired: {
         className: 'ui-input_state_empty',
         message: 'required'

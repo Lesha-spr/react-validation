@@ -42,10 +42,9 @@ Validation.extendErrors({
 });
 
 var Form = React.createClass({
-    onSubmit: function(event, data) {
-
+    onSubmit: function(event) {
         event.preventDefault();
-        console.log(data);
+        console.log(event);
     },
 
     render: function() {

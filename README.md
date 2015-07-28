@@ -15,28 +15,6 @@ npm install react-validation
 # Example usage
 
 ```
-var Validation = require('react-validation');
-var validator = require('validator');
-
-validator.extend('isRequired', function(str) {
-    return Boolean(validator.trim(str));
-});
-
-validator.extend('isNotOneStr', function(str) {
-    return validator.trim(str) === '1';
-});
-
-Validation.extendErrors({
-    isRequired: {
-        className: 'ui-input_state_empty',
-        message: 'required'
-    },
-    isEmail: {
-        className: 'ui-input_state_email-pattern-failed',
-        message: 'should be email'
-    }
-});
-
 Validation.extendErrors({
     isNotValidUser: {
         className: 'ui-input_state_invalid-user',
@@ -54,9 +32,9 @@ Validation.extendErrors({
 
 var Form = React.createClass({
     onSubmit: function(event, data) {
+
         event.preventDefault();
         console.log(data);
-
     },
 
     render: function() {

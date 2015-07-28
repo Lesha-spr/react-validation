@@ -7,16 +7,6 @@ var errors = {
     defaultMessage: 'validation error',
     isValid: {
         className: 'ui-input_state_invalid'
-    },
-
-    isRequired: {
-        className: 'ui-input_state_empty',
-        message: 'required'
-    },
-
-    isEmail: {
-        className: 'ui-input_state_email-pattern-failed',
-        message: 'should be email'
     }
 };
 

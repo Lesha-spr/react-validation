@@ -55,10 +55,9 @@ var Form = React.createClass({
                       rule: 'isRequired'
                   },
                   {
-                      rule: 'isNotValidUser',
-                      invalidClassName: 'ui-input_state_custom-classname'
+                      rule: 'isNotValidUser'
                   }
-                ]} name='username' type='text'/>
+                ]} invalidClassName='ui-input_state_custom-error-classname' name='username' type='text'/>
                 <Validation.Input blocking='input' className='ui-input' validations={[{
                     rule: 'isEmail'
                 }]} name='email' type='text'/>

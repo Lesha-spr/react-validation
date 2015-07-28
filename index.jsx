@@ -5,9 +5,8 @@ var classNames = require('classnames');
 
 var errors = {
     defaultMessage: 'validation error',
-    isValid: {
-        className: 'ui-input_state_invalid'
-    }
+    defaultInvalidClassName: 'ui-input_state_invalid',
+    defaultDisabledClassName: 'ui-button_state_disabled'
 };
 
 var Validation = {};
@@ -174,7 +173,7 @@ Validation.Input = React.createClass({
             type: 'text',
             placeholder: 'placeholder',
             className: 'ui-input',
-            invalidClassName: 'ui-input_state_invalid'
+            invalidClassName: errors.defaultInvalidClassName
         }
     },
 
@@ -234,7 +233,7 @@ Validation.Button = React.createClass({
         return {
             type: 'submit',
             className: 'ui-button',
-            disabledClassName: 'ui-button_state_disabled'
+            disabledClassName: errors.defaultDisabledClassName
         }
     },
 

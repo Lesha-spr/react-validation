@@ -54,18 +54,18 @@ Validation.Form = React.createClass({displayName: "Form",
         className[component.props.className] = true;
 
         for (var i = 0; i < validations.length; i++) {
-            var rule = validations[i];
+            var validation = validations[i];
 
             if (isCheckbox) {
                 state.isValid = component.state.checked;
                 if (!state.isValid) {
-                    setErrorState(rule);
+                    setErrorState(validation);
                 }
             }
 
-            if (!validator[rule](component.state.value)) {
+            if (!validator[validation.rule](component.state.value)) {
                 state.isValid = false;
-                setErrorState(rule);
+                setErrorState(validation);
 
                 break;
             }
@@ -85,10 +85,10 @@ Validation.Form = React.createClass({displayName: "Form",
         this.inputs.validations[component.props.name] = state.isValid;
         this.toggleSubmitButtons();
 
-        function setErrorState(rule) {
+        function setErrorState(validation) {
             className[component.props.invalidClassName] = true;
-            className[errors[rule].className] = true;
-            errorMessage = component.props.errorMessage || errors[rule].message || errors.defaultMessage;
+            className[errors[validation.rule].className] = true;
+            errorMessage = validation.errorMessage || errors[validation.rule].message || errors.defaultMessage;
         }
     },
 

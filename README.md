@@ -22,20 +22,64 @@ validator.extend('isRequired', function(str) {
     return Boolean(validator.trim(str));
 });
 
-var Form = React.createClass({
-  onSubmit: function(event) {
-    event.preventDefault();
-    console.log(event.currentTarget);
-  },
+validator.extend('isNotOneStr', function(str) {
+    return validator.trim(str) === '1';
+});
 
-  render: function() {
-    return (
-      <Validation.Form onSubmit={this.onSubmit}>
-        <Validation.Input validations={['isRequired', 'isEmail']} type='text' name='login' className='ui-input' />
-        <Validation.Input validations={['isRequired']} type='password' name='password' className='ui-input' />
-        <Validation.Button type='submit' className='ui-button' />
-      </Validation.Form>
-    );
-  }
+Validation.extendErrors({
+    isNotOneStr: {
+        className: 'ui-input_state_not-one',
+        message: 'not equal to "1"'
+    },
+    isRequired: {
+        className: 'ui-input_state_empty',
+        message: 'required'
+    },
+    isEmail: {
+        className: 'ui-input_state_email-pattern-failed',
+        message: 'should be email'
+    }
+});
+
+Validation.extendErrors({
+    isNotValidUser: {
+        className: 'ui-input_state_invalid-user',
+        message: 'not equal to "Alex"'
+    },
+    isRequired: {
+        className: 'ui-input_state_empty',
+        message: 'required'
+    },
+    isEmail: {
+        className: 'ui-input_state_email-pattern-failed',
+        message: 'should be email'
+    }
+});
+
+var Form = React.createClass({
+    onSubmit: function(event, data) {
+        event.preventDefault();
+        console.log(data);
+
+    },
+
+    render: function() {
+        return (
+            <Validation.Form onSubmit={this.onSubmit}>
+                <Validation.Input blocking='input' className='ui-input' validations={[{
+                    rule: 'isNotValidUser',
+                    invalidClassName: 'ui-input_state_custom-classname'
+                }]} name='username' type='text'/>
+                <Validation.Input blocking='input' className='ui-input' validations={[{
+                    rule: 'isEmail'
+                }]} name='email' type='text'/>
+                <Validation.Input blocking='input' className='ui-input' validations={[{
+                    rule: 'isRequired',
+                    errorMessage: 'required'
+                }]} name='password' type='password'/>
+                <Validation.Button blocking='button' value='submit'/>
+            </Validation.Form>
+        );
+    }
 });
 ```

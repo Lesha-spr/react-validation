@@ -193,6 +193,25 @@ Validation.Input = React.createClass({
         }
     },
 
+    showError: function(message, additionalClassName) {
+        var className = {};
+
+        if (additionalClassName) {
+            className[additionalClassName] = true;
+        }
+
+        className[this.props.className] = true;
+        className[this.props.invalidClassName] = true;
+
+        this.setState({
+            isValid: false,
+            isUsed: true,
+            isChanged: true,
+            className: classNames(className),
+            errorMessage: message || null
+        });
+    },
+
     setValue: function(event) {
         this.setState({
             isChanged: true,

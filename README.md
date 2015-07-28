@@ -50,10 +50,15 @@ var Form = React.createClass({
     render: function() {
         return (
             <Validation.Form onSubmit={this.onSubmit}>
-                <Validation.Input blocking='input' className='ui-input' validations={[{
-                    rule: 'isNotValidUser',
-                    invalidClassName: 'ui-input_state_custom-classname'
-                }]} name='username' type='text'/>
+                <Validation.Input blocking='input' className='ui-input' validations={[
+                  {
+                      rule: 'isRequired'
+                  },
+                  {
+                      rule: 'isNotValidUser',
+                      invalidClassName: 'ui-input_state_custom-classname'
+                  }
+                ]} name='username' type='text'/>
                 <Validation.Input blocking='input' className='ui-input' validations={[{
                     rule: 'isEmail'
                 }]} name='email' type='text'/>

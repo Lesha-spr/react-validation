@@ -15,6 +15,17 @@ npm install react-validation
 # Example usage
 
 ```
+var validator = require('validator');
+var Validation = require('react-validation');
+
+validator.extend('isRequired', function(str) {
+    return Boolean(validator.trim(str));
+});
+
+validator.extend('isNotValidUser', function(str) {
+    return validator.trim(str) === 'Alex';
+});
+
 Validation.extendErrors({
     isNotValidUser: {
         className: 'ui-input_state_invalid-user',

@@ -1,13 +1,16 @@
 var React = require('react');
-var _ = require('underscore');
 var validator = require('validator');
+var isObject = require('is-object');
+var isArray = require('is-array');
+var includes = require('lodash.includes');
+var noop = require('lodash.noop');
+var objectAssign = require('object-assign');
 var classNames = require('classnames');
 
 var errors = {
     defaultMessage: 'validation error',
-    isValid: {
-        className: 'ui-input_state_invalid'
-    }
+    defaultInvalidClassName: 'ui-input_state_invalid',
+    defaultDisabledClassName: 'ui-button_state_disabled'
 };
 
 var Validation = {};
@@ -64,7 +67,7 @@ Validation.Form = React.createClass({displayName: "Form",
         className = classNames(className);
 
         if (isCheckbox || (component.state.isUsed && component.state.isChanged)) {
-            _.extend(state, {
+            objectAssign(state, {
                 className: className,
                 errorMessage: errorMessage
             });
@@ -90,7 +93,7 @@ Validation.Form = React.createClass({displayName: "Form",
     },
 
     isValidForm: function() {
-        return !(_.contains(this.inputs.validations, false));
+        return !(includes(this.inputs.validations, false));
     },
 
     blocking: function(component) {
@@ -125,12 +128,12 @@ Validation.Form = React.createClass({displayName: "Form",
         return React.Children.map(children, function(child, i) {
             var $idx = index || i;
 
-            if (!_.isObject(child)) {
+            if (!isObject(child)) {
                 return child;
             }
 
             var childProps = {};
-            var shouldValidate = _.isArray(child.props.validations) && child.props.validations.length;
+            var shouldValidate = isArray(child.props.validations) && child.props.validations.length;
 
             if (shouldValidate) {
                 childProps.validate = this.validate;
@@ -174,7 +177,7 @@ Validation.Input = React.createClass({displayName: "Input",
             type: 'text',
             placeholder: 'placeholder',
             className: 'ui-input',
-            invalidClassName: 'ui-input_state_invalid'
+            invalidClassName: errors.defaultInvalidClassName
         }
     },
 
@@ -196,21 +199,21 @@ Validation.Input = React.createClass({displayName: "Input",
             value: event.currentTarget.value,
             checked: !this.state.checked
         }, function() {
-            (this.props.blocking || _.noop)(this);
-            (this.props.validate || _.noop)(this);
+            (this.props.blocking || noop)(this);
+            (this.props.validate || noop)(this);
         });
 
-        (this.props.onChange || _.noop)(event);
+        (this.props.onChange || noop)(event);
     },
 
     onBlur: function(event) {
         this.setState({
             isUsed: true
         }, function() {
-            (this.props.validate || _.noop)(this);
+            (this.props.validate || noop)(this);
         });
 
-        (this.props.onBlur || _.noop)(event);
+        (this.props.onBlur || noop)(event);
     },
 
     render: function() {
@@ -234,7 +237,7 @@ Validation.Button = React.createClass({displayName: "Button",
         return {
             type: 'submit',
             className: 'ui-button',
-            disabledClassName: 'ui-button_state_disabled'
+            disabledClassName: errors.defaultDisabledClassName
         }
     },
 
@@ -258,7 +261,7 @@ Validation.Button = React.createClass({displayName: "Button",
 });
 
 Validation.extendErrors = function(obj) {
-    _.extend(errors, obj);
+    objectAssign(errors, obj);
 };
 
 module.exports = Validation;

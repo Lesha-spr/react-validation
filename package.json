@@ -1,6 +1,6 @@
 {
   "name": "react-validation",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "validation components",
   "main": "build/index.js",
   "scripts": {
@@ -18,8 +18,12 @@
   "homepage": "https://github.com/Lesha-spr/react-validation",
   "dependencies": {
     "classnames": "^2.1.3",
+    "is-array": "^1.0.1",
+    "is-object": "^1.0.1",
+    "lodash.includes": "^3.1.3",
+    "lodash.noop": "^3.0.0",
+    "object-assign": "^3.0.0",
     "react": "^0.13.3",
-    "underscore": "^1.8.3",
     "validator": "^3.41.2"
   },
   "devDependencies": {

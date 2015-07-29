@@ -141,6 +141,29 @@ You can apply whatever count of validations on the same Input component in order
 
 ```invalidClassName``` prop is overriding default invalidClassName.
 
+Input has public method ```showError(message, additionalClassName)```. Both params are optional. When called an error occurs with passed message and additional className on input. It's helpful to use with async errors such not found credentials or something else.
+
+<b>Example</b>
+
+```
+var Registration = React.createClass({
+    onSubmit: function(event) {
+        event.preventDefault();
+        this.refs.username.showError('Registration is now closed. We are sorry :(', 'ui-closed-registration-error');
+    },
+
+    render: function() {
+        return (
+            <Validation.Form>
+                <Validation.Input ref='username' name='username' validations={[{rule: 'isRequired'}]} />
+                <Validation.Input ref='password' name='password' validations={[{rule: 'isRequired'}]} />
+                <Validation.Button type='submit' />
+            </Validation.Form>
+        );
+    }
+});
+```
+
 <h3>Button component</h3>
 
 Button is connected to form via validations. It's disabled when invalid input occurs and if ```blocking='button'``` prop passed and there is some empty ```blocking='input'``` presents.

@@ -135,4 +135,4 @@ You can apply whatever count of validations on the same Input component in order
 
 ```blocking``` prop serving empty value and "blocks" Buttons components (sets ```disabled``` prop and className) if it's length is equal to 0 without any errors. It might be deprecated in the future.
 
-```invalidClassName``` prop is 
+```invalidClassName``` prop is overriding default invalidClassName.

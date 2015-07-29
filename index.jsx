@@ -175,11 +175,17 @@ Validation.Input = React.createClass({
         }
     },
 
+    // TODO: refactor this method
     getInitialState: function() {
+        var value = this.props.value || '';
         this.isCheckbox = this.props.type === 'checkbox';
 
+        if (this.isCheckbox && !this.props.checked) {
+            value = '';
+        }
+
         return {
-            value: this.props.value || '',
+            value: value,
             className: this.props.className || '',
             checked: this.props.checked || false,
             isValid: true,

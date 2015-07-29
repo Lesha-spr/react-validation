@@ -8,6 +8,10 @@ React-validation provides several components which are 'connected' to form via i
 
 Additional markup is allowed inside the Validation.Form markup.
 
+Any additional props (such event handlers) can also be passed to components.
+
+If you find any bug or error, please feel free to raise an issue. Pull requests are also welcome.
+
 # Installation
 
 ``
@@ -162,6 +166,20 @@ var Registration = React.createClass({
         );
     }
 });
+```
+
+<h3>Select component</h3>
+
+Select is a wrapper for select DOM element. Be aware to pass empty value on the 'choose' option.
+
+<b>Example</b>
+
+```
+<Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
+    <option value=''>Choose your City</option>
+    <option value='Kyiv'>Kyiv</option>
+    <option value='London'>London</option>
+</Validation.Select>
 ```
 
 <h3>Button component</h3>

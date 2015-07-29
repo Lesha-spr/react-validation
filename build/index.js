@@ -37,7 +37,6 @@ Validation.Form = React.createClass({displayName: "Form",
 
     validate: function(component) {
         var validations = component.props.validations;
-        var isCheckbox = component.props.type === 'checkbox';
         var state = {
             isValid: true
         };
@@ -49,13 +48,7 @@ Validation.Form = React.createClass({displayName: "Form",
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
 
-            if (isCheckbox) {
-                state.isValid = component.state.checked;
-                if (!state.isValid) {
-                    setErrorState(validation);
-                }
-            }
-
+            console.log(component.state.value);
             if (!validator[validation.rule](component.state.value)) {
                 state.isValid = false;
                 setErrorState(validation);
@@ -66,7 +59,7 @@ Validation.Form = React.createClass({displayName: "Form",
 
         className = classNames(className);
 
-        if (isCheckbox || (component.state.isUsed && component.state.isChanged)) {
+        if (component.state.isUsed && component.state.isChanged) {
             objectAssign(state, {
                 className: className,
                 errorMessage: errorMessage
@@ -79,8 +72,9 @@ Validation.Form = React.createClass({displayName: "Form",
         this.toggleSubmitButtons();
 
         function setErrorState(validation) {
+            var hasErrorClassName = errors[validation.rule] && errors[validation.rule].className;
             className[component.props.invalidClassName] = true;
-            className[errors[validation.rule].className] = true;
+            className[hasErrorClassName ? errors[validation.rule].className : className[errors.defaultInvalidClassName]] = true;
             errorMessage = validation.errorMessage || errors[validation.rule].message || errors.defaultMessage;
         }
     },
@@ -182,13 +176,15 @@ Validation.Input = React.createClass({displayName: "Input",
     },
 
     getInitialState: function() {
+        this.isCheckbox = this.props.type === 'checkbox';
+
         return {
             value: this.props.value || '',
             className: this.props.className || '',
             checked: this.props.checked || false,
             isValid: true,
-            isUsed: false,
-            isChanged: false,
+            isUsed: this.isCheckbox,
+            isChanged: this.isCheckbox,
             errorMessage: null
         }
     },
@@ -213,16 +209,21 @@ Validation.Input = React.createClass({displayName: "Input",
     },
 
     setValue: function(event) {
+        var value = event.currentTarget.value;
+
+        if (this.isCheckbox && this.state.checked) {
+            value = null;
+        }
+
         this.setState({
             isChanged: true,
-            value: event.currentTarget.value,
+            value: value,
             checked: !this.state.checked
         }, function() {
             (this.props.blocking || noop)(this);
             (this.props.validate || noop)(this);
+            (this.props.onChange || noop)(event);
         });
-
-        (this.props.onChange || noop)(event);
     },
 
     onBlur: function(event) {
@@ -230,9 +231,8 @@ Validation.Input = React.createClass({displayName: "Input",
             isUsed: true
         }, function() {
             (this.props.validate || noop)(this);
+            (this.props.onBlur || noop)(event);
         });
-
-        (this.props.onBlur || noop)(event);
     },
 
     render: function() {
@@ -240,7 +240,46 @@ Validation.Input = React.createClass({displayName: "Input",
 
         return (
             React.createElement("div", null, 
-                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, value: this.state.value, onChange: this.setValue, onBlur: this.onBlur})), 
+                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, value: this.isCheckbox ? this.props.value : this.state.value, onChange: this.setValue, onBlur: this.onBlur})), 
+                React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)
+            )
+        );
+    }
+});
+
+Validation.Select = React.createClass({displayName: "Select",
+    getDefaultProps: function() {
+        return {
+            className: 'ui-select',
+            invalidClassName: errors.defaultInvalidClassName
+        }
+    },
+
+    getInitialState: function() {
+        return {
+            value: this.props.value || null,
+            className: this.props.className || '',
+            isUsed: true,
+            isChanged: true
+        };
+    },
+
+    setValue: function(event) {
+        this.setState({
+            value: event.currentTarget.value
+        }, function() {
+            (this.props.blocking || noop)(this);
+            (this.props.validate || noop)(this);
+            (this.props.onChange || noop)(event);
+        });
+    },
+
+    render: function() {
+        return (
+            React.createElement("div", null, 
+                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this.setValue, value: this.state.value}), 
+                    this.props.children
+                ), 
                 React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)
             )
         );

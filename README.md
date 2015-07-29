@@ -6,6 +6,8 @@ It is not easy to validate forms with React. The reason is one-way data flow sty
 In this case we can't affect forms from the inputs in easy way.
 React-validation provides several components which are 'connected' to form via input's method attached by Form component.
 
+Additional markup is allowed inside the Validation.Form markup.
+
 # Installation
 
 ``
@@ -52,21 +54,23 @@ var Form = React.createClass({
     render: function() {
         return (
             <Validation.Form onSubmit={this.onSubmit}>
-                <Validation.Input
-                    blocking='input'
-                    className='ui-input'
-                    validations={[
-                      {
-                          rule: 'isRequired'
-                      },
-                      {
-                          rule: 'isNotValidUser'
-                      }
-                    ]}
-                    invalidClassName='ui-input_state_custom-error-classname'
-                    name='username'
-                    type='text'/>
-
+                <label>
+                    Just a label for username
+                    <Validation.Input
+                        blocking='input'
+                        className='ui-input'
+                        validations={[
+                          {
+                              rule: 'isRequired'
+                          },
+                          {
+                              rule: 'isNotValidUser'
+                          }
+                        ]}
+                        invalidClassName='ui-input_state_custom-error-classname'
+                        name='username'
+                        type='text'/>
+                </label>
                 <Validation.Input
                     blocking='input'
                     className='ui-input'
@@ -131,8 +135,18 @@ validator.extend('isRequired', function(str) {
 ```
 
 In the example above we've described Input with two validation rules ```'isRequired'``` and ```'isEmail'```. This rules should be a references to ```validator``` rules as we extended it in example (```'isEmail'``` is a native validator's rule).
-You can apply whatever count of validations on the same Input component in order you want them apply errors.
+You can apply whatever count of validations on the same Input component in order you want them to apply errors.
 
-```blocking``` prop serving empty value and "blocks" Buttons components (sets ```disabled``` prop and className) if it's length is equal to 0 without any errors. It might be deprecated in the future.
+```blocking``` prop serving empty value and "blocks" Buttons components (sets ```disabled``` prop and className) if it's length is equal to 0 without any errors. It might be deprecated in the future. By default Validation blocks only ```submit``` input.
 
 ```invalidClassName``` prop is overriding default invalidClassName.
+
+<h3>Button component</h3>
+
+Button is connected to form via validations. It's disabled when invalid input occurs and if ```blocking='button'``` prop passed and there is some empty ```blocking='input'``` presents.
+
+<b>Example</b>
+
+```
+<Validation.Button type='submit' blocking='button' />
+```

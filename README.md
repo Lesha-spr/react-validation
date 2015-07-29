@@ -154,7 +154,7 @@ var Registration = React.createClass({
 
     render: function() {
         return (
-            <Validation.Form>
+            <Validation.Form onSubmit={this.onSubmit}>
                 <Validation.Input ref='username' name='username' validations={[{rule: 'isRequired'}]} />
                 <Validation.Input ref='password' name='password' validations={[{rule: 'isRequired'}]} />
                 <Validation.Button type='submit' />

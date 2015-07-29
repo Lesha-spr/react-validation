@@ -6,7 +6,7 @@ It is not easy to validate forms with React. The reason is one-way data flow sty
 In this case we can't affect forms from the inputs in easy way.
 React-validation provides several components which are 'connected' to form via input's method attached by Form component.
 
-<b>Be aware to always pass ```name``` prop. It is required</b>
+<b>Be aware to always pass ```name``` prop. It is required.</b>
 
 Additional markup is allowed inside the Validation.Form markup.
 

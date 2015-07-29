@@ -18,6 +18,7 @@ npm install react-validation
 var validator = require('validator');
 var Validation = require('react-validation');
 
+// Extend validator for custom rules
 validator.extend('isRequired', function(str) {
     return Boolean(validator.trim(str));
 });
@@ -26,6 +27,7 @@ validator.extend('isNotValidUser', function(str) {
     return validator.trim(str) === 'Alex';
 });
 
+// Extend Validation for error classNames and messages
 Validation.extendErrors({
     isNotValidUser: {
         className: 'ui-input_state_invalid-user',
@@ -50,21 +52,42 @@ var Form = React.createClass({
     render: function() {
         return (
             <Validation.Form onSubmit={this.onSubmit}>
-                <Validation.Input blocking='input' className='ui-input' validations={[
-                  {
-                      rule: 'isRequired'
-                  },
-                  {
-                      rule: 'isNotValidUser'
-                  }
-                ]} invalidClassName='ui-input_state_custom-error-classname' name='username' type='text'/>
-                <Validation.Input blocking='input' className='ui-input' validations={[{
-                    rule: 'isEmail'
-                }]} name='email' type='text'/>
-                <Validation.Input blocking='input' className='ui-input' validations={[{
-                    rule: 'isRequired',
-                    errorMessage: 'required'
-                }]} name='password' type='password'/>
+                <Validation.Input
+                    blocking='input'
+                    className='ui-input'
+                    validations={[
+                      {
+                          rule: 'isRequired'
+                      },
+                      {
+                          rule: 'isNotValidUser'
+                      }
+                    ]}
+                    invalidClassName='ui-input_state_custom-error-classname'
+                    name='username'
+                    type='text'/>
+
+                <Validation.Input
+                    blocking='input'
+                    className='ui-input'
+                    validations={[
+                        {
+                            rule: 'isEmail'
+                        }
+                    ]}
+                    name='email'
+                    type='text'/>
+                <Validation.Input
+                    blocking='input'
+                    className='ui-input'
+                    validations={[
+                        {
+                            rule: 'isRequired',
+                            errorMessage: 'required'
+                        }
+                    ]}
+                    name='password'
+                    type='password'/>
                 <Validation.Button blocking='button' value='submit'/>
             </Validation.Form>
         );

@@ -48,7 +48,6 @@ Validation.Form = React.createClass({displayName: "Form",
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
 
-            console.log(component.state.value);
             if (!validator[validation.rule](component.state.value)) {
                 state.isValid = false;
                 setErrorState(validation);
@@ -160,6 +159,7 @@ Validation.Form = React.createClass({displayName: "Form",
 
 Validation.Input = React.createClass({displayName: "Input",
     propTypes: {
+        name: React.PropTypes.string.isRequired,
         type: React.PropTypes.string,
         placeholder: React.PropTypes.oneOfType([
             React.PropTypes.string, React.PropTypes.number
@@ -248,6 +248,10 @@ Validation.Input = React.createClass({displayName: "Input",
 });
 
 Validation.Select = React.createClass({displayName: "Select",
+    propTypes: {
+        name: React.PropTypes.string.isRequired
+    },
+
     getDefaultProps: function() {
         return {
             className: 'ui-select',

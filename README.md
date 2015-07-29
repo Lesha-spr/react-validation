@@ -94,3 +94,45 @@ var Form = React.createClass({
     }
 });
 ```
+
+# Components and props
+
+<h3>Form component</h3>
+
+Form is just a wrapper for form DOM element. You might want to add ```onSubmit={this.onSubmit}``` prop to it to handle the submit event.
+Right now it has only one public method ```form.isValidForm() // returns Boolean```
+
+<h3>Input component</h3>
+
+Input component provides several public methods and props.
+
+```validations``` prop attaches validations to Input. It should be an array of objects with ```rule``` and (optional) ```errorMessage```
+
+<b>Example</b>
+```
+validator.extend('isRequired', function(str) {
+    return Boolean(validator.trim(str));
+});
+
+<Validation.Input
+    invalidClassName='ui-error'
+    blocking='input'
+    validations={[
+        {
+            rule: 'isRequired',
+            errorMessage: 'mandatory field'
+        },
+        {
+            rule: 'isEmail',
+            errorMessage: 'should be email'
+        }
+    ]} 
+/>
+```
+
+In the example above we've described Input with two validation rules ```'isRequired'``` and ```'isEmail'```. This rules should be a references to ```validator``` rules as we extended it in example (```'isEmail'``` is a native validator's rule).
+You can apply whatever count of validations on the same Input component in order you want them apply errors.
+
+```blocking``` prop serving empty value and "blocks" Buttons components (sets ```disabled``` prop and className) if it's length is equal to 0 without any errors. It might be deprecated in the future.
+
+```invalidClassName``` prop is 

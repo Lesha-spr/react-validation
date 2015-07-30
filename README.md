@@ -22,7 +22,7 @@ npm install react-validation
 
 # Example usage
 
-```
+```javascript
 var validator = require('validator');
 var Validation = require('react-validation');
 
@@ -119,7 +119,7 @@ Input component provides several public methods and props.
 ```validations``` prop attaches validations to Input. It should be an array of objects with ```rule``` and (optional) ```errorMessage```
 
 <b>Example</b>
-```
+```javascript
 validator.extend('isRequired', function(str) {
     return Boolean(validator.trim(str));
 });
@@ -150,7 +150,7 @@ You can apply whatever count of validations on the same Input component in order
 
 <b>Example</b>
 
-```
+```javascript
 var Registration = React.createClass({
     onSubmit: function(event) {
         event.preventDefault();
@@ -175,7 +175,7 @@ Select is a wrapper for select DOM element. Be aware to pass empty value on the 
 
 <b>Example</b>
 
-```
+```javascript
 <Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
     <option value=''>Choose your City</option>
     <option value='Kyiv'>Kyiv</option>
@@ -189,7 +189,7 @@ Button is connected to form via validations. It's disabled when invalid input oc
 
 <b>Example</b>
 
-```
+```javascript
 <Validation.Button type='submit' blocking='button' />
 ```
 
@@ -199,7 +199,7 @@ Controlled components (Input, Select) has ```setValue``` and ```showError``` met
 
 <b>Example</b>
 
-```
+```javascript
 var CitySelect = React.createClass({
     onClick: function(event) {
         event.preventDefault();

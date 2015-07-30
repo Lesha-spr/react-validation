@@ -148,8 +148,6 @@ You can apply whatever count of validations on the same Input component in order
 
 ```invalidClassName``` prop is overriding default invalidClassName.
 
-Input has public method ```showError(message, additionalClassName)```. Both params are optional. When called an error occurs with passed message and additional className on input. It's helpful to use with async errors such not found credentials or something else.
-
 <b>Example</b>
 
 ```

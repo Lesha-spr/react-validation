@@ -194,3 +194,45 @@ Button is connected to form via validations. It's disabled when invalid input oc
 ```
 <Validation.Button type='submit' blocking='button' />
 ```
+
+<h3>Components API</h3>
+
+Controlled components (Input, Select) has ```setValue``` and ```showError``` methods.
+
+<b>Example</b>
+
+```
+var CitySelect = React.createClass({
+    onClick: function(event) {
+        event.preventDefault();
+
+        this.refs.select.setValue('Kyiv');
+    },
+
+    render: function() {
+        return (
+            <Validation.Form>
+                <Validation.Select value='London' ref='select' validations={[{rule: 'isRequired'}]} name='city' className='ui-select'>
+                    <option value=''>Choose</option>
+                    <option value='Kyiv'>Kyiv</option>
+                    <option value='London'>London</option>
+                </Validation.Select>
+                <Validation.Button value='submit'/>
+                <a href='#' onClick={this.onClick}>Set Kyiv</a>
+            </Validation.Form>
+        );
+    }
+});
+```
+
+The example above shows how to set values to Components.
+
+```ref.setValue(value [,forceError])```
+
+```value``` - value to set.
+```forceError``` - force validate after setting.
+
+```ref.showError([message] [,additionalClassName])```
+
+```message``` - custom message to show in hint.
+```additionalClassName``` - custom className to add to element.

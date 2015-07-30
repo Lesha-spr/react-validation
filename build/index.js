@@ -27,6 +27,11 @@ Validation.Form = React.createClass({displayName: "Form",
         };
     },
 
+    componentDidMount: function() {
+        this.toggleButtons(this.inputs.submit, this.inputs.validations);
+        this.toggleButtons(this.inputs.blocking.buttons, this.inputs.blocking.inputs);
+    },
+
     render: function() {
         return (
             React.createElement("form", {onSubmit: this.props.onSubmit}, 
@@ -68,7 +73,7 @@ Validation.Form = React.createClass({displayName: "Form",
         component.setState(state);
 
         this.inputs.validations[component.props.name] = state.isValid;
-        this.toggleSubmitButtons();
+        this.toggleButtons(this.inputs.submit, this.inputs.validations);
 
         function setErrorState(validation) {
             var hasErrorClassName = errors[validation.rule] && errors[validation.rule].className;
@@ -78,31 +83,28 @@ Validation.Form = React.createClass({displayName: "Form",
         }
     },
 
-    toggleSubmitButtons: function() {
-        var buttons = this.inputs.submit;
-        var isValidForm = this.isValidForm();
+    toggleButtons: function(buttons, model) {
+        var hasBlocking = this.hasFalsyFlag(model);
 
-        this._setButtonsState(buttons, !isValidForm);
+        this._setButtonsState(buttons, hasBlocking);
     },
 
     isValidForm: function() {
-        return !(includes(this.inputs.validations, false));
+        return !this.hasFalsyFlag(this.inputs.validations);
+    },
+
+    hasFalsyFlag: function(model) {
+        return includes(model, false);
     },
 
     blocking: function(component) {
         var _this = this;
         var buttons = _this.inputs.blocking.buttons;
-        var hasBlocking = false;
+        var hasBlocking;
 
         _this.inputs.blocking.inputs[component.props.name] = Boolean(validator.trim(component.state.value));
 
-        if (_this.inputs.blocking.inputs.length) {
-            Object.keys(_this.inputs.blocking.inputs).forEach(function(key) {
-                if (!_this.inputs.blocking.inputs[key]) {
-                    hasBlocking = true;
-                }
-            });
-        }
+        hasBlocking = _this.hasFalsyFlag(_this.inputs.blocking.inputs);
 
         this._setButtonsState(buttons, hasBlocking);
     },
@@ -127,10 +129,16 @@ Validation.Form = React.createClass({displayName: "Form",
 
             var childProps = {};
             var shouldValidate = isArray(child.props.validations) && child.props.validations.length;
+            var isCheckbox = child.props.type === 'checkbox';
+            var value = validator.trim(child.props.value);
+
+            if (isCheckbox && !child.props.checked) {
+                value = '';
+            }
 
             if (shouldValidate) {
                 childProps.validate = this.validate;
-                this.inputs.validations[child.props.name] = false;
+                this.inputs.validations[child.props.name] = Boolean(value);
             }
 
             if (child.props.type === 'submit') {
@@ -141,7 +149,7 @@ Validation.Form = React.createClass({displayName: "Form",
 
             if (child.props.blocking === 'input') {
                 childProps.blocking = this.blocking;
-                this.inputs.blocking.inputs[child.props.name] = false;
+                this.inputs.blocking.inputs[child.props.name] = Boolean(value);
             }
 
             if (child.props.blocking === 'button') {
@@ -214,21 +222,28 @@ Validation.Input = React.createClass({displayName: "Input",
         });
     },
 
-    setValue: function(event) {
+    onChange: function(event) {
         var value = event.currentTarget.value;
 
-        if (this.isCheckbox && this.state.checked) {
-            value = null;
+        this.setValue(value, event);
+    },
+
+    setValue: function(value, event) {
+        var isEventPassed = (event && event.nativeEvent instanceof Event);
+
+        if (this.isCheckbox) {
+            value = !this.state.checked ? this.props.value : null;
         }
 
         this.setState({
             isChanged: true,
+            isUsed: isEventPassed || !event,
             value: value,
-            checked: !this.state.checked
+            checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
         }, function() {
             (this.props.blocking || noop)(this);
             (this.props.validate || noop)(this);
-            (this.props.onChange || noop)(event);
+            (this.props.onChange || noop)(isEventPassed ? event : undefined);
         });
     },
 
@@ -246,7 +261,7 @@ Validation.Input = React.createClass({displayName: "Input",
 
         return (
             React.createElement("div", null, 
-                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, value: this.isCheckbox ? this.props.value : this.state.value, onChange: this.setValue, onBlur: this.onBlur})), 
+                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this.onChange, onBlur: this.onBlur})), 
                 React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)
             )
         );
@@ -274,20 +289,28 @@ Validation.Select = React.createClass({displayName: "Select",
         };
     },
 
-    setValue: function(event) {
+    onChange: function(event) {
+        var value = event.currentTarget.value;
+
+        this.setValue(value, event);
+    },
+
+    setValue: function(value, event) {
+        var isEventPassed = (event && event.nativeEvent instanceof Event);
+
         this.setState({
-            value: event.currentTarget.value
+            value: value
         }, function() {
             (this.props.blocking || noop)(this);
             (this.props.validate || noop)(this);
-            (this.props.onChange || noop)(event);
+            (this.props.onChange || noop)(isEventPassed ? event : undefined);
         });
     },
 
     render: function() {
         return (
             React.createElement("div", null, 
-                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this.setValue, value: this.state.value}), 
+                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this.onChange, value: this.state.value}), 
                     this.props.children
                 ), 
                 React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)

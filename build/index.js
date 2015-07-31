@@ -72,6 +72,7 @@ Validation.Form = React.createClass({displayName: "Form",
                 if (!validator[validation.rule](component.state.value)) {
                     state.isValid = false;
                     setErrorState(validation);
+                    (component.props.onError || noop)(validation);
 
                     break;
                 }

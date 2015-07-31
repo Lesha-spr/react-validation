@@ -24,6 +24,11 @@ npm install react-validation
 
 # Example usage
 
+Before use you should extend ```validator``` to provide your own rules. Please check <a href="https://github.com/chriso/validator.js">validator</a> reference to see all existing rules.
+Additional you can also extend ```Validation``` with public ```Validation.extendErrors``` method to set hint message and error className.
+
+Here is huge example below with many features used.
+
 ```javascript
 var validator = require('validator');
 var Validation = require('react-validation');
@@ -119,6 +124,7 @@ Right now it has only one public method ```form.isValidForm() // returns Boolean
 Input component provides several public methods and props.
 
 ```validations``` prop attaches validations to Input. It should be an array of objects with ```rule``` and (optional) ```errorMessage```
+There is also optional prop ```onError``` callback. It would be called on validation fail and pass the first validation object it is failed on.
 
 <b>Example</b>
 ```javascript
@@ -130,6 +136,7 @@ validator.extend('isRequired', function(str) {
     name='my-input'
     invalidClassName='ui-error'
     blocking='input'
+    onError={function(validation) {console.log(validation.rule)}}
     validations={[
         {
             rule: 'isRequired',
@@ -195,7 +202,7 @@ Button is connected to form via validations. It's disabled when invalid input oc
 <Validation.Button type='submit' blocking='button' />
 ```
 
-<h3>Components API</h3>
+# Components API
 
 Controlled components (Input, Select) has ```setValue``` and ```showError``` methods.
 

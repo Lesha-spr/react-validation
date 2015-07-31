@@ -14,7 +14,8 @@ var classNames = require('classnames');
 var errors = {
     defaultMessage: 'validation error',
     defaultInvalidClassName: 'ui-input_state_invalid',
-    defaultDisabledClassName: 'ui-button_state_disabled'
+    defaultDisabledClassName: 'ui-button_state_disabled',
+    defaultHintClassName: 'ui-hint'
 };
 
 /**
@@ -331,7 +332,7 @@ Validation.Input = React.createClass({displayName: "Input",
         return (
             React.createElement("div", null, 
                 React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this.onChange, onBlur: this.onBlur})), 
-                React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)
+                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
             )
         );
     }
@@ -398,7 +399,7 @@ Validation.Select = React.createClass({displayName: "Select",
                 React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this.onChange, value: this.state.value}), 
                     this.props.children
                 ), 
-                React.createElement("span", {className: "ui-input-hint"}, this.state.errorMessage)
+                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
             )
         );
     }

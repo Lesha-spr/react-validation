@@ -72,11 +72,15 @@ Validation.Form = React.createClass({
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
 
-            if (!validator[validation.rule](component.state.value)) {
-                state.isValid = false;
-                setErrorState(validation);
+            try {
+                if (!validator[validation.rule](component.state.value)) {
+                    state.isValid = false;
+                    setErrorState(validation);
 
-                break;
+                    break;
+                }
+            } catch (error) {
+                console.warn('You probably didn\'t specified (extended) validator for ' + validation.rule + ' rule');
             }
         }
 
@@ -95,10 +99,11 @@ Validation.Form = React.createClass({
         this.toggleButtons(this.inputs.submit, this.inputs.validations);
 
         function setErrorState(validation) {
-            var hasErrorClassName = errors[validation.rule] && errors[validation.rule].className;
+            var hasRule = errors[validation.rule];
+            var hasErrorClassName = hasRule && errors[validation.rule].className;
             className[component.props.invalidClassName] = true;
             className[hasErrorClassName ? errors[validation.rule].className : className[errors.defaultInvalidClassName]] = true;
-            errorMessage = validation.errorMessage || errors[validation.rule].message || errors.defaultMessage;
+            errorMessage = validation.errorMessage || hasRule ? errors[validation.rule].message : errors.defaultMessage;
         }
     },
 

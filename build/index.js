@@ -7,16 +7,30 @@ var noop = require('lodash.noop');
 var objectAssign = require('object-assign');
 var classNames = require('classnames');
 
+/**
+ * Extendable defaults
+ * @type {{defaultMessage: string, defaultInvalidClassName: string, defaultDisabledClassName: string}}
+ */
 var errors = {
     defaultMessage: 'validation error',
     defaultInvalidClassName: 'ui-input_state_invalid',
     defaultDisabledClassName: 'ui-button_state_disabled'
 };
 
+/**
+ * Validation component namespace
+ * @type {Object}
+ */
 var Validation = {};
 
+/**
+ * Describe Form component
+ * It is using heavy recursiveCloneChildren method
+ * It may be refactored by using refs instead and set props more natively
+ */
 Validation.Form = React.createClass({displayName: "Form",
     componentWillMount: function() {
+        // TODO: spread to separated objects
         this.inputs = {
             submit: [],
             validations: {},
@@ -40,6 +54,10 @@ Validation.Form = React.createClass({displayName: "Form",
         );
     },
 
+    /**
+     * Method to validate component value
+     * @param component {Object} React component
+     */
     validate: function(component) {
         var validations = component.props.validations;
         var state = {
@@ -83,6 +101,11 @@ Validation.Form = React.createClass({displayName: "Form",
         }
     },
 
+    /**
+     * Method to lock/unlock buttons
+     * @param buttons {Array} Array of refs to React components
+     * @param model {Object} Model to find blockers
+     */
     toggleButtons: function(buttons, model) {
         var hasBlocking = this.hasFalsyFlag(model);
 
@@ -93,10 +116,19 @@ Validation.Form = React.createClass({displayName: "Form",
         return !this.hasFalsyFlag(this.inputs.validations);
     },
 
+    /**
+     * Method to validate data model
+     * @param model {Object} Model to validate
+     * @return {Boolean}
+     */
     hasFalsyFlag: function(model) {
         return includes(model, false);
     },
 
+    /**
+     * Method to validate blocking inputs
+     * @param component {Object} React component
+     */
     blocking: function(component) {
         var _this = this;
         var buttons = _this.inputs.blocking.buttons;
@@ -109,6 +141,12 @@ Validation.Form = React.createClass({displayName: "Form",
         this._setButtonsState(buttons, hasBlocking);
     },
 
+    /**
+     * Method to set buttons state
+     * @param buttons {Array} Array of refs on button React components
+     * @param hasBlocking {Boolean} button has at least one blocker
+     * @private
+     */
     _setButtonsState: function(buttons, hasBlocking) {
         var i;
 
@@ -119,6 +157,13 @@ Validation.Form = React.createClass({displayName: "Form",
         }
     },
 
+    /**
+     * Method to check props and add additional validation methods
+     * Should be refactored or being rewrite
+     * @param children {Object|String|Number} Child elements of root React component
+     * @param index {Number} abstract number to add ref
+     * @return {Object|String|Number}
+     */
     recursiveCloneChildren: function(children, index) {
         return React.Children.map(children, function(child, i) {
             var $idx = index || i;
@@ -165,6 +210,10 @@ Validation.Form = React.createClass({displayName: "Form",
     }
 });
 
+/**
+ * Describe Input component
+ * It is a common component and contains inputs, checkboxes and radios
+ */
 Validation.Input = React.createClass({displayName: "Input",
     propTypes: {
         name: React.PropTypes.string.isRequired,
@@ -203,6 +252,12 @@ Validation.Input = React.createClass({displayName: "Input",
         }
     },
 
+    /**
+     * Public method to show errors
+     * Useful with async validation
+     * @param message {String} message to show
+     * @param additionalClassName {String} className to add
+     */
     showError: function(message, additionalClassName) {
         var className = {};
 
@@ -222,17 +277,27 @@ Validation.Input = React.createClass({displayName: "Input",
         });
     },
 
+    /**
+     * Change handler
+     * We need this method to avoid async problem with React's setState
+     * @param event {Event} event object
+     */
     onChange: function(event) {
         var value = event.currentTarget.value;
 
         this.setValue(value, event);
     },
 
+    /**
+     * Public value setter
+     * @param value {String|Number} value to be setted
+     * @param event {Event|Boolean} event object or flag to prevent errors to show
+     */
     setValue: function(value, event) {
         var isEventPassed = (event && event.nativeEvent instanceof Event);
 
         if (this.isCheckbox) {
-            value = !this.state.checked ? this.props.value : null;
+            value = !this.state.checked ? this.props.value : '';
         }
 
         this.setState({
@@ -247,6 +312,10 @@ Validation.Input = React.createClass({displayName: "Input",
         });
     },
 
+    /**
+     * Blur handler
+     * @param event {Event} event object
+     */
     onBlur: function(event) {
         this.setState({
             isUsed: true
@@ -268,6 +337,11 @@ Validation.Input = React.createClass({displayName: "Input",
     }
 });
 
+/**
+ * Describe Select component
+ * It's familiar with Input component
+ * But have some specific such isUsed and isChanged flags are true with init
+ */
 Validation.Select = React.createClass({displayName: "Select",
     propTypes: {
         name: React.PropTypes.string.isRequired
@@ -289,12 +363,23 @@ Validation.Select = React.createClass({displayName: "Select",
         };
     },
 
+    /**
+     * Change handler
+     * We need this method to avoid async problem with React's setState
+     * @param event {Event} event object
+     */
     onChange: function(event) {
         var value = event.currentTarget.value;
 
         this.setValue(value, event);
     },
 
+    /**
+     * Public value setter
+     * Familiar with Input setter
+     * @param value {String|Number} value to be setted
+     * @param event {Event|Boolean} event object or flag to prevent errors to show
+     */
     setValue: function(value, event) {
         var isEventPassed = (event && event.nativeEvent instanceof Event);
 
@@ -319,6 +404,9 @@ Validation.Select = React.createClass({displayName: "Select",
     }
 });
 
+/**
+ * Describe Button component
+ */
 Validation.Button = React.createClass({displayName: "Button",
     propTypes: {
         type: React.PropTypes.string
@@ -351,6 +439,10 @@ Validation.Button = React.createClass({displayName: "Button",
     }
 });
 
+/**
+ * Public method to extend default error object
+ * @param obj {Object}
+ */
 Validation.extendErrors = function(obj) {
     objectAssign(errors, obj);
 };

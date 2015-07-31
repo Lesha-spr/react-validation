@@ -31,26 +31,21 @@ var Validation = {};
  */
 Validation.Form = React.createClass({displayName: "Form",
     componentWillMount: function() {
-        // TODO: spread to separated objects
-        this.inputs = {
-            submit: [],
-            validations: {},
-            blocking: {
-                inputs: {},
-                buttons: []
-            }
-        };
+        this._validations = {};
+        this._blockers = {};
+        this._submitRefs = [];
+        this._blockingRefs = [];
     },
 
     componentDidMount: function() {
-        this.toggleButtons(this.inputs.submit, this.inputs.validations);
-        this.toggleButtons(this.inputs.blocking.buttons, this.inputs.blocking.inputs);
+        this._toggleButtons(this._submitRefs, this._validations);
+        this._toggleButtons(this._blockingRefs, this._blockers);
     },
 
     render: function() {
         return (
-            React.createElement("form", {onSubmit: this.props.onSubmit}, 
-                this.recursiveCloneChildren(this.props.children)
+            React.createElement("form", {onSubmit: this.props.onSubmit || noop}, 
+                this._recursiveCloneChildren(this.props.children, 0)
             )
         );
     },
@@ -58,8 +53,9 @@ Validation.Form = React.createClass({displayName: "Form",
     /**
      * Method to validate component value
      * @param component {Object} React component
+     * @private
      */
-    validate: function(component) {
+    _validate: function(component) {
         var validations = component.props.validations;
         var state = {
             isValid: true
@@ -95,12 +91,13 @@ Validation.Form = React.createClass({displayName: "Form",
 
         component.setState(state);
 
-        this.inputs.validations[component.props.name] = state.isValid;
-        this.toggleButtons(this.inputs.submit, this.inputs.validations);
+        this._validations[component.props.name] = state.isValid;
+        this._toggleButtons(this._submitRefs, this._validations);
 
         function setErrorState(validation) {
             var hasRule = errors[validation.rule];
             var hasErrorClassName = hasRule && errors[validation.rule].className;
+
             className[component.props.invalidClassName] = true;
             className[hasErrorClassName ? errors[validation.rule].className : className[errors.defaultInvalidClassName]] = true;
             errorMessage = validation.errorMessage || hasRule ? errors[validation.rule].message : errors.defaultMessage;
@@ -111,38 +108,45 @@ Validation.Form = React.createClass({displayName: "Form",
      * Method to lock/unlock buttons
      * @param buttons {Array} Array of refs to React components
      * @param model {Object} Model to find blockers
+     * @private
      */
-    toggleButtons: function(buttons, model) {
-        var hasBlocking = this.hasFalsyFlag(model);
+    _toggleButtons: function(buttons, model) {
+        var hasBlocking = this._hasFalsyFlag(model);
 
         this._setButtonsState(buttons, hasBlocking);
     },
 
+    /**
+     * Public method to check form on validity
+     * @return {Boolean}
+     */
     isValidForm: function() {
-        return !this.hasFalsyFlag(this.inputs.validations);
+        return !this._hasFalsyFlag(this._validations);
     },
 
     /**
      * Method to validate data model
      * @param model {Object} Model to validate
      * @return {Boolean}
+     * @private
      */
-    hasFalsyFlag: function(model) {
+    _hasFalsyFlag: function(model) {
         return includes(model, false);
     },
 
     /**
      * Method to validate blocking inputs
      * @param component {Object} React component
+     * @private
      */
-    blocking: function(component) {
+    _blocking: function(component) {
         var _this = this;
-        var buttons = _this.inputs.blocking.buttons;
+        var buttons = _this._blockingRefs;
         var hasBlocking;
 
-        _this.inputs.blocking.inputs[component.props.name] = Boolean(validator.trim(component.state.value));
+        _this._blockers[component.props.name] = Boolean(validator.trim(component.state.value));
 
-        hasBlocking = _this.hasFalsyFlag(_this.inputs.blocking.inputs);
+        hasBlocking = _this._hasFalsyFlag(_this._blockers);
 
         this._setButtonsState(buttons, hasBlocking);
     },
@@ -169,8 +173,9 @@ Validation.Form = React.createClass({displayName: "Form",
      * @param children {Object|String|Number} Child elements of root React component
      * @param index {Number} abstract number to add ref
      * @return {Object|String|Number}
+     * @private
      */
-    recursiveCloneChildren: function(children, index) {
+    _recursiveCloneChildren: function(children, index) {
         return React.Children.map(children, function(child, i) {
             var $idx = index || i;
 
@@ -188,28 +193,28 @@ Validation.Form = React.createClass({displayName: "Form",
             }
 
             if (shouldValidate) {
-                childProps.validate = this.validate;
-                this.inputs.validations[child.props.name] = Boolean(value);
+                childProps._validate = this._validate;
+                this._validations[child.props.name] = Boolean(value);
             }
 
             if (child.props.type === 'submit') {
                 childProps.ref = child.props.ref || child.props.type + $idx;
                 $idx++;
-                this.inputs.submit.push(childProps.ref);
+                this._submitRefs.push(childProps.ref);
             }
 
             if (child.props.blocking === 'input') {
-                childProps.blocking = this.blocking;
-                this.inputs.blocking.inputs[child.props.name] = Boolean(value);
+                childProps._blocking = this._blocking;
+                this._blockers[child.props.name] = Boolean(value);
             }
 
             if (child.props.blocking === 'button') {
                 childProps.ref = childProps.ref || child.props.ref || child.props.blocking + $idx;
                 $idx++;
-                this.inputs.blocking.buttons.push(childProps.ref);
+                this._blockingRefs.push(childProps.ref);
             }
 
-            childProps.children = this.recursiveCloneChildren(child.props.children, $idx);
+            childProps.children = this._recursiveCloneChildren(child.props.children, $idx);
 
             return React.cloneElement(child, childProps);
         }, this);
@@ -287,8 +292,9 @@ Validation.Input = React.createClass({displayName: "Input",
      * Change handler
      * We need this method to avoid async problem with React's setState
      * @param event {Event} event object
+     * @private
      */
-    onChange: function(event) {
+    _onChange: function(event) {
         var value = event.currentTarget.value;
 
         this.setValue(value, event);
@@ -312,8 +318,8 @@ Validation.Input = React.createClass({displayName: "Input",
             value: value,
             checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
         }, function() {
-            (this.props.blocking || noop)(this);
-            (this.props.validate || noop)(this);
+            (this.props._blocking || noop)(this);
+            (this.props._validate || noop)(this);
             (this.props.onChange || noop)(isEventPassed ? event : undefined);
         });
     },
@@ -321,12 +327,13 @@ Validation.Input = React.createClass({displayName: "Input",
     /**
      * Blur handler
      * @param event {Event} event object
+     * @private
      */
-    onBlur: function(event) {
+    _onBlur: function(event) {
         this.setState({
             isUsed: true
         }, function() {
-            (this.props.validate || noop)(this);
+            (this.props._validate || noop)(this);
             (this.props.onBlur || noop)(event);
         });
     },
@@ -336,7 +343,7 @@ Validation.Input = React.createClass({displayName: "Input",
 
         return (
             React.createElement("div", null, 
-                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this.onChange, onBlur: this.onBlur})), 
+                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._onChange, onBlur: this._onBlur})), 
                 React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
             )
         );
@@ -373,8 +380,9 @@ Validation.Select = React.createClass({displayName: "Select",
      * Change handler
      * We need this method to avoid async problem with React's setState
      * @param event {Event} event object
+     * @private
      */
-    onChange: function(event) {
+    _onChange: function(event) {
         var value = event.currentTarget.value;
 
         this.setValue(value, event);
@@ -392,8 +400,8 @@ Validation.Select = React.createClass({displayName: "Select",
         this.setState({
             value: value
         }, function() {
-            (this.props.blocking || noop)(this);
-            (this.props.validate || noop)(this);
+            (this.props._blocking || noop)(this);
+            (this.props._validate || noop)(this);
             (this.props.onChange || noop)(isEventPassed ? event : undefined);
         });
     },
@@ -401,7 +409,7 @@ Validation.Select = React.createClass({displayName: "Select",
     render: function() {
         return (
             React.createElement("div", null, 
-                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this.onChange, value: this.state.value}), 
+                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._onChange, value: this.state.value}), 
                     this.props.children
                 ), 
                 React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)

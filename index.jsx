@@ -19,6 +19,21 @@ var errors = {
 };
 
 /**
+ * Mounting mixin to register/unregister controls with Component's lifecycle
+ * @type {{componentWillMount: Function, componentWillUnmount: Function}}
+ * @private
+ */
+var _mounting = {
+    componentWillMount: function() {
+        (this.props._registerControl || noop)(this);
+    },
+
+    componentWillUnmount: function() {
+        (this.props._unregisterControl || noop)(this);
+    }
+};
+
+/**
  * Validation component namespace
  * @type {Object}
  */
@@ -48,6 +63,19 @@ Validation.Form = React.createClass({
                 {this._recursiveCloneChildren(this.props.children, 0)}
             </form>
         );
+    },
+
+    _getValidationModel: function(component, callback) {
+        var isCheckbox = component.props.type === 'checkbox';
+        var isBlocker = component.props.blocking;
+        var value = validator.trim(component.props.value);
+        var model = isBlocker ? this._blockers : this._validations;
+
+        if (isCheckbox && !component.props.checked) {
+            value = '';
+        }
+
+        return callback(value, model);
     },
 
     /**
@@ -147,7 +175,7 @@ Validation.Form = React.createClass({
 
         _this._blockers[component.props.name] = Boolean(validator.trim(component.state.value));
 
-        hasBlocking = _this._hasFalsyFlag(_this._blockers);
+        hasBlocking = _this._hasFalsyFlag(_this._blockers) || _this._hasFalsyFlag(_this._validations);
 
         this._setButtonsState(buttons, hasBlocking);
     },
@@ -186,16 +214,10 @@ Validation.Form = React.createClass({
 
             var childProps = {};
             var shouldValidate = isArray(child.props.validations) && child.props.validations.length;
-            var isCheckbox = child.props.type === 'checkbox';
-            var value = validator.trim(child.props.value);
-
-            if (isCheckbox && !child.props.checked) {
-                value = '';
-            }
 
             if (shouldValidate) {
+                childProps._registerControl = this._registerControl;
                 childProps._validate = this._validate;
-                this._validations[child.props.name] = Boolean(value);
             }
 
             if (child.props.type === 'submit') {
@@ -205,8 +227,8 @@ Validation.Form = React.createClass({
             }
 
             if (child.props.blocking === 'input') {
+                childProps._registerControl = this._registerControl;
                 childProps._blocking = this._blocking;
-                this._blockers[child.props.name] = Boolean(value);
             }
 
             if (child.props.blocking === 'button') {
@@ -219,6 +241,18 @@ Validation.Form = React.createClass({
 
             return React.cloneElement(child, childProps);
         }, this);
+    },
+
+    _registerControl: function(component) {
+        this._getValidationModel(component, function(value, model) {
+            model[component.props.name] = Boolean(value);
+        });
+    },
+
+    _unregisterControl: function(component) {
+        this._getValidationModel(component, function(value, model) {
+            delete model[component.props.name];
+        });
     }
 });
 
@@ -227,6 +261,8 @@ Validation.Form = React.createClass({
  * It is a common component and contains inputs, checkboxes and radios
  */
 Validation.Input = React.createClass({
+    mixins: [_mounting],
+
     propTypes: {
         name: React.PropTypes.string.isRequired,
         type: React.PropTypes.string,
@@ -357,6 +393,8 @@ Validation.Input = React.createClass({
  * But have some specific such isUsed and isChanged flags are true with init
  */
 Validation.Select = React.createClass({
+    mixins: [_mounting],
+
     propTypes: {
         name: React.PropTypes.string.isRequired
     },

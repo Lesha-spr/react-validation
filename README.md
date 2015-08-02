@@ -25,6 +25,7 @@ npm install react-validation
 # Example usage
 
 Please check <a href="https://github.com/chriso/validator.js">validator</a> reference to see all existing rules.
+For known reasons it is better to use ```validator```'s rules where it's possible.
 You can extend ```Validation``` with public ```Validation.extendErrors``` method to configure rule, hint message and error className.
 
 Here is huge example below with many features used.
@@ -126,10 +127,6 @@ There is also optional prop ```onError``` callback. It would be called on valida
 
 <b>Example</b>
 ```javascript
-validator.extend('isRequired', function(str) {
-    return Boolean(validator.trim(str));
-});
-
 <Validation.Input
     name='my-input'
     invalidClassName='ui-error'

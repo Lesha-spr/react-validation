@@ -51,6 +51,7 @@ Validation.extendErrors({
     },
     isEmail: {
         className: 'ui-input_state_email-pattern-failed',
+        // validator already has strong email-pattern, so we don't have to extend it by custom
         message: 'should be email'
     }
 });

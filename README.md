@@ -24,8 +24,8 @@ npm install react-validation
 
 # Example usage
 
-Before use you should extend ```validator``` to provide your own rules. Please check <a href="https://github.com/chriso/validator.js">validator</a> reference to see all existing rules.
-Additional you can also extend ```Validation``` with public ```Validation.extendErrors``` method to set hint message and error className.
+Please check <a href="https://github.com/chriso/validator.js">validator</a> reference to see all existing rules.
+You can extend ```Validation``` with public ```Validation.extendErrors``` method to configure rule, hint message and error className.
 
 Here is huge example below with many features used.
 
@@ -33,24 +33,21 @@ Here is huge example below with many features used.
 var validator = require('validator');
 var Validation = require('react-validation');
 
-// Extend validator for custom rules
-validator.extend('isRequired', function(str) {
-    return Boolean(validator.trim(str));
-});
-
-validator.extend('isNotValidUser', function(str) {
-    return validator.trim(str) === 'Alex';
-});
-
-// Extend Validation for error classNames and messages
+// Extend Validation with custom rules
 Validation.extendErrors({
     isNotValidUser: {
         className: 'ui-input_state_invalid-user',
-        message: 'not equal to "Alex"'
+        message: 'not equal to "Alex"',
+        rule: function(value) {
+            return validator.trim(value) === 'Alex';
+        }
     },
     isRequired: {
         className: 'ui-input_state_empty',
-        message: 'required'
+        message: 'required',
+        rule: function(value) {
+            return Boolean(validator.trim(value));
+        }
     },
     isEmail: {
         className: 'ui-input_state_email-pattern-failed',

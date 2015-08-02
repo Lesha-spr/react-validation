@@ -2,6 +2,7 @@ var React = require('react');
 var validator = require('validator');
 var isObject = require('is-object');
 var isArray = require('is-array');
+var isFunction = require('is-function');
 var includes = require('lodash.includes');
 var noop = require('lodash.noop');
 var objectAssign = require('object-assign');
@@ -105,7 +106,8 @@ Validation.Form = React.createClass({displayName: "Form",
                     break;
                 }
             } catch (error) {
-                console.warn('You probably didn\'t specified (extended) validator for ' + validation.rule + ' rule');
+                console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
+                'See Validation.extendErrors public method.');
             }
         }
 
@@ -498,6 +500,14 @@ Validation.Button = React.createClass({displayName: "Button",
  */
 Validation.extendErrors = function(obj) {
     objectAssign(errors, obj);
+
+    Object.keys(errors).forEach(function(key) {
+        if (errors[key].rule && isFunction(errors[key].rule)) {
+            validator.extend(key, function(str) {
+                return errors[key].rule(str);
+            });
+        }
+    });
 };
 
 module.exports = Validation;

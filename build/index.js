@@ -66,17 +66,15 @@ Validation.Form = React.createClass({displayName: "Form",
         );
     },
 
-    _getValidationModel: function(component, callback) {
+    _getValidationValue: function(component, callback) {
         var isCheckbox = component.props.type === 'checkbox';
-        var isBlocker = component.props.blocking;
         var value = validator.trim(component.props.value);
-        var model = isBlocker ? this._blockers : this._validations;
 
         if (isCheckbox && !component.props.checked) {
             value = '';
         }
 
-        return callback(value, model);
+        return callback.call(this, value);
     },
 
     /**
@@ -246,15 +244,20 @@ Validation.Form = React.createClass({displayName: "Form",
     },
 
     _registerControl: function(component) {
-        this._getValidationModel(component, function(value, model) {
-            model[component.props.name] = Boolean(value);
+        this._getValidationValue(component, function(value) {
+            if (component.props.blocking) {
+                this._blockers[component.props.name] = Boolean(value);
+            }
+
+            if (component.props.validations) {
+                this._validations[component.props.name] = Boolean(value);
+            }
         });
     },
 
     _unregisterControl: function(component) {
-        this._getValidationModel(component, function(value, model) {
-            delete model[component.props.name];
-        });
+        delete this._blockers[component.props.name];
+        delete this._validations[component.props.name];
     }
 });
 
@@ -353,7 +356,7 @@ Validation.Input = React.createClass({displayName: "Input",
 
         this.setState({
             isChanged: value !== this.state.value,
-            isUsed: this.state.isUsed || event && !isEventPassed,
+            isUsed: this.state.isUsed || (!event || !isEventPassed),
             value: value,
             checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
         }, function() {

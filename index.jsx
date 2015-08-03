@@ -60,7 +60,7 @@ Validation.Form = React.createClass({
 
     render: function() {
         return (
-            <form onSubmit={this.props.onSubmit || noop}>
+            <form {...this.props}>
                 {this._recursiveCloneChildren(this.props.children, 0)}
             </form>
         );

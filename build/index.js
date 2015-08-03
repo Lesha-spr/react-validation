@@ -60,7 +60,7 @@ Validation.Form = React.createClass({displayName: "Form",
 
     render: function() {
         return (
-            React.createElement("form", {onSubmit: this.props.onSubmit || noop}, 
+            React.createElement("form", React.__spread({},  this.props), 
                 this._recursiveCloneChildren(this.props.children, 0)
             )
         );

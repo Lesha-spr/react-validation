@@ -245,11 +245,11 @@ Validation.Form = React.createClass({
 
     _registerControl: function(component) {
         this._getValidationValue(component, function(value) {
-            if (component.props.blocking) {
+            if (component.props._blocking) {
                 this._blockers[component.props.name] = Boolean(value);
             }
 
-            if (component.props.validations) {
+            if (component.props._validate) {
                 this._validations[component.props.name] = Boolean(value);
             }
         });

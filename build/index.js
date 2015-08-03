@@ -352,8 +352,8 @@ Validation.Input = React.createClass({displayName: "Input",
         }
 
         this.setState({
-            isChanged: true,
-            isUsed: isEventPassed || !event,
+            isChanged: value !== this.state.value,
+            isUsed: this.state.isUsed || event && !isEventPassed,
             value: value,
             checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
         }, function() {

@@ -1,47 +1,7 @@
 var React = require('react');
-var validator = require('validator');
-var Validation = require('./build');
+require('./src/extend-validation')();
+var Login = require('./src/Login');
+var Registration = require('./src/Registration');
 
-Validation.extendErrors({
-    isRequired: {
-        message: 'required',
-        rule: function(value) {
-            return Boolean(validator.trim(value));
-        }
-    },
-    isEmail: {
-        className: 'ui-input_state_email-pattern-failed',
-        message: 'should be email'
-    }
-});
-
-var Login = React.createClass({
-    render: function() {
-        return (
-            <Validation.Form>
-                <label>
-                    Email
-                    <Validation.Input name='email' validations={[
-                        {
-                            rule: 'isRequired'
-                        },
-                        {
-                            rule: 'isEmail'
-                        }
-                    ]} />
-                </label>
-                <label>
-                    Password
-                    <Validation.Input name='password' type='password' validations={[
-                        {
-                            rule: 'isRequired'
-                        }
-                    ]} />
-                </label>
-                <Validation.Button type='submit' value='login' />
-            </Validation.Form>
-        );
-    }
-});
-
-React.render(<Login/>, document.body);
+React.render(<Login/>, document.getElementById('login'));
+React.render(<Registration/>, document.getElementById('registration'));

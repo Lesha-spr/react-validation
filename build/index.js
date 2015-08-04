@@ -21,16 +21,67 @@ var errors = {
 
 /**
  * Mounting mixin to register/unregister controls with Component's lifecycle
- * @type {{componentWillMount: Function, componentWillUnmount: Function}}
+ * @type {{componentWillMount: Function, componentWillUnmount: Function, _onChange: Function, showError: Function, hideError: Function}}
  * @private
  */
-var _mounting = {
+var sharedMixin = {
     componentWillMount: function() {
         (this.props._registerControl || noop)(this);
     },
 
     componentWillUnmount: function() {
         (this.props._unregisterControl || noop)(this);
+    },
+
+    /**
+     * Change handler
+     * We need this method to avoid async problem with React's setState
+     * @param event {Event} event object
+     * @private
+     */
+    _onChange: function(event) {
+        var value = event.currentTarget.value;
+
+        this.setValue(value, event);
+    },
+
+    /**
+     * Public method to show errors
+     * Useful with async validation
+     * @param message {String} message to show
+     * @param additionalClassName {String} className to add
+     */
+    showError: function(message, additionalClassName) {
+        var className = {};
+
+        if (additionalClassName) {
+            className[additionalClassName] = true;
+        }
+
+        className[this.props.className] = true;
+        className[this.props.invalidClassName] = true;
+
+        this.setState({
+            isValid: false,
+            isUsed: true,
+            isChanged: true,
+            className: classNames(className),
+            errorMessage: message || null
+        });
+    },
+
+    /**
+     * Public method to hide errors
+     */
+    hideError: function() {
+        var className = {};
+
+        className[this.props.className] = true;
+
+        this.setState({
+            className: classNames(className),
+            errorMessage: null
+        });
     }
 };
 
@@ -266,7 +317,7 @@ Validation.Form = React.createClass({displayName: "Form",
  * It is a common component and contains inputs, checkboxes and radios
  */
 Validation.Input = React.createClass({displayName: "Input",
-    mixins: [_mounting],
+    mixins: [sharedMixin],
 
     propTypes: {
         name: React.PropTypes.string.isRequired,
@@ -303,43 +354,6 @@ Validation.Input = React.createClass({displayName: "Input",
             isChanged: this.isCheckbox,
             errorMessage: null
         }
-    },
-
-    /**
-     * Public method to show errors
-     * Useful with async validation
-     * @param message {String} message to show
-     * @param additionalClassName {String} className to add
-     */
-    showError: function(message, additionalClassName) {
-        var className = {};
-
-        if (additionalClassName) {
-            className[additionalClassName] = true;
-        }
-
-        className[this.props.className] = true;
-        className[this.props.invalidClassName] = true;
-
-        this.setState({
-            isValid: false,
-            isUsed: true,
-            isChanged: true,
-            className: classNames(className),
-            errorMessage: message || null
-        });
-    },
-
-    /**
-     * Change handler
-     * We need this method to avoid async problem with React's setState
-     * @param event {Event} event object
-     * @private
-     */
-    _onChange: function(event) {
-        var value = event.currentTarget.value;
-
-        this.setValue(value, event);
     },
 
     /**
@@ -398,7 +412,7 @@ Validation.Input = React.createClass({displayName: "Input",
  * But have some specific such isUsed and isChanged flags are true with init
  */
 Validation.Select = React.createClass({displayName: "Select",
-    mixins: [_mounting],
+    mixins: [sharedMixin],
 
     propTypes: {
         name: React.PropTypes.string.isRequired
@@ -418,18 +432,6 @@ Validation.Select = React.createClass({displayName: "Select",
             isUsed: true,
             isChanged: true
         };
-    },
-
-    /**
-     * Change handler
-     * We need this method to avoid async problem with React's setState
-     * @param event {Event} event object
-     * @private
-     */
-    _onChange: function(event) {
-        var value = event.currentTarget.value;
-
-        this.setValue(value, event);
     },
 
     /**

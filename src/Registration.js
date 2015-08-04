@@ -2,10 +2,12 @@ var React = require('react');
 var Validation = require('./../build');
 
 var Registration = React.createClass({
+    // It's just for demo
+    // You probably should write more 'ok' checker
     checkEqual: function() {
         var password = this.refs.password;
         var passwordConfirm = this.refs.passwordConfirm;
-        var hasValue = Boolean(password.state.value) && Boolean(passwordConfirm.state.value);
+        var hasValue = password.state.value && passwordConfirm.state.value;
 
         if (hasValue) {
             if (password.state.value === passwordConfirm.state.value) {

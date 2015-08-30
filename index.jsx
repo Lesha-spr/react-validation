@@ -20,7 +20,7 @@ var errors = {
 };
 
 /**
- * Mounting mixin to register/unregister controls with Component's lifecycle
+ * Shared mixin to register/unregister controls with Component's lifecycle
  * @type {{componentWillMount: Function, componentWillUnmount: Function, _onChange: Function, showError: Function, hideError: Function}}
  * @private
  */

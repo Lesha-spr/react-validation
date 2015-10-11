@@ -6,6 +6,8 @@ It is not easy to validate forms with React. The reason is one-way data flow sty
 In this case we can't affect forms from the inputs in easy way.
 React-validation provides several components which are 'connected' to form via input's method attached by Form component.
 
+<h3><a href="http://lesha-spr.github.io/react-validation/">DEMO</a></h3>
+
 It is just a validation and doesn't provide any model or something similar. You can use FormData or something like <a href="https://www.npmjs.com/package/form-serialize">form-serialize</a> to get form data.
 
 <b>Be aware to always pass ```name``` prop. It is required.</b>
@@ -199,7 +201,7 @@ Button is connected to form via validations. It's disabled when invalid input oc
 
 # Components API
 
-Controlled components (Input, Select) has ```setValue``` and ```showError``` methods.
+Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError``` methods.
 
 <b>Example</b>
 
@@ -238,3 +240,5 @@ The example above shows how to set values to Components.
 
 ```message``` - custom message to show in hint.
 ```additionalClassName``` - custom className to add to element.
+
+```ref.hideError()```.

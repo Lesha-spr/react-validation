@@ -20,7 +20,7 @@ var errors = {
 };
 
 /**
- * Mounting mixin to register/unregister controls with Component's lifecycle
+ * Shared mixin to register/unregister controls with Component's lifecycle
  * @type {{componentWillMount: Function, componentWillUnmount: Function, _onChange: Function, showError: Function, hideError: Function}}
  * @private
  */
@@ -369,7 +369,7 @@ Validation.Input = React.createClass({displayName: "Input",
         }
 
         this.setState({
-            isChanged: value !== this.state.value,
+            isChanged: (value !== this.state.value) || (value !== this.state.lastValue),
             isUsed: this.state.isUsed || !event,
             value: value,
             checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
@@ -387,7 +387,8 @@ Validation.Input = React.createClass({displayName: "Input",
      */
     _onBlur: function(event) {
         this.setState({
-            isUsed: true
+            isUsed: true,
+            lastValue: event.currentTarget.value
         }, function() {
             (this.props._validate || noop)(this);
             (this.props.onBlur || noop)(event);

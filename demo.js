@@ -1,7 +1,8 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 require('./src/extend-validation')();
 var Login = require('./src/Login');
 var Registration = require('./src/Registration');
 
-React.render(<Login/>, document.getElementById('login'));
-React.render(<Registration/>, document.getElementById('registration'));
+ReactDOM.render(<Login/>, document.getElementById('login'));
+ReactDOM.render(<Registration/>, document.getElementById('registration'));

@@ -366,6 +366,8 @@ Validation.Input = React.createClass({
             value = !this.state.checked ? this.props.value : '';
         }
 
+        var eventClone = objectAssign({}, event);
+
         this.setState({
             isChanged: (value !== this.state.value) || (value !== this.state.lastValue),
             isUsed: this.state.isUsed || !event,
@@ -374,7 +376,7 @@ Validation.Input = React.createClass({
         }, function() {
             (this.props._blocking || noop)(this);
             (this.props._validate || noop)(this);
-            (this.props.onChange || noop)(isEventPassed ? event : undefined);
+            (this.props.onChange || noop)(isEventPassed ? eventClone : undefined);
         });
     },
 

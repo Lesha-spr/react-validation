@@ -21,7 +21,7 @@ var errors = {
 
 /**
  * Shared mixin to register/unregister controls with Component's lifecycle
- * @type {{componentWillMount: Function, componentWillUnmount: Function, _onChange: Function, showError: Function, hideError: Function}}
+ * @type {{componentWillMount: Function, componentWillUnmount: Function, _handleChange: Function, showError: Function, hideError: Function}}
  * @private
  */
 var sharedMixin = {
@@ -39,7 +39,7 @@ var sharedMixin = {
      * @param event {Event} event object
      * @private
      */
-    _onChange: function(event) {
+    _handleChange: function(event) {
         var value = event.currentTarget.value;
 
         this.setValue(value, event);
@@ -107,14 +107,6 @@ Validation.Form = React.createClass({
     componentDidMount: function() {
         this._toggleButtons(this._submitRefs, this._validations);
         this._toggleButtons(this._blockingRefs, this._blockers);
-    },
-
-    render: function() {
-        return (
-            <form {...this.props}>
-                {this._recursiveCloneChildren(this.props.children, 0)}
-            </form>
-        );
     },
 
     _getValidationValue: function(component, callback) {
@@ -309,6 +301,12 @@ Validation.Form = React.createClass({
     _unregisterControl: function(component) {
         delete this._blockers[component.props.name];
         delete this._validations[component.props.name];
+    },
+
+    render: function() {
+        return <form {...this.props}>
+            {this._recursiveCloneChildren(this.props.children, 0)}
+        </form>;
     }
 });
 
@@ -385,7 +383,7 @@ Validation.Input = React.createClass({
      * @param event {Event} event object
      * @private
      */
-    _onBlur: function(event) {
+    _handleBlur: function(event) {
         this.setState({
             isUsed: true,
             lastValue: event.currentTarget.value
@@ -398,12 +396,10 @@ Validation.Input = React.createClass({
     render: function() {
         // TODO: rework hint appearance
 
-        return (
-            <div>
-                <input {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._onChange} onBlur={this._onBlur}/>
+        return <div>
+                <input {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>
                 <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-            </div>
-        );
+            </div>;
     }
 });
 
@@ -454,14 +450,12 @@ Validation.Select = React.createClass({
     },
 
     render: function() {
-        return (
-            <div>
-                <select {...this.props} className={this.state.className} onChange={this._onChange} value={this.state.value}>
+        return <div>
+                <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
                     {this.props.children}
                 </select>
                 <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-            </div>
-        );
+            </div>;
     }
 });
 
@@ -494,9 +488,7 @@ Validation.Button = React.createClass({
         className = classNames(className);
 
         // NOTE: Disabled state would be override by passing 'disabled' prop
-        return (
-            <input disabled={this.state.isDisabled} {...this.props} className={className}/>
-        );
+        return <input disabled={this.state.isDisabled} {...this.props} className={className}/>;
     }
 });
 

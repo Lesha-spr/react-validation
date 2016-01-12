@@ -54,6 +54,11 @@ var Registration = React.createClass({
                             rule: 'isRequired'
                         }
                     ]} />
+                <Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
+                    <option value=''>Choose your City</option>
+                    <option value='Kyiv'>Kyiv</option>
+                    <option value='London'>London</option>
+                </Validation.Select>
                 <Validation.Input placeholder='password' ref='password' type='password' onBlur={this.checkEqual} onChange={this.checkEqual} name='password' validations={[
                         {
                             rule: 'isRequired'

@@ -148,7 +148,7 @@ Validation.Form = React.createClass({
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                'See Validation.extendErrors public method.');
+                    'See Validation.extendErrors public method.');
             }
         }
 
@@ -319,16 +319,12 @@ Validation.Input = React.createClass({
 
     propTypes: {
         name: React.PropTypes.string.isRequired,
-        type: React.PropTypes.string,
-        placeholder: React.PropTypes.oneOfType([
-            React.PropTypes.string, React.PropTypes.number
-        ])
+        type: React.PropTypes.string
     },
 
     getDefaultProps: function() {
         return {
             type: 'text',
-            placeholder: 'placeholder',
             className: 'ui-input',
             invalidClassName: errors.defaultInvalidClassName
         }
@@ -394,12 +390,26 @@ Validation.Input = React.createClass({
     },
 
     render: function() {
+        var input;
+        var props;
+
+        if (this.props.wrapper) {
+            try {
+                props = objectAssign({}, this.props.wrapper.props, this.props);
+
+                input = <this.props.wrapper.component {...props} className={this.state.className} checked={this.state.checked} onChange={this._handleChange} onBlur={this._handleBlur}/>;
+            } catch(e) {
+                console.log(e);
+            }
+        } else {
+            input = <input {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>;
+        }
         // TODO: rework hint appearance
 
         return <div>
-                <input {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>
-                <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-            </div>;
+            {input}
+            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+        </div>;
     }
 });
 
@@ -451,11 +461,11 @@ Validation.Select = React.createClass({
 
     render: function() {
         return <div>
-                <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
-                    {this.props.children}
-                </select>
-                <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-            </div>;
+            <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
+                {this.props.children}
+            </select>
+            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+        </div>;
     }
 });
 

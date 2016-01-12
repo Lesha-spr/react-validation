@@ -1,5 +1,6 @@
 var React = require('react');
 var Validation = require('./../build');
+var MaskedInput = require('react-maskedinput');
 
 var Registration = React.createClass({
     // It's just for demo
@@ -46,6 +47,11 @@ var Registration = React.createClass({
                         },
                         {
                             rule: 'isEmail'
+                        }
+                    ]} />
+                <Validation.Input wrapper={{component: MaskedInput, props: {mask: '11/11/1111'}}} name='birthday' onChange={function(event) {console.log(event.target.value)}} validations={[
+                        {
+                            rule: 'isRequired'
                         }
                     ]} />
                 <Validation.Input placeholder='password' ref='password' type='password' onBlur={this.checkEqual} onChange={this.checkEqual} name='password' validations={[

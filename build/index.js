@@ -319,16 +319,12 @@ Validation.Input = React.createClass({displayName: "Input",
 
     propTypes: {
         name: React.PropTypes.string.isRequired,
-        type: React.PropTypes.string,
-        placeholder: React.PropTypes.oneOfType([
-            React.PropTypes.string, React.PropTypes.number
-        ])
+        type: React.PropTypes.string
     },
 
     getDefaultProps: function() {
         return {
             type: 'text',
-            placeholder: 'placeholder',
             className: 'ui-input',
             invalidClassName: errors.defaultInvalidClassName
         }
@@ -394,10 +390,24 @@ Validation.Input = React.createClass({displayName: "Input",
     },
 
     render: function() {
+        var input;
+        var props;
+
+        if (this.props.wrapper) {
+            try {
+                props = objectAssign({}, this.props.wrapper.props, this.props);
+
+                input = React.createElement(this.props.wrapper.component, React.__spread({},  props, {className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur}));
+            } catch(e) {
+                console.log(e);
+            }
+        } else {
+            input = React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur}));
+        }
         // TODO: rework hint appearance
 
         return React.createElement("div", null, 
-                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur})), 
+                input, 
                 React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
             );
     }

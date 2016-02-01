@@ -35,6 +35,8 @@ Here is huge example below with many features used.
 ```javascript
 var validator = require('validator');
 var Validation = require('react-validation');
+// You can use Validation Input component with some other wrappers around
+var MaskedInput = require('react-maskedinput');
 
 // Extend Validation with custom rules
 Validation.extendErrors({
@@ -85,6 +87,12 @@ var Form = React.createClass({
                         name='username'
                         type='text'/>
                 </label>
+                // Passing wrapper prop will extra wrap the input with passed Component and it's props
+                <Validation.Input wrapper={{component: MaskedInput, props: {mask: '11/11/1111'}}} name='birthday' onChange={function(event) {console.log(event.target.value)}} validations={[
+                    {
+                        rule: 'isRequired'
+                    }
+                ]} />
                 <Validation.Input
                     blocking='input'
                     className='ui-input'

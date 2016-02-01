@@ -166,7 +166,7 @@ Validation.Form = React.createClass({
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                'See Validation.extendErrors public method.');
+                    'See Validation.extendErrors public method.');
             }
         }
 
@@ -443,6 +443,9 @@ Validation.Input = React.createClass({
                 {input}
                 <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
             </div>;
+            {input}
+            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+        </div>;
     }
 });
 
@@ -494,11 +497,11 @@ Validation.Select = React.createClass({
 
     render: function() {
         return <div>
-                <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
-                    {this.props.children}
-                </select>
-                <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-            </div>;
+            <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
+                {this.props.children}
+            </select>
+            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+        </div>;
     }
 });
 

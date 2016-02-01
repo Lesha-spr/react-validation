@@ -3,24 +3,6 @@ var Validation = require('./../build');
 var MaskedInput = require('react-maskedinput');
 
 var Registration = React.createClass({
-    // It's just for demo
-    // You probably should write more 'ok' checker
-    checkEqual: function() {
-        var password = this.refs.password;
-        var passwordConfirm = this.refs.passwordConfirm;
-        var hasValue = password.state.value && passwordConfirm.state.value;
-
-        if (hasValue) {
-            if (password.state.value === passwordConfirm.state.value) {
-                password.hideError();
-                passwordConfirm.hideError();
-            } else {
-                password.showError('Passwords should be equal');
-                passwordConfirm.showError('Passwords should be equal');
-            }
-        }
-    },
-
     render: function() {
         return (
             <Validation.Form>
@@ -59,14 +41,22 @@ var Registration = React.createClass({
                     <option value='Kyiv'>Kyiv</option>
                     <option value='London'>London</option>
                 </Validation.Select>
-                <Validation.Input placeholder='password' ref='password' type='password' onBlur={this.checkEqual} onChange={this.checkEqual} name='password' validations={[
+                <Validation.Input placeholder='password' ref='password' type='password' name='password' validations={[
                         {
                             rule: 'isRequired'
+                        },
+                        {
+                            rule: 'isEqualToNamedInput',
+                            name: 'password-confirm'
                         }
                     ]} />
-                <Validation.Input placeholder='password confirmation' ref='passwordConfirm' type='password' onBlur={this.checkEqual} onChange={this.checkEqual} name='password-confirm' validations={[
+                <Validation.Input placeholder='password confirmation' ref='passwordConfirm' type='password' name='password-confirm' validations={[
                         {
                             rule: 'isRequired'
+                        },
+                        {
+                            rule: 'isEqualToNamedInput',
+                            name: 'password'
                         }
                     ]} />
                 <br/>

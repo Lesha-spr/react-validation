@@ -16,6 +16,12 @@ module.exports = function() {
 
         isAlpha: {
             message: 'only letters are valid'
+        },
+        isEqualToNamedInput: {
+            message: 'should be equal',
+            rule: function(value, comparedValue) {
+                return value === comparedValue;
+            }
         }
     });
 };

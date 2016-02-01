@@ -98,6 +98,7 @@ var Validation = {};
  */
 Validation.Form = React.createClass({displayName: "Form",
     componentWillMount: function() {
+        this._inputs = {};
         this._validations = {};
         this._blockers = {};
         this._submitRefs = [];
@@ -123,32 +124,49 @@ Validation.Form = React.createClass({displayName: "Form",
     /**
      * Method to validate component value
      * @param component {Object} React component
+     * @param dontValidateBoundedInput {Boolean}
      * @private
      */
-    _validate: function(component) {
+    _validate: function(component, dontValidateBoundedInput) {
+        // TODO: refactor whole method
         var validations = component.props.validations;
         var state = {
             isValid: true
         };
         var className = {};
         var errorMessage = null;
+        var boundInput = null;
 
         className[component.props.className] = true;
 
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
+            var boundValue;
+            boundInput = this._inputs[validation.name];
+
+            if (boundInput) {
+                boundValue = boundInput.state.value;
+            }
 
             try {
-                if (!validator[validation.rule](component.state.value)) {
-                    state.isValid = false;
-                    setErrorState(validation);
-                    (component.props.onError || noop)(validation);
+                if (boundInput && !dontValidateBoundedInput) {
+                    this._validate(boundInput, true);
+                }
 
-                    break;
+                if (boundInput) {
+                    if (boundInput.state.isUsed && boundInput.state.isChanged) {
+                        if (!validate(validation, boundValue)) {
+                            break;
+                        }
+                    }
+                } else {
+                    if (!validate(validation, boundValue)) {
+                        break;
+                    }
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                'See Validation.extendErrors public method.');
+                    'See Validation.extendErrors public method.');
             }
         }
 
@@ -165,6 +183,20 @@ Validation.Form = React.createClass({displayName: "Form",
 
         this._validations[component.props.name] = state.isValid;
         this._toggleButtons(this._submitRefs, this._validations);
+
+        function validate(validation, boundValue) {
+            var isValid = true;
+
+            if (!validator[validation.rule](component.state.value, boundValue)) {
+                state.isValid = false;
+                setErrorState(validation);
+                (component.props.onError || noop)(validation);
+
+                isValid = false;
+            }
+
+            return isValid;
+        }
 
         function setErrorState(validation) {
             var hasRule = errors[validation.rule];
@@ -293,6 +325,7 @@ Validation.Form = React.createClass({displayName: "Form",
             }
 
             if (component.props._validate) {
+                this._inputs[component.props.name] = component;
                 this._validations[component.props.name] = Boolean(value);
             }
         });
@@ -319,16 +352,12 @@ Validation.Input = React.createClass({displayName: "Input",
 
     propTypes: {
         name: React.PropTypes.string.isRequired,
-        type: React.PropTypes.string,
-        placeholder: React.PropTypes.oneOfType([
-            React.PropTypes.string, React.PropTypes.number
-        ])
+        type: React.PropTypes.string
     },
 
     getDefaultProps: function() {
         return {
             type: 'text',
-            placeholder: 'placeholder',
             className: 'ui-input',
             invalidClassName: errors.defaultInvalidClassName
         }
@@ -394,12 +423,26 @@ Validation.Input = React.createClass({displayName: "Input",
     },
 
     render: function() {
+        var input;
+        var props;
+
+        if (this.props.wrapper) {
+            try {
+                props = objectAssign({}, this.props.wrapper.props, this.props);
+
+                input = React.createElement(this.props.wrapper.component, React.__spread({},  props, {className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur}));
+            } catch(e) {
+                console.log(e);
+            }
+        } else {
+            input = React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur}));
+        }
         // TODO: rework hint appearance
 
         return React.createElement("div", null, 
-                React.createElement("input", React.__spread({},  this.props, {className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur})), 
-                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
-            );
+            input, 
+            React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
+        );
     }
 });
 
@@ -451,11 +494,11 @@ Validation.Select = React.createClass({displayName: "Select",
 
     render: function() {
         return React.createElement("div", null, 
-                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
-                    this.props.children
-                ), 
-                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
-            );
+            React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
+                this.props.children
+            ), 
+            React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
+        );
     }
 });
 
@@ -501,8 +544,8 @@ Validation.extendErrors = function(obj) {
 
     Object.keys(errors).forEach(function(key) {
         if (errors[key].rule && isFunction(errors[key].rule)) {
-            validator.extend(key, function(str) {
-                return errors[key].rule(str);
+            validator.extend(key, function(value, comparedValue) {
+                return errors[key].rule(value, comparedValue);
             });
         }
     });

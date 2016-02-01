@@ -98,6 +98,7 @@ var Validation = {};
  */
 Validation.Form = React.createClass({
     componentWillMount: function() {
+        this._inputs = {};
         this._validations = {};
         this._blockers = {};
         this._submitRefs = [];
@@ -123,28 +124,45 @@ Validation.Form = React.createClass({
     /**
      * Method to validate component value
      * @param component {Object} React component
+     * @param dontValidateBoundedInput {Boolean}
      * @private
      */
-    _validate: function(component) {
+    _validate: function(component, dontValidateBoundedInput) {
+        // TODO: refactor whole method
         var validations = component.props.validations;
         var state = {
             isValid: true
         };
         var className = {};
         var errorMessage = null;
+        var boundInput = null;
 
         className[component.props.className] = true;
 
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
+            var boundValue;
+            boundInput = this._inputs[validation.name];
+
+            if (boundInput) {
+                boundValue = boundInput.state.value;
+            }
 
             try {
-                if (!validator[validation.rule](component.state.value)) {
-                    state.isValid = false;
-                    setErrorState(validation);
-                    (component.props.onError || noop)(validation);
+                if (boundInput && !dontValidateBoundedInput) {
+                    this._validate(boundInput, true);
+                }
 
-                    break;
+                if (boundInput) {
+                    if (boundInput.state.isUsed && boundInput.state.isChanged) {
+                        if (!validate(validation, boundValue)) {
+                            break;
+                        }
+                    }
+                } else {
+                    if (!validate(validation, boundValue)) {
+                        break;
+                    }
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
@@ -165,6 +183,20 @@ Validation.Form = React.createClass({
 
         this._validations[component.props.name] = state.isValid;
         this._toggleButtons(this._submitRefs, this._validations);
+
+        function validate(validation, boundValue) {
+            var isValid = true;
+
+            if (!validator[validation.rule](component.state.value, boundValue)) {
+                state.isValid = false;
+                setErrorState(validation);
+                (component.props.onError || noop)(validation);
+
+                isValid = false;
+            }
+
+            return isValid;
+        }
 
         function setErrorState(validation) {
             var hasRule = errors[validation.rule];
@@ -293,6 +325,7 @@ Validation.Form = React.createClass({
             }
 
             if (component.props._validate) {
+                this._inputs[component.props.name] = component;
                 this._validations[component.props.name] = Boolean(value);
             }
         });
@@ -511,8 +544,8 @@ Validation.extendErrors = function(obj) {
 
     Object.keys(errors).forEach(function(key) {
         if (errors[key].rule && isFunction(errors[key].rule)) {
-            validator.extend(key, function(str) {
-                return errors[key].rule(str);
+            validator.extend(key, function(value, comparedValue) {
+                return errors[key].rule(value, comparedValue);
             });
         }
     });

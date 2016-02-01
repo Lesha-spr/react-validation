@@ -128,6 +128,7 @@ Validation.Form = React.createClass({displayName: "Form",
      * @private
      */
     _validate: function(component, dontValidateBoundedInput) {
+        // TODO: refactor whole method
         var validations = component.props.validations;
         var state = {
             isValid: true
@@ -165,7 +166,7 @@ Validation.Form = React.createClass({displayName: "Form",
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                'See Validation.extendErrors public method.');
+                    'See Validation.extendErrors public method.');
             }
         }
 
@@ -493,11 +494,11 @@ Validation.Select = React.createClass({displayName: "Select",
 
     render: function() {
         return React.createElement("div", null, 
-                React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
-                    this.props.children
-                ), 
-                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
-            );
+            React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
+                this.props.children
+            ), 
+            React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
+        );
     }
 });
 

@@ -443,9 +443,6 @@ Validation.Input = React.createClass({
                 {input}
                 <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
             </div>;
-            {input}
-            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
-        </div>;
     }
 });
 

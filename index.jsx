@@ -204,7 +204,7 @@ Validation.Form = React.createClass({
 
             className[component.props.invalidClassName] = true;
             className[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
-            errorMessage = validation.errorMessage || hasRule ? errors[validation.rule].message : errors.defaultMessage;
+            errorMessage = validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
         }
     },
 

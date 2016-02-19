@@ -1,12 +1,11 @@
 module.exports = function() {
     var Validation = require('./../build');
-    var validator = require('validator');
 
     Validation.extendErrors({
         isRequired: {
             message: 'required',
             rule: function(value) {
-                return Boolean(validator.trim(value));
+                return Boolean(Validation.validator.trim(value));
             }
         },
         isEmail: {

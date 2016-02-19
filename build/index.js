@@ -535,6 +535,8 @@ Validation.Button = React.createClass({displayName: "Button",
     }
 });
 
+Validation.validator = validator;
+
 /**
  * Public method to extend default error object
  * @param obj {Object}
@@ -544,6 +546,8 @@ Validation.extendErrors = function(obj) {
 
     Object.keys(errors).forEach(function(key) {
         if (errors[key].rule && isFunction(errors[key].rule)) {
+            var validator = Validation.validator || validator;
+
             validator.extend(key, function(value, comparedValue) {
                 return errors[key].rule(value, comparedValue);
             });

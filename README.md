@@ -33,7 +33,6 @@ You can extend ```Validation``` with public ```Validation.extendErrors``` method
 Here is huge example below with many features used.
 
 ```javascript
-var validator = require('validator');
 var Validation = require('react-validation');
 // You can use Validation Input component with some other wrappers around
 var MaskedInput = require('react-maskedinput');
@@ -44,14 +43,15 @@ Validation.extendErrors({
         className: 'ui-input_state_invalid-user',
         message: 'not equal to "Alex"',
         rule: function(value) {
-            return validator.trim(value) === 'Alex';
+            // Validation provides ref to 'validator' module, so you don't need to install it separately
+            return Validation.validator.trim(value) === 'Alex';
         }
     },
     isRequired: {
         className: 'ui-input_state_empty',
         message: 'required',
         rule: function(value) {
-            return Boolean(validator.trim(value));
+            return Boolean(Validation.validator.trim(value));
         }
     },
     isEmail: {

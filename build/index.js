@@ -535,6 +535,8 @@ Validation.Button = React.createClass({displayName: "Button",
     }
 });
 
+Validation.validator = validator;
+
 /**
  * Public method to extend default error object
  * @param obj {Object}

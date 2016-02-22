@@ -403,7 +403,7 @@ Validation.Input = React.createClass({
         }, function() {
             (this.props._blocking || noop)(this);
             (this.props._validate || noop)(this);
-            (this.props.onChange || noop)(isEventPassed ? event : undefined);
+            (this.props.onChange || noop)(isEventPassed ? event : undefined, value);
         });
     },
 

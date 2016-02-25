@@ -395,6 +395,11 @@ Validation.Input = React.createClass({displayName: "Input",
             value = !this.state.checked ? this.props.value : '';
         }
 
+        if (isEventPassed) {
+          // Persist the event since we will need this event outside this event loop.
+          event.persist();
+        }
+
         this.setState({
             isChanged: (value !== this.state.value) || (value !== this.state.lastValue),
             isUsed: this.state.isUsed || !event,
@@ -483,6 +488,11 @@ Validation.Select = React.createClass({displayName: "Select",
     setValue: function(value, event) {
         var isEventPassed = (event && event.nativeEvent instanceof Event);
 
+        if (isEventPassed) {
+          // Persist the event since we will need this event outside this event loop.
+          event.persist();
+        }
+        
         this.setState({
             value: value
         }, function() {

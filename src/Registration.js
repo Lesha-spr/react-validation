@@ -36,6 +36,14 @@ var Registration = React.createClass({
                             rule: 'isRequired'
                         }
                     ]} />
+                <label>
+                    * I accept the policy
+                    <Validation.Input name='policy' value='true' type='checkbox' validations={[
+                        {
+                            rule: 'isRequired'
+                        }
+                    ]} />
+                </label>
                 <Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
                     <option value=''>Choose your City</option>
                     <option value='Kyiv'>Kyiv</option>

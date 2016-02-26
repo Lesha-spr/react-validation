@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var react = require('gulp-react');
-var watch = require('gulp-watch');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var gutil = require('gulp-util');
@@ -16,28 +15,21 @@ gulp.task('build', function () {
 });
 
 gulp.task('compress', function() {
-    var b = browserify({
-        entries: './demo.js',
-        debug: true,
-        // defining transforms here will avoid crashing your stream
-        transform: [babelify]
-    });
+    var b = browserify('./demo.js').transform('babelify', {presets: ['es2015', 'react']});
 
     return b.bundle()
-        .pipe(source('./bundle.js'))
+        .pipe(source('./demo.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
         // Add transformation tasks to the pipeline here.
         .pipe(uglify())
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('watch', function() {
-    watch('./demo.js', function() {
-        gulp.run(['compress']);
-    });
+    gulp.watch('./demo.js', ['compress']);
 });
 
 gulp.task('default', ['build', 'compress', 'watch']);

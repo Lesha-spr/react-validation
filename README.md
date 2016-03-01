@@ -209,7 +209,61 @@ Button is connected to form via validations. It's disabled when invalid input oc
 
 # Components API
 
-Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError``` methods.
+###Form component has an ```forceValidate``` method.
+
+```ref.forceValidate([,showErrors])``` - returns object with name keys and boolean valid values
+
+```showErrors``` - boolean flag to show errors.
+
+<b>Example</b>
+
+```javascript
+var Subscribe = React.createClass({
+    onSubmit: function(event) {
+        event.preventDefault();
+
+        console.log(this.refs.form.forceValidate(true));
+    },
+
+    render: function() {
+        return (
+            <Validation.Form onSubmit={this.onSubmit} ref='form'>
+                <h2>Subscription form</h2>
+                <label>
+                    Name
+                    <Validation.Input placeholder='' name='firstname' validations={[
+                        {
+                            rule: 'isRequired'
+                        },
+                        {
+                            rule: 'isAlpha'
+                        }
+                    ]} />
+                </label>
+                <label>
+                    Email
+                    <Validation.Input placeholder='' name='email' validations={[
+                        {
+                            rule: 'isRequired'
+                        },
+                        {
+                            rule: 'isEmail'
+                        }
+                    ]} />
+                </label>
+                <label>
+                    Send me all news
+                    <input type='checkbox' name='sendAll' value='1'/>
+                </label>
+                <br/>
+                <button type='submit' value='subscribe'>Subscribe</button>
+            </Validation.Form>
+        );
+    }
+});
+```
+
+###Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError``` methods.
 
 <b>Example</b>
 

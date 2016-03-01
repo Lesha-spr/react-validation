@@ -29,7 +29,7 @@ gulp.task('compress', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('./demo.js', ['compress']);
+    gulp.watch(['./demo.js', './index.jsx', './src/**/*.js'], ['build', 'compress']);
 });
 
 gulp.task('default', ['build', 'compress', 'watch']);

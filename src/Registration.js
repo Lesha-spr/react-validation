@@ -3,9 +3,14 @@ var Validation = require('./../build');
 var MaskedInput = require('react-maskedinput');
 
 var Registration = React.createClass({
+    onSubmit: function(event) {
+        event.preventDefault();
+
+        console.log(this.refs.form.forceValidate(true));
+    },
     render: function() {
         return (
-            <Validation.Form>
+            <Validation.Form onSubmit={this.onSubmit} ref='form'>
                 <h2>Registration form</h2>
                 <Validation.Input placeholder='firstname' name='firstname' validations={[
                         {
@@ -68,7 +73,7 @@ var Registration = React.createClass({
                         }
                     ]} />
                 <br/>
-                <Validation.Button type='submit' value='complete registration' />
+                <button type='submit' value='complete registration'>Submit</button>
             </Validation.Form>
         );
     }

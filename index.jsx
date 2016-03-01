@@ -1,7 +1,6 @@
 var React = require('react');
 var validator = require('validator');
 var isObject = require('is-object');
-var isArray = require('is-array');
 var isFunction = require('is-function');
 var includes = require('lodash.includes');
 var noop = require('lodash.noop');
@@ -125,9 +124,10 @@ Validation.Form = React.createClass({
      * Method to validate component value
      * @param component {Object} React component
      * @param dontValidateBoundedInput {Boolean}
+     * @param forceValidate {Boolean}
      * @private
      */
-    _validate: function(component, dontValidateBoundedInput) {
+    _validate: function(component, dontValidateBoundedInput, forceValidate) {
         // TODO: refactor whole method
         var validations = component.props.validations;
         var state = {
@@ -166,13 +166,13 @@ Validation.Form = React.createClass({
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                    'See Validation.extendErrors public method.');
+                'See Validation.extendErrors public method.');
             }
         }
 
         className = classNames(className);
 
-        if (component.state.isUsed && component.state.isChanged) {
+        if ((component.state.isUsed && component.state.isChanged) || forceValidate) {
             objectAssign(state, {
                 className: className,
                 errorMessage: errorMessage
@@ -288,25 +288,26 @@ Validation.Form = React.createClass({
             }
 
             var childProps = {};
-            var shouldValidate = isArray(child.props.validations) && child.props.validations.length;
+            var shouldValidate = Array.isArray(child.props.validations) && child.props.validations.length;
 
             if (shouldValidate) {
                 childProps._registerControl = this._registerControl;
                 childProps._validate = this._validate;
             }
 
-            if (child.props.type === 'submit') {
+            // TODO: Check this condition
+            if (child.props.type === 'submit' && isFunction(child.type)) {
                 childProps.ref = child.props.ref || child.props.type + $idx;
                 $idx++;
                 this._submitRefs.push(childProps.ref);
             }
 
-            if (child.props.blocking === 'input') {
+            if (child.props.blocking === 'input' && isFunction(child.type)) {
                 childProps._registerControl = this._registerControl;
                 childProps._blocking = this._blocking;
             }
 
-            if (child.props.blocking === 'button') {
+            if (child.props.blocking === 'button' && isFunction(child.type)) {
                 childProps.ref = childProps.ref || child.props.ref || child.props.blocking + $idx;
                 $idx++;
                 this._blockingRefs.push(childProps.ref);
@@ -334,6 +335,16 @@ Validation.Form = React.createClass({
     _unregisterControl: function(component) {
         delete this._blockers[component.props.name];
         delete this._validations[component.props.name];
+    },
+
+    forceValidate: function(showErrors) {
+        var _this = this;
+
+        Object.keys(this._inputs).forEach(function(name) {
+            _this._inputs[name].props._validate(_this._inputs[name], false, showErrors);
+        });
+
+        return objectAssign({}, _this._validations);
     },
 
     render: function() {
@@ -489,10 +500,10 @@ Validation.Select = React.createClass({
         var isEventPassed = (event && event.nativeEvent instanceof Event);
 
         if (isEventPassed) {
-          // Persist the event since we will need this event outside this event loop.
-          event.persist();
+            // Persist the event since we will need this event outside this event loop.
+            event.persist();
         }
-        
+
         this.setState({
             value: value
         }, function() {
@@ -556,6 +567,8 @@ Validation.extendErrors = function(obj) {
 
     Object.keys(errors).forEach(function(key) {
         if (errors[key].rule && isFunction(errors[key].rule)) {
+            var validator = Validation.validator || validator;
+
             validator.extend(key, function(value, comparedValue) {
                 return errors[key].rule(value, comparedValue);
             });

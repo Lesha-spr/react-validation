@@ -371,7 +371,8 @@ Validation.Input = React.createClass({
         return {
             type: 'text',
             className: 'ui-input',
-            invalidClassName: errors.defaultInvalidClassName
+            invalidClassName: errors.defaultInvalidClassName,
+            containerClassName: errors.defaultContainerClassName
         }
     },
 
@@ -456,7 +457,7 @@ Validation.Input = React.createClass({
         }
         // TODO: rework hint appearance
 
-        return <div className={errors.defaultContainerClassName}>
+        return <div className={this.props.containerClassName}>
             {input}
             <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
         </div>;
@@ -478,7 +479,8 @@ Validation.Select = React.createClass({
     getDefaultProps: function() {
         return {
             className: 'ui-select',
-            invalidClassName: errors.defaultInvalidClassName
+            invalidClassName: errors.defaultInvalidClassName,
+            containerClassName: errors.defaultContainerClassName
         }
     },
 
@@ -515,7 +517,7 @@ Validation.Select = React.createClass({
     },
 
     render: function() {
-        return <div className={errors.defaultContainerClassName}>
+        return <div className={this.props.containerClassName}>
             <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
                 {this.props.children}
             </select>

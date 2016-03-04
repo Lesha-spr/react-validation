@@ -15,7 +15,8 @@ var errors = {
     defaultMessage: 'validation error',
     defaultInvalidClassName: 'ui-input_state_invalid',
     defaultDisabledClassName: 'ui-button_state_disabled',
-    defaultHintClassName: 'ui-hint'
+    defaultHintClassName: 'ui-hint',
+    defaultContainerClassName: ''
 };
 
 /**
@@ -455,7 +456,7 @@ Validation.Input = React.createClass({
         }
         // TODO: rework hint appearance
 
-        return <div>
+        return <div className={errors.defaultContainerClassName}>
             {input}
             <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
         </div>;
@@ -514,7 +515,7 @@ Validation.Select = React.createClass({
     },
 
     render: function() {
-        return <div>
+        return <div className={errors.defaultContainerClassName}>
             <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
                 {this.props.children}
             </select>

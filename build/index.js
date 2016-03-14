@@ -15,7 +15,8 @@ var errors = {
     defaultMessage: 'validation error',
     defaultInvalidClassName: 'ui-input_state_invalid',
     defaultDisabledClassName: 'ui-button_state_disabled',
-    defaultHintClassName: 'ui-hint'
+    defaultHintClassName: 'ui-hint',
+    defaultContainerClassName: ''
 };
 
 /**
@@ -166,7 +167,7 @@ Validation.Form = React.createClass({displayName: "Form",
                 }
             } catch (error) {
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
-                    'See Validation.extendErrors public method.');
+                'See Validation.extendErrors public method.');
             }
         }
 
@@ -370,7 +371,8 @@ Validation.Input = React.createClass({displayName: "Input",
         return {
             type: 'text',
             className: 'ui-input',
-            invalidClassName: errors.defaultInvalidClassName
+            invalidClassName: errors.defaultInvalidClassName,
+            containerClassName: errors.defaultContainerClassName
         }
     },
 
@@ -455,10 +457,10 @@ Validation.Input = React.createClass({displayName: "Input",
         }
         // TODO: rework hint appearance
 
-        return React.createElement("div", null, 
-                input, 
-                React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
-            );
+        return React.createElement("div", {className: this.props.containerClassName}, 
+            input, 
+            React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
+        );
     }
 });
 
@@ -477,7 +479,8 @@ Validation.Select = React.createClass({displayName: "Select",
     getDefaultProps: function() {
         return {
             className: 'ui-select',
-            invalidClassName: errors.defaultInvalidClassName
+            invalidClassName: errors.defaultInvalidClassName,
+            containerClassName: errors.defaultContainerClassName
         }
     },
 
@@ -500,10 +503,10 @@ Validation.Select = React.createClass({displayName: "Select",
         var isEventPassed = (event && event.nativeEvent instanceof Event);
 
         if (isEventPassed) {
-          // Persist the event since we will need this event outside this event loop.
-          event.persist();
+            // Persist the event since we will need this event outside this event loop.
+            event.persist();
         }
-        
+
         this.setState({
             value: value
         }, function() {
@@ -514,7 +517,7 @@ Validation.Select = React.createClass({displayName: "Select",
     },
 
     render: function() {
-        return React.createElement("div", null, 
+        return React.createElement("div", {className: this.props.containerClassName}, 
             React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
                 this.props.children
             ), 

@@ -59,7 +59,7 @@ var sharedMixin = {
         }
 
         className[this.props.className] = true;
-        className[this.props.invalidClassName] = true;
+        className[this.props.invalidClassName || errors.defaultInvalidClassName] = true;
 
         this.setState({
             isValid: false,
@@ -203,7 +203,7 @@ Validation.Form = React.createClass({displayName: "Form",
             var hasRule = errors[validation.rule];
             var hasErrorClassName = hasRule && errors[validation.rule].className;
 
-            className[component.props.invalidClassName] = true;
+            className[component.props.invalidClassName || errors.defaultInvalidClassName] = true;
             className[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
             errorMessage = validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
         }
@@ -369,10 +369,7 @@ Validation.Input = React.createClass({displayName: "Input",
 
     getDefaultProps: function() {
         return {
-            type: 'text',
-            className: 'ui-input',
-            invalidClassName: errors.defaultInvalidClassName,
-            containerClassName: errors.defaultContainerClassName
+            type: 'text'
         }
     },
 
@@ -409,8 +406,8 @@ Validation.Input = React.createClass({displayName: "Input",
         }
 
         if (isEventPassed) {
-          // Persist the event since we will need this event outside this event loop.
-          event.persist();
+            // Persist the event since we will need this event outside this event loop.
+            event.persist();
         }
 
         this.setState({
@@ -457,7 +454,7 @@ Validation.Input = React.createClass({displayName: "Input",
         }
         // TODO: rework hint appearance
 
-        return React.createElement("div", {className: this.props.containerClassName}, 
+        return React.createElement("div", {className: this.props.containerClassName || errors.defaultContainerClassName}, 
             input, 
             React.createElement("span", {className: errors.defaultHintClassName}, this.state.errorMessage)
         );
@@ -474,14 +471,6 @@ Validation.Select = React.createClass({displayName: "Select",
 
     propTypes: {
         name: React.PropTypes.string.isRequired
-    },
-
-    getDefaultProps: function() {
-        return {
-            className: 'ui-select',
-            invalidClassName: errors.defaultInvalidClassName,
-            containerClassName: errors.defaultContainerClassName
-        }
     },
 
     getInitialState: function() {
@@ -517,7 +506,7 @@ Validation.Select = React.createClass({displayName: "Select",
     },
 
     render: function() {
-        return React.createElement("div", {className: this.props.containerClassName}, 
+        return React.createElement("div", {className: this.props.containerClassName || errors.defaultContainerClassName}, 
             React.createElement("select", React.__spread({},  this.props, {className: this.state.className, onChange: this._handleChange, value: this.state.value}), 
                 this.props.children
             ), 
@@ -536,9 +525,7 @@ Validation.Button = React.createClass({displayName: "Button",
 
     getDefaultProps: function() {
         return {
-            type: 'submit',
-            className: 'ui-button',
-            disabledClassName: errors.defaultDisabledClassName
+            type: 'submit'
         }
     },
 
@@ -550,8 +537,12 @@ Validation.Button = React.createClass({displayName: "Button",
 
     render: function() {
         var className = {};
-        className[this.props.className] = true;
-        className[this.props.disabledClassName] = this.state.isDisabled;
+
+        if (this.props.className) {
+            className[this.props.className] = true;
+        }
+
+        className[this.props.disabledClassName || errors.defaultDisabledClassName] = this.state.isDisabled;
         className = classNames(className);
 
         // NOTE: Disabled state would be override by passing 'disabled' prop

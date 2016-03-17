@@ -6,6 +6,8 @@ It is not easy to validate forms with React. The reason is one-way data flow sty
 In this case we can't affect forms from the inputs in easy way.
 React-validation provides several components which are 'connected' to form via input's method attached by Form component.
 
+### UPDATE: ```ui-input``` className is no longer setted by default. Please check your render method.
+
 <h3><a href="http://lesha-spr.github.io/react-validation/">DEMO</a></h3>
 
 It is just a validation and doesn't provide any model or something similar. You can use FormData or something like <a href="https://www.npmjs.com/package/form-serialize">form-serialize</a> to get form data.

@@ -14,7 +14,7 @@ var Subscribe = React.createClass({
                 <h2>Subscription form</h2>
                 <label>
                     Name
-                    <Validation.Input placeholder='' name='firstname' validations={[
+                    <Validation.Input className='ui-input' placeholder='' name='firstname' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -25,7 +25,7 @@ var Subscribe = React.createClass({
                 </label>
                 <label>
                     Email
-                    <Validation.Input placeholder='' name='email' validations={[
+                    <Validation.Input className='ui-input' containerClassName='other-custom-container-class-name' placeholder='' name='email' validations={[
                         {
                             rule: 'isRequired'
                         },

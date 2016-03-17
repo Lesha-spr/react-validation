@@ -2,7 +2,12 @@ module.exports = function() {
     var Validation = require('./../build');
 
     Validation.extendErrors({
+        defaultDisabledClassName: 'custom-disabled-class-name',
+        defaultInvalidClassName: 'custom-invalid-class-name',
+        defaultHintClassName: 'custom-hint-class-name',
+        defaultContainerClassName: 'custom-container-class-name',
         isRequired: {
+            className: 'custom-invalid-class-name_required',
             message: 'required',
             rule: function(value) {
                 return Boolean(Validation.validator.trim(value));

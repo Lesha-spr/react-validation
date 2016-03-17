@@ -7,7 +7,7 @@ var Registration = React.createClass({
         return (
             <Validation.Form ref='form'>
                 <h2>Registration form</h2>
-                <Validation.Input placeholder='firstname' name='firstname' validations={[
+                <Validation.Input className='ui-input' placeholder='firstname' name='firstname' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -15,7 +15,7 @@ var Registration = React.createClass({
                             rule: 'isAlpha'
                         }
                     ]} />
-                <Validation.Input placeholder='lastname' name='lastname' validations={[
+                <Validation.Input className='ui-input' placeholder='lastname' name='lastname' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -23,7 +23,7 @@ var Registration = React.createClass({
                             rule: 'isAlpha'
                         }
                     ]} />
-                <Validation.Input placeholder='email' name='email' validations={[
+                <Validation.Input className='ui-input' placeholder='email' name='email' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -31,25 +31,25 @@ var Registration = React.createClass({
                             rule: 'isEmail'
                         }
                     ]} />
-                <Validation.Input wrapper={{component: MaskedInput, props: {mask: '11/11/1111'}}} name='birthday' onChange={function(event) {console.log(event.target.value)}} validations={[
+                <Validation.Input className='ui-input' wrapper={{component: MaskedInput, props: {mask: '11/11/1111'}}} name='birthday' onChange={function(event) {console.log(event.target.value)}} validations={[
                         {
                             rule: 'isRequired'
                         }
                     ]} />
                 <label>
                     * I accept the policy
-                    <Validation.Input name='policy' value='true' type='checkbox' validations={[
+                    <Validation.Input className='ui-input' name='policy' value='true' type='checkbox' validations={[
                         {
                             rule: 'isRequired'
                         }
                     ]} />
                 </label>
-                <Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
+                <Validation.Select className='ui-select' name='city' validations={[{rule: 'isRequired'}]}>
                     <option value=''>Choose your City</option>
                     <option value='Kyiv'>Kyiv</option>
                     <option value='London'>London</option>
                 </Validation.Select>
-                <Validation.Input placeholder='password' ref='password' type='password' name='password' validations={[
+                <Validation.Input className='ui-input' placeholder='password' ref='password' type='password' name='password' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -58,7 +58,7 @@ var Registration = React.createClass({
                             name: 'password-confirm'
                         }
                     ]} />
-                <Validation.Input placeholder='password confirmation' ref='passwordConfirm' type='password' name='password-confirm' validations={[
+                <Validation.Input className='ui-input' placeholder='password confirmation' ref='passwordConfirm' type='password' name='password-confirm' validations={[
                         {
                             rule: 'isRequired'
                         },

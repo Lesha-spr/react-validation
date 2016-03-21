@@ -406,8 +406,8 @@ Validation.Input = React.createClass({
         }
 
         if (isEventPassed) {
-          // Persist the event since we will need this event outside this event loop.
-          event.persist();
+            // Persist the event since we will need this event outside this event loop.
+            event.persist();
         }
 
         this.setState({
@@ -440,6 +440,7 @@ Validation.Input = React.createClass({
     render: function() {
         var input;
         var props;
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
 
         if (this.props.wrapper) {
             try {
@@ -456,7 +457,7 @@ Validation.Input = React.createClass({
 
         return <div className={this.props.containerClassName || errors.defaultContainerClassName}>
             {input}
-            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+            {hint}
         </div>;
     }
 });
@@ -506,11 +507,13 @@ Validation.Select = React.createClass({
     },
 
     render: function() {
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
+
         return <div className={this.props.containerClassName || errors.defaultContainerClassName}>
             <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
                 {this.props.children}
             </select>
-            <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span>
+            {hint}
         </div>;
     }
 });

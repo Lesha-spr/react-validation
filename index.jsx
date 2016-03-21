@@ -440,7 +440,7 @@ Validation.Input = React.createClass({
     render: function() {
         var input;
         var props;
-        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : '';
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
 
         if (this.props.wrapper) {
             try {
@@ -507,7 +507,7 @@ Validation.Select = React.createClass({
     },
 
     render: function() {
-        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : '';
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
 
         return <div className={this.props.containerClassName || errors.defaultContainerClassName}>
             <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>

@@ -187,6 +187,7 @@
 	                boundValue = boundInput.state.value;
 	            }
 
+	            try {
 	                if (boundInput && !dontValidateBoundedInput) {
 	                    this._validate(boundInput, true);
 	                }
@@ -202,6 +203,10 @@
 	                        break;
 	                    }
 	                }
+	            } catch (error) {
+	                console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
+	                    'See Validation.extendErrors public method.');
+	            }
 	        }
 
 	        className = classNames(className);

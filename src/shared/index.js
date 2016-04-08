@@ -1,5 +1,6 @@
 var errors = require('./../errors');
 var noop = require('lodash.noop');
+var classNames = require('classnames');
 
 module.exports = {
     componentWillMount: function() {

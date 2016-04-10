@@ -36,6 +36,7 @@ Here is huge example below with many features used.
 
 ```javascript
 var Validation = require('react-validation');
+var validator = require('validator');
 // You can use Validation Input component with some other wrappers around
 var MaskedInput = require('react-maskedinput');
 
@@ -46,14 +47,14 @@ Validation.extendErrors({
         message: 'not equal to "Alex"',
         rule: function(value) {
             // Validation provides ref to 'validator' module, so you don't need to install it separately
-            return Validation.validator.trim(value) === 'Alex';
+            return validator.trim(value) === 'Alex';
         }
     },
     isRequired: {
         className: 'ui-input_state_empty',
         message: 'required',
         rule: function(value) {
-            return Boolean(Validation.validator.trim(value));
+            return Boolean(validator.trim(value));
         }
     },
     isEmail: {

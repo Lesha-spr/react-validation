@@ -1,5 +1,5 @@
 var React = require('react');
-var Validation = require('./../build');
+var Validation = require('./index.jsx');
 var MaskedInput = require('react-maskedinput');
 
 var Registration = React.createClass({

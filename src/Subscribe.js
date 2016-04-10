@@ -1,5 +1,5 @@
 var React = require('react');
-var Validation = require('./../build');
+var Validation = require('./index.jsx');
 
 var Subscribe = React.createClass({
     onSubmit: function(event) {

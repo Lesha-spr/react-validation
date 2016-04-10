@@ -1,5 +1,6 @@
 module.exports = function() {
-    var Validation = require('./../build');
+    var validator = require('validator');
+    var Validation = require('./index.jsx');
 
     Validation.extendErrors({
         defaultDisabledClassName: 'custom-disabled-class-name',
@@ -10,7 +11,7 @@ module.exports = function() {
             className: 'custom-invalid-class-name_required',
             message: 'required',
             rule: function(value) {
-                return Boolean(Validation.validator.trim(value));
+                return Boolean(validator.trim(value));
             }
         },
         isEmail: {

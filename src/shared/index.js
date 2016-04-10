@@ -11,6 +11,12 @@ module.exports = {
         (this.props._unregisterControl || noop)(this);
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        if (typeof nextProps.value !== 'undefined') {
+            this.setValue(nextProps.value, null);
+        }
+    },
+
     /**
      * Change handler
      * We need this method to avoid async problem with React's setState

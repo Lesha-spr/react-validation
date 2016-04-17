@@ -2,21 +2,9 @@ var React = require('react');
 var Validation = require('./index.jsx');
 
 var Login = React.createClass({
-    getInitialState: function() {
-        return {
-            value: ''
-        }
-    },
-
     onSubmit: function(event) {
         event.preventDefault();
         console.log(event.currentTarget);
-    },
-
-    onChange: function(event) {
-        this.setState({
-            value: event.target.value
-        })
     },
 
     render: function() {
@@ -24,7 +12,7 @@ var Login = React.createClass({
             <Validation.Form onSubmit={this.onSubmit}>
                 <label>
                     Email
-                    <Validation.Input onChange={this.onChange} className='ui-input' placeholder='' name='email' validations={[
+                    <Validation.Input className='ui-input' placeholder='' name='email' validations={[
                         {
                             rule: 'isRequired'
                         },
@@ -35,7 +23,7 @@ var Login = React.createClass({
                 </label>
                 <label>
                     Password
-                    <Validation.Input value={this.state.value} className='ui-input' placeholder='' name='password' type='password' validations={[
+                    <Validation.Input className='ui-input' placeholder='' name='password' type='password' validations={[
                         {
                             rule: 'isRequired'
                         }

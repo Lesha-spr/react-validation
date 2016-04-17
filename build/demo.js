@@ -23728,21 +23728,9 @@
 	var Login = React.createClass({
 	    displayName: 'Login',
 
-	    getInitialState: function getInitialState() {
-	        return {
-	            value: ''
-	        };
-	    },
-
 	    onSubmit: function onSubmit(event) {
 	        event.preventDefault();
 	        console.log(event.currentTarget);
-	    },
-
-	    onChange: function onChange(event) {
-	        this.setState({
-	            value: event.target.value
-	        });
 	    },
 
 	    render: function render() {
@@ -23753,7 +23741,7 @@
 	                'label',
 	                null,
 	                'Email',
-	                React.createElement(Validation.Input, { onChange: this.onChange, className: 'ui-input', placeholder: '', name: 'email', validations: [{
+	                React.createElement(Validation.Input, { className: 'ui-input', placeholder: '', name: 'email', validations: [{
 	                        rule: 'isRequired'
 	                    }, {
 	                        rule: 'isEmail'
@@ -23763,7 +23751,7 @@
 	                'label',
 	                null,
 	                'Password',
-	                React.createElement(Validation.Input, { value: this.state.value, className: 'ui-input', placeholder: '', name: 'password', type: 'password', validations: [{
+	                React.createElement(Validation.Input, { className: 'ui-input', placeholder: '', name: 'password', type: 'password', validations: [{
 	                        rule: 'isRequired'
 	                    }] })
 	            ),

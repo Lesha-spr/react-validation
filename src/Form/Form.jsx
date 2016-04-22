@@ -183,7 +183,9 @@ module.exports = React.createClass({
     _setButtonsState: function(buttons, hasBlocking) {
         var i;
 
+
         for (i = 0; i < buttons.length; i++) {
+            //console.log(buttons[i]._owner);
             this.refs[buttons[i]].setState({
                 isDisabled: hasBlocking
             });
@@ -216,7 +218,7 @@ module.exports = React.createClass({
 
             // TODO: Check this condition
             if (child.props.type === 'submit' && isFunction(child.type)) {
-                childProps.ref = child.props.ref || child.props.type + $idx;
+                childProps.ref = child.props.type + $idx;
                 $idx++;
                 this._submitRefs.push(childProps.ref);
             }
@@ -227,7 +229,7 @@ module.exports = React.createClass({
             }
 
             if (child.props.blocking === 'button' && isFunction(child.type)) {
-                childProps.ref = childProps.ref || child.props.ref || child.props.blocking + $idx;
+                childProps.ref = childProps.ref || child.props.blocking + $idx;
                 $idx++;
                 this._blockingRefs.push(childProps.ref);
             }

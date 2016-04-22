@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
 
 module.exports = {
     entry: {
@@ -29,8 +28,13 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.jsx$/,
-                loader: 'jsx-loader'
+                test: /\.js+x?$/,
+                exclude: /(node_modules|bower_components)/,
+                loader: 'babel',
+                query: {
+                    presets: ['react', 'es2015'],
+                    plugins: ['transform-runtime']
+                }
             }
         ]
     }

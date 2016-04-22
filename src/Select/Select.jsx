@@ -17,7 +17,7 @@ module.exports = React.createClass({
 
     getInitialState: function() {
         return {
-            value: this.props.value || null,
+            value: this.props.value || '',
             className: this.props.className || '',
             isUsed: true,
             isChanged: true

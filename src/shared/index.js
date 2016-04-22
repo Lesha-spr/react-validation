@@ -24,7 +24,7 @@ module.exports = {
      * @private
      */
     _handleChange: function(event) {
-        var value = event.currentTarget.value;
+        var value = event.target.value;
 
         this.setValue(value, event);
     },

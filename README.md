@@ -306,8 +306,12 @@ The example above shows how to set values to Components.
 ```message``` - custom message to show in hint.
 ```additionalClassName``` - custom className to add to element.
 
-```ref.hideError()```.
+```
+ref.hideError()
+```
 
 # Tests
 
-```npm test```
+```
+npm test
+```

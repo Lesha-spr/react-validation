@@ -1,8 +1,8 @@
 var React = require('react');
 var noop = require('lodash.noop');
 var objectAssign = require('lodash.assign');
-var shared = require('./../shared');
-var errors = require('./../errors');
+var shared = require('./shared');
+var errors = require('./../errors/index');
 
 /**
  * Describe Input component

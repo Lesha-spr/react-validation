@@ -66,23 +66,23 @@
 	    Form: __webpack_require__(41),
 	    Input: __webpack_require__(46),
 	    Select: __webpack_require__(55),
-	    Button: __webpack_require__(56)
-	};
+	    Button: __webpack_require__(56),
 
-	/**
-	 * Public method to extend default error object
-	 * @param obj {Object}
-	 */
-	Validation.extendErrors = function (obj) {
-	    objectAssign(errors, obj);
+	    /**
+	     * Public method to extend default error object
+	     * @param obj {Object}
+	     */
+	    extendErrors: function extendErrors(obj) {
+	        objectAssign(errors, obj);
 
-	    (0, _keys2.default)(errors).forEach(function (key) {
-	        if (errors[key].rule && isFunction(errors[key].rule)) {
-	            validator.extend(key, function (value, comparedValue) {
-	                return errors[key].rule(value, comparedValue);
-	            });
-	        }
-	    });
+	        (0, _keys2.default)(errors).forEach(function (key) {
+	            if (errors[key].rule && isFunction(errors[key].rule)) {
+	                validator.extend(key, function (value, comparedValue) {
+	                    return errors[key].rule(value, comparedValue);
+	                });
+	            }
+	        });
+	    }
 	};
 
 	module.exports = Validation;

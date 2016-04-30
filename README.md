@@ -307,3 +307,7 @@ The example above shows how to set values to Components.
 ```additionalClassName``` - custom className to add to element.
 
 ```ref.hideError()```.
+
+# Tests
+
+```npm test```

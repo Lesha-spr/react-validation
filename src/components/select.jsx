@@ -1,7 +1,7 @@
 var React = require('react');
 var noop = require('lodash.noop');
-var shared = require('./../shared');
-var errors = require('./../errors');
+var shared = require('./shared');
+var errors = require('./../errors/index');
 
 /**
  * Describe Select component

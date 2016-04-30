@@ -6,7 +6,7 @@ var isObject = require('lodash.isobject');
 var isFunction = require('lodash.isfunction');
 var noop = require('lodash.noop');
 var includes = require('lodash.includes');
-var errors = require('./../errors');
+var errors = require('./../errors/index');
 
 /**
  * Describe Form component

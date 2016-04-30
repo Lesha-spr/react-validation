@@ -1,6 +1,6 @@
 var React = require('react');
 var classNames = require('classnames');
-var errors = require('./../errors');
+var errors = require('./../errors/index');
 
 /**
  * Describe Button component

@@ -9,26 +9,26 @@ var errors = require('./errors');
  * @type {Object}
  */
 var Validation = {
-    Form: require('./Form/Form.jsx'),
-    Input: require('./Input/Input.jsx'),
-    Select: require('./Select/Select.jsx'),
-    Button: require('./Button/Button.jsx')
-};
+    Form: require('./components/form.jsx'),
+    Input: require('./components/input.jsx'),
+    Select: require('./components/select.jsx'),
+    Button: require('./components/button.jsx'),
 
-/**
- * Public method to extend default error object
- * @param obj {Object}
- */
-Validation.extendErrors = function(obj) {
-    objectAssign(errors, obj);
+    /**
+     * Public method to extend default error object
+     * @param obj {Object}
+     */
+    extendErrors: function(obj) {
+        objectAssign(errors, obj);
 
-    Object.keys(errors).forEach(function(key) {
-        if (errors[key].rule && isFunction(errors[key].rule)) {
-            validator.extend(key, function(value, comparedValue) {
-                return errors[key].rule(value, comparedValue);
-            });
-        }
-    });
+        Object.keys(errors).forEach(function(key) {
+            if (errors[key].rule && isFunction(errors[key].rule)) {
+                validator.extend(key, function(value, comparedValue) {
+                    return errors[key].rule(value, comparedValue);
+                });
+            }
+        });
+    }
 };
 
 module.exports = Validation;

@@ -1,6 +1,6 @@
 {
   "name": "react-validation",
-  "version": "1.6.6",
+  "version": "1.6.7",
   "description": "validation components",
   "keywords": [
     "react",
@@ -31,7 +31,7 @@
     "lodash.noop": "^3.0.0"
   },
   "peerDependencies": {
-    "validator": "^3.41.2",
+    "validator": "*",
     "react": "*",
     "react-dom": "*"
   },

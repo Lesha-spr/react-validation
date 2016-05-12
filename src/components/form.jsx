@@ -29,7 +29,7 @@ module.exports = React.createClass({
 
     _getValidationValue: function(component, callback) {
         var isCheckbox = component.props.type === 'checkbox';
-        var value = validator.trim(component.props.value);
+        var value = value ? validator.trim(component.props.value.toString()) : '';
 
         if (isCheckbox && !component.props.checked) {
             value = '';
@@ -183,9 +183,7 @@ module.exports = React.createClass({
     _setButtonsState: function(buttons, hasBlocking) {
         var i;
 
-
         for (i = 0; i < buttons.length; i++) {
-            //console.log(buttons[i]._owner);
             this.refs[buttons[i]].setState({
                 isDisabled: hasBlocking
             });

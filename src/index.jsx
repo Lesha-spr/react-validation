@@ -23,9 +23,7 @@ var Validation = {
 
         Object.keys(errors).forEach(function(key) {
             if (errors[key].rule && isFunction(errors[key].rule)) {
-                validator.extend(key, function(value, comparedValue) {
-                    return errors[key].rule(value, comparedValue);
-                });
+                validator[key] = validator[key] || errors[key].rule;
             }
         });
     }

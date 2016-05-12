@@ -77,9 +77,7 @@
 
 	        (0, _keys2.default)(errors).forEach(function (key) {
 	            if (errors[key].rule && isFunction(errors[key].rule)) {
-	                validator.extend(key, function (value, comparedValue) {
-	                    return errors[key].rule(value, comparedValue);
-	                });
+	                validator[key] = validator[key] || errors[key].rule;
 	            }
 	        });
 	    }
@@ -645,7 +643,7 @@
 
 	    _getValidationValue: function _getValidationValue(component, callback) {
 	        var isCheckbox = component.props.type === 'checkbox';
-	        var value = validator.trim(component.props.value);
+	        var value = value ? validator.trim(component.props.value.toString()) : '';
 
 	        if (isCheckbox && !component.props.checked) {
 	            value = '';
@@ -799,7 +797,6 @@
 	        var i;
 
 	        for (i = 0; i < buttons.length; i++) {
-	            //console.log(buttons[i]._owner);
 	            this.refs[buttons[i]].setState({
 	                isDisabled: hasBlocking
 	            });

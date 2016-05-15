@@ -643,7 +643,7 @@
 
 	    _getValidationValue: function _getValidationValue(component, callback) {
 	        var isCheckbox = component.props.type === 'checkbox';
-	        var value = value ? validator.trim(component.props.value.toString()) : '';
+	        var value = component.props.value ? validator.trim(component.props.value.toString()) : '';
 
 	        if (isCheckbox && !component.props.checked) {
 	            value = '';

@@ -7,7 +7,8 @@ var errors = require('./../errors/index');
  */
 module.exports = React.createClass({
     propTypes: {
-        type: React.PropTypes.string
+        type: React.PropTypes.string,
+        onClick: React.PropTypes.function,
     },
 
     getDefaultProps: function() {

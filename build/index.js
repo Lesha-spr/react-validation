@@ -989,7 +989,7 @@
 
 	        this.setState({
 	            isChanged: value !== this.state.value || value !== this.state.lastValue,
-	            isUsed: this.state.isUsed || !event,
+	            isUsed: this.state.isUsed || event,
 	            value: value,
 	            checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event
 	        }, function () {

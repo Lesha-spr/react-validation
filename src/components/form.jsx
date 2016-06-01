@@ -136,6 +136,7 @@ module.exports = React.createClass({
     _toggleButtons: function(buttons, model) {
         var hasBlocking = this._hasFalsyFlag(model);
 
+        console.log(buttons);
         this._setButtonsState(buttons, hasBlocking);
     },
 
@@ -200,7 +201,7 @@ module.exports = React.createClass({
      */
     _recursiveCloneChildren: function(children, index) {
         return React.Children.map(children, function(child, i) {
-            var $idx = index || i;
+            var $idx = ++index || i;
 
             if (!isObject(child)) {
                 return child;

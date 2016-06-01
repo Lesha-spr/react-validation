@@ -749,6 +749,7 @@
 	    _toggleButtons: function _toggleButtons(buttons, model) {
 	        var hasBlocking = this._hasFalsyFlag(model);
 
+	        console.log(buttons);
 	        this._setButtonsState(buttons, hasBlocking);
 	    },
 
@@ -813,7 +814,7 @@
 	     */
 	    _recursiveCloneChildren: function _recursiveCloneChildren(children, index) {
 	        return React.Children.map(children, function (child, i) {
-	            var $idx = index || i;
+	            var $idx = ++index || i;
 
 	            if (!isObject(child)) {
 	                return child;

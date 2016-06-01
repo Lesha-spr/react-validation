@@ -1348,16 +1348,17 @@
 
 	    render: function render() {
 	        var className = {};
+	        var disabled = this.state.isDisabled || this.props.forceDisabled;
 
 	        if (this.props.className) {
 	            className[this.props.className] = true;
 	        }
 
-	        className[this.props.disabledClassName || errors.defaultDisabledClassName] = this.state.isDisabled;
+	        className[this.props.disabledClassName || errors.defaultDisabledClassName] = disabled;
 	        className = classNames(className);
 
 	        // NOTE: Disabled state would be override by passing 'disabled' prop
-	        return React.createElement('input', (0, _extends3.default)({ disabled: this.state.isDisabled }, this.props, { className: className }));
+	        return React.createElement('input', (0, _extends3.default)({ disabled: disabled }, this.props, { className: className }));
 	    }
 	});
 

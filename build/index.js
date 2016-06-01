@@ -749,7 +749,6 @@
 	    _toggleButtons: function _toggleButtons(buttons, model) {
 	        var hasBlocking = this._hasFalsyFlag(model);
 
-	        console.log(buttons);
 	        this._setButtonsState(buttons, hasBlocking);
 	    },
 

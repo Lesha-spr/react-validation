@@ -49,6 +49,7 @@ module.exports = React.createClass({
      */
     setValue: function(value, event) {
         var isEventPassed = (event && event.nativeEvent instanceof Event);
+        var isChanged;
 
         if (this.isCheckbox) {
             value = !this.state.checked ? this.props.value : '';
@@ -59,8 +60,10 @@ module.exports = React.createClass({
             event.persist();
         }
 
+        isChanged = (value !== this.state.value) || (value && value !== this.state.lastValue);
+
         this.setState({
-            isChanged: (value !== this.state.value) || (value !== this.state.lastValue),
+            isChanged: isChanged,
             isUsed: this.state.isUsed || !event,
             value: value,
             checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event

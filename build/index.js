@@ -400,7 +400,7 @@
 /* 23 */
 /***/ function(module, exports) {
 
-	var core = module.exports = {version: '2.3.0'};
+	var core = module.exports = {version: '2.2.2'};
 	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ },
@@ -977,6 +977,7 @@
 	     */
 	    setValue: function setValue(value, event) {
 	        var isEventPassed = event && event.nativeEvent instanceof Event;
+	        var isChanged;
 
 	        if (this.isCheckbox) {
 	            value = !this.state.checked ? this.props.value : '';
@@ -987,8 +988,10 @@
 	            event.persist();
 	        }
 
+	        isChanged = value !== this.state.value || value && value !== this.state.lastValue;
+
 	        this.setState({
-	            isChanged: value !== this.state.value || value !== this.state.lastValue,
+	            isChanged: isChanged,
 	            isUsed: this.state.isUsed || !event,
 	            value: value,
 	            checked: this.isCheckbox ? !this.state.checked : isEventPassed || !event

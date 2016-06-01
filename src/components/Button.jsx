@@ -24,15 +24,16 @@ module.exports = React.createClass({
 
     render: function() {
         var className = {};
+        var disabled = this.state.isDisabled || this.props.forceDisabled;
 
         if (this.props.className) {
             className[this.props.className] = true;
         }
 
-        className[this.props.disabledClassName || errors.defaultDisabledClassName] = this.state.isDisabled;
+        className[this.props.disabledClassName || errors.defaultDisabledClassName] = disabled;
         className = classNames(className);
 
         // NOTE: Disabled state would be override by passing 'disabled' prop
-        return <input disabled={this.state.isDisabled} {...this.props} className={className}/>;
+        return <input disabled={disabled} {...this.props} className={className}/>;
     }
 });

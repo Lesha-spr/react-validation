@@ -65,8 +65,8 @@
 	var Validation = {
 	    Form: __webpack_require__(41),
 	    Input: __webpack_require__(46),
-	    Select: __webpack_require__(55),
-	    Button: __webpack_require__(56),
+	    Select: __webpack_require__(56),
+	    Button: __webpack_require__(57),
 
 	    /**
 	     * Public method to extend default error object
@@ -632,13 +632,13 @@
 	        this._inputs = {};
 	        this._validations = {};
 	        this._blockers = {};
-	        this._submitRefs = [];
-	        this._blockingRefs = [];
+	        this._submitButtons = {};
+	        this._blockingButtons = {};
 	    },
 
 	    componentDidMount: function componentDidMount() {
-	        this._toggleButtons(this._submitRefs, this._validations);
-	        this._toggleButtons(this._blockingRefs, this._blockers);
+	        this._toggleButtons(this._submitButtons, this._validations);
+	        this._toggleButtons(this._blockingButtons, this._blockers);
 	    },
 
 	    _getValidationValue: function _getValidationValue(component, callback) {
@@ -713,7 +713,7 @@
 	        component.setState(state);
 
 	        this._validations[component.props.name] = state.isValid;
-	        this._toggleButtons(this._submitRefs, this._validations);
+	        this._toggleButtons(this._submitButtons, this._validations);
 
 	        function validate(validation, boundValue) {
 	            var isValid = true;
@@ -777,12 +777,12 @@
 	     */
 	    _blocking: function _blocking(component) {
 	        var _this = this;
-	        var buttons = _this._blockingRefs;
+	        var buttons = _this._blockingButtons;
 	        var hasBlocking;
 
 	        _this._blockers[component.props.name] = Boolean(validator.trim(component.state.value));
 
-	        hasBlocking = _this._hasFalsyFlag(_this._blockers) || _this._hasFalsyFlag(_this._validations);
+	        hasBlocking = _this._hasFalsyFlag(_this._blockers);
 
 	        this._setButtonsState(buttons, hasBlocking);
 	    },
@@ -794,13 +794,11 @@
 	     * @private
 	     */
 	    _setButtonsState: function _setButtonsState(buttons, hasBlocking) {
-	        var i;
-
-	        for (i = 0; i < buttons.length; i++) {
-	            this.refs[buttons[i]].setState({
+	        (0, _keys2.default)(buttons).forEach(function (id) {
+	            buttons[id].setState({
 	                isDisabled: hasBlocking
 	            });
-	        }
+	        });
 	    },
 
 	    /**
@@ -824,14 +822,16 @@
 
 	            if (shouldValidate) {
 	                childProps._registerControl = this._registerControl;
+	                childProps._unregisterControl = this._unregisterControl;
 	                childProps._validate = this._validate;
 	            }
 
 	            // TODO: Check this condition
 	            if (child.props.type === 'submit' && isFunction(child.type)) {
-	                childProps.ref = child.props.type + $idx;
+	                childProps._id = child.props.type + $idx;
 	                $idx++;
-	                this._submitRefs.push(childProps.ref);
+	                childProps._registerSubmit = this._registerSubmit;
+	                childProps._unregisterSubmit = this._unregisterSubmit;
 	            }
 
 	            if (child.props.blocking === 'input' && isFunction(child.type)) {
@@ -840,15 +840,31 @@
 	            }
 
 	            if (child.props.blocking === 'button' && isFunction(child.type)) {
-	                childProps.ref = childProps.ref || child.props.blocking + $idx;
+	                childProps._id = child.props.blocking + $idx;
 	                $idx++;
-	                this._blockingRefs.push(childProps.ref);
+	                childProps._registerBlocking = this._registerBlocking;
 	            }
 
 	            childProps.children = this._recursiveCloneChildren(child.props.children, $idx);
 
 	            return React.cloneElement(child, childProps);
 	        }, this);
+	    },
+
+	    _registerSubmit: function _registerSubmit(component) {
+	        this._submitButtons[component.props._id] = component;
+	    },
+
+	    _unregisterSubmit: function _unregisterSubmit(component) {
+	        delete this._submitButtons[component.props._id];
+	    },
+
+	    _registerBlocking: function _registerBlocking(component) {
+	        this._blockingButtons[component.props._id] = component;
+	    },
+
+	    _unregisterBlocking: function _unregisterBlocking(component) {
+	        delete this._blockingButtons[component.props._id];
 	    },
 
 	    _registerControl: function _registerControl(component) {
@@ -926,8 +942,9 @@
 
 	var React = __webpack_require__(36);
 	var noop = __webpack_require__(44);
+	var getElement = __webpack_require__(54);
 	var objectAssign = __webpack_require__(39);
-	var shared = __webpack_require__(54);
+	var shared = __webpack_require__(55);
 	var errors = __webpack_require__(40);
 
 	/**
@@ -937,7 +954,7 @@
 	module.exports = React.createClass({
 	    displayName: 'exports',
 
-	    mixins: [shared],
+	    mixins: [shared, getElement],
 
 	    propTypes: {
 	        name: React.PropTypes.string.isRequired,
@@ -1030,12 +1047,12 @@
 	            try {
 	                props = objectAssign({}, this.props.wrapper.props, this.props);
 
-	                input = React.createElement(this.props.wrapper.component, (0, _extends3.default)({}, props, { className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur }));
+	                input = React.createElement(this.props.wrapper.component, (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur }));
 	            } catch (e) {
 	                console.log(e);
 	            }
 	        } else {
-	            input = React.createElement('input', (0, _extends3.default)({}, this.props, { className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur }));
+	            input = React.createElement('input', (0, _extends3.default)({ ref: 'element' }, this.props, { className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur }));
 	        }
 	        // TODO: rework hint appearance
 
@@ -1150,6 +1167,18 @@
 
 /***/ },
 /* 54 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = {
+	    getElement: function getElement() {
+	        return this.refs.element;
+	    }
+	};
+
+/***/ },
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1226,7 +1255,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1239,7 +1268,8 @@
 
 	var React = __webpack_require__(36);
 	var noop = __webpack_require__(44);
-	var shared = __webpack_require__(54);
+	var getElement = __webpack_require__(54);
+	var shared = __webpack_require__(55);
 	var errors = __webpack_require__(40);
 
 	/**
@@ -1250,7 +1280,7 @@
 	module.exports = React.createClass({
 	    displayName: 'exports',
 
-	    mixins: [shared],
+	    mixins: [shared, getElement],
 
 	    propTypes: {
 	        name: React.PropTypes.string.isRequired
@@ -1300,7 +1330,7 @@
 	            { className: this.props.containerClassName || errors.defaultContainerClassName },
 	            React.createElement(
 	                'select',
-	                (0, _extends3.default)({}, this.props, { className: this.state.className, onChange: this._handleChange, value: this.state.value }),
+	                (0, _extends3.default)({ ref: 'element' }, this.props, { className: this.state.className, onChange: this._handleChange, value: this.state.value }),
 	                this.props.children
 	            ),
 	            hint
@@ -1309,7 +1339,7 @@
 	});
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1321,6 +1351,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var React = __webpack_require__(36);
+	var noop = __webpack_require__(44);
+	var getElement = __webpack_require__(54);
 	var classNames = __webpack_require__(42);
 	var errors = __webpack_require__(40);
 
@@ -1330,6 +1362,7 @@
 	module.exports = React.createClass({
 	    displayName: 'exports',
 
+	    mixins: [getElement],
 	    propTypes: {
 	        type: React.PropTypes.string
 	    },
@@ -1346,6 +1379,16 @@
 	        };
 	    },
 
+	    componentWillMount: function componentWillMount() {
+	        (this.props._registerSubmit || noop)(this);
+	        (this.props._registerBlocking || noop)(this);
+	    },
+
+	    componentWillUnmount: function componentWillUnmount() {
+	        (this.props._unregisterSubmit || noop)(this);
+	        (this.props._unregisterBlocking || noop)(this);
+	    },
+
 	    render: function render() {
 	        var className = {};
 
@@ -1357,7 +1400,7 @@
 	        className = classNames(className);
 
 	        // NOTE: Disabled state would be override by passing 'disabled' prop
-	        return React.createElement('input', (0, _extends3.default)({ disabled: this.state.isDisabled }, this.props, { className: className }));
+	        return React.createElement('input', (0, _extends3.default)({ ref: 'element', disabled: this.state.isDisabled }, this.props, { className: className }));
 	    }
 	});
 

@@ -1,4 +1,6 @@
 var React = require('react');
+var noop = require('lodash.noop');
+var getElement = require('./getElement');
 var classNames = require('classnames');
 var errors = require('./../errors/index');
 
@@ -6,6 +8,7 @@ var errors = require('./../errors/index');
  * Describe Button component
  */
 module.exports = React.createClass({
+    mixins: [getElement],
     propTypes: {
         type: React.PropTypes.string
     },
@@ -22,6 +25,16 @@ module.exports = React.createClass({
         }
     },
 
+    componentWillMount: function() {
+        (this.props._registerSubmit || noop)(this);
+        (this.props._registerBlocking || noop)(this);
+    },
+
+    componentWillUnmount: function() {
+        (this.props._unregisterSubmit || noop)(this);
+        (this.props._unregisterBlocking || noop)(this);
+    },
+
     render: function() {
         var className = {};
 
@@ -33,6 +46,6 @@ module.exports = React.createClass({
         className = classNames(className);
 
         // NOTE: Disabled state would be override by passing 'disabled' prop
-        return <input disabled={this.state.isDisabled} {...this.props} className={className}/>;
+        return <input ref='element' disabled={this.state.isDisabled} {...this.props} className={className}/>;
     }
 });

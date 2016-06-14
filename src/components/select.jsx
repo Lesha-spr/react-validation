@@ -1,5 +1,6 @@
 var React = require('react');
 var noop = require('lodash.noop');
+var getElement = require('./getElement');
 var shared = require('./shared');
 var errors = require('./../errors/index');
 
@@ -9,7 +10,7 @@ var errors = require('./../errors/index');
  * But have some specific such isUsed and isChanged flags are true with init
  */
 module.exports = React.createClass({
-    mixins: [shared],
+    mixins: [shared, getElement],
 
     propTypes: {
         name: React.PropTypes.string.isRequired
@@ -51,7 +52,7 @@ module.exports = React.createClass({
         var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
 
         return <div className={this.props.containerClassName || errors.defaultContainerClassName}>
-            <select {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
+            <select ref='element' {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>
                 {this.props.children}
             </select>
             {hint}

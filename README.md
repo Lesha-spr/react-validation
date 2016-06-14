@@ -266,7 +266,7 @@ var Subscribe = React.createClass({
 });
 ```
 
-###Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError``` methods.
+###Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError```, ```getElement``` methods.
 
 <b>Example</b>
 
@@ -306,9 +306,9 @@ The example above shows how to set values to Components.
 ```message``` - custom message to show in hint.
 ```additionalClassName``` - custom className to add to element.
 
-```
-ref.hideError()
-```
+```ref.hideError()``` - hides error.
+
+```ref.getElement()``` - returns input/select/button DOM element
 
 # Tests
 

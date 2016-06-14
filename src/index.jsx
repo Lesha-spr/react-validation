@@ -9,10 +9,10 @@ var errors = require('./errors');
  * @type {Object}
  */
 var Validation = {
-    Form: require('./components/form.jsx'),
-    Input: require('./components/input.jsx'),
-    Select: require('./components/select.jsx'),
-    Button: require('./components/button.jsx'),
+    Form: require('./components/Form.jsx'),
+    Input: require('./components/Input.jsx'),
+    Select: require('./components/Select.jsx'),
+    Button: require('./components/Button.jsx'),
 
     /**
      * Public method to extend default error object

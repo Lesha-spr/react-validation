@@ -18,13 +18,13 @@ module.exports = React.createClass({
         this._inputs = {};
         this._validations = {};
         this._blockers = {};
-        this._submitRefs = [];
-        this._blockingRefs = [];
+        this._submitButtons = {};
+        this._blockingButtons = {};
     },
 
     componentDidMount: function() {
-        this._toggleButtons(this._submitRefs, this._validations);
-        this._toggleButtons(this._blockingRefs, this._blockers);
+        this._toggleButtons(this._submitButtons, this._validations);
+        this._toggleButtons(this._blockingButtons, this._blockers);
     },
 
     _getValidationValue: function(component, callback) {
@@ -100,7 +100,7 @@ module.exports = React.createClass({
         component.setState(state);
 
         this._validations[component.props.name] = state.isValid;
-        this._toggleButtons(this._submitRefs, this._validations);
+        this._toggleButtons(this._submitButtons, this._validations);
 
         function validate(validation, boundValue) {
             var isValid = true;
@@ -164,12 +164,12 @@ module.exports = React.createClass({
      */
     _blocking: function(component) {
         var _this = this;
-        var buttons = _this._blockingRefs;
+        var buttons = _this._blockingButtons;
         var hasBlocking;
 
         _this._blockers[component.props.name] = Boolean(validator.trim(component.state.value));
 
-        hasBlocking = _this._hasFalsyFlag(_this._blockers) || _this._hasFalsyFlag(_this._validations);
+        hasBlocking = _this._hasFalsyFlag(_this._blockers);
 
         this._setButtonsState(buttons, hasBlocking);
     },
@@ -181,13 +181,11 @@ module.exports = React.createClass({
      * @private
      */
     _setButtonsState: function(buttons, hasBlocking) {
-        var i;
-
-        for (i = 0; i < buttons.length; i++) {
-            this.refs[buttons[i]].setState({
+        Object.keys(buttons).forEach(function(id) {
+            buttons[id].setState({
                 isDisabled: hasBlocking
             });
-        }
+        });
     },
 
     /**
@@ -211,14 +209,16 @@ module.exports = React.createClass({
 
             if (shouldValidate) {
                 childProps._registerControl = this._registerControl;
+                childProps._unregisterControl = this._unregisterControl;
                 childProps._validate = this._validate;
             }
 
             // TODO: Check this condition
             if (child.props.type === 'submit' && isFunction(child.type)) {
-                childProps.ref = child.props.type + $idx;
+                childProps._id = child.props.type + $idx;
                 $idx++;
-                this._submitRefs.push(childProps.ref);
+                childProps._registerSubmit = this._registerSubmit;
+                childProps._unregisterSubmit = this._unregisterSubmit;
             }
 
             if (child.props.blocking === 'input' && isFunction(child.type)) {
@@ -227,15 +227,31 @@ module.exports = React.createClass({
             }
 
             if (child.props.blocking === 'button' && isFunction(child.type)) {
-                childProps.ref = childProps.ref || child.props.blocking + $idx;
+                childProps._id = child.props.blocking + $idx;
                 $idx++;
-                this._blockingRefs.push(childProps.ref);
+                childProps._registerBlocking = this._registerBlocking;
             }
 
             childProps.children = this._recursiveCloneChildren(child.props.children, $idx);
 
             return React.cloneElement(child, childProps);
         }, this);
+    },
+
+    _registerSubmit: function(component) {
+        this._submitButtons[component.props._id] = component;
+    },
+
+    _unregisterSubmit: function(component) {
+        delete this._submitButtons[component.props._id];
+    },
+
+    _registerBlocking: function(component) {
+        this._blockingButtons[component.props._id] = component;
+    },
+
+    _unregisterBlocking: function(component) {
+        delete this._blockingButtons[component.props._id];
     },
 
     _registerControl: function(component) {

@@ -1,5 +1,6 @@
 var React = require('react');
 var noop = require('lodash.noop');
+var getElement = require('./getElement');
 var objectAssign = require('lodash.assign');
 var shared = require('./shared');
 var errors = require('./../errors/index');
@@ -9,7 +10,7 @@ var errors = require('./../errors/index');
  * It is a common component and contains inputs, checkboxes and radios
  */
 module.exports = React.createClass({
-    mixins: [shared],
+    mixins: [shared, getElement],
 
     propTypes: {
         name: React.PropTypes.string.isRequired,
@@ -98,12 +99,12 @@ module.exports = React.createClass({
             try {
                 props = objectAssign({}, this.props.wrapper.props, this.props);
 
-                input = <this.props.wrapper.component {...props} className={this.state.className} checked={this.state.checked} onChange={this._handleChange} onBlur={this._handleBlur}/>;
+                input = <this.props.wrapper.component ref='element' {...props} className={this.state.className} checked={this.state.checked} onChange={this._handleChange} onBlur={this._handleBlur}/>;
             } catch(e) {
                 console.log(e);
             }
         } else {
-            input = <input {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>;
+            input = <input ref='element' {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>;
         }
         // TODO: rework hint appearance
 

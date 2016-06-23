@@ -1,7 +1,6 @@
 var React = require('react');
 var noop = require('lodash.noop');
 var getElement = require('./getElement');
-var objectAssign = require('lodash.assign');
 var shared = require('./shared');
 var errors = require('./../errors/index');
 
@@ -97,7 +96,7 @@ module.exports = React.createClass({
 
         if (this.props.wrapper) {
             try {
-                props = objectAssign({}, this.props.wrapper.props, this.props);
+                props = Object.assign({}, this.props.wrapper.props, this.props);
 
                 input = <this.props.wrapper.component ref='element' {...props} className={this.state.className} checked={this.state.checked} onChange={this._handleChange} onBlur={this._handleBlur}/>;
             } catch(e) {

@@ -50,33 +50,35 @@
 
 	var _keys2 = _interopRequireDefault(_keys);
 
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(36);
-	var validator = __webpack_require__(37);
-	var isFunction = __webpack_require__(38);
-	var objectAssign = __webpack_require__(39);
-	var errors = __webpack_require__(40);
+	var React = __webpack_require__(42);
+	var validator = __webpack_require__(43);
+	var errors = __webpack_require__(44);
 
 	/**
 	 * Validation component namespace
 	 * @type {Object}
 	 */
 	var Validation = {
-	    Form: __webpack_require__(41),
-	    Input: __webpack_require__(46),
-	    Select: __webpack_require__(56),
-	    Button: __webpack_require__(57),
+	    Form: __webpack_require__(45),
+	    Input: __webpack_require__(49),
+	    Select: __webpack_require__(53),
+	    Button: __webpack_require__(54),
 
 	    /**
 	     * Public method to extend default error object
 	     * @param obj {Object}
 	     */
 	    extendErrors: function extendErrors(obj) {
-	        objectAssign(errors, obj);
+	        (0, _assign2.default)(errors, obj);
 
 	        (0, _keys2.default)(errors).forEach(function (key) {
-	            if (errors[key].rule && isFunction(errors[key].rule)) {
+	            if (errors[key].rule) {
 	                validator[key] = validator[key] || errors[key].rule;
 	            }
 	        });
@@ -562,30 +564,90 @@
 
 /***/ },
 /* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(37), __esModule: true };
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(38);
+	module.exports = __webpack_require__(23).Object.assign;
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.3.1 Object.assign(target, source)
+	var $export = __webpack_require__(22);
+
+	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(39)});
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	// 19.1.2.1 Object.assign(target, source, ...)
+	var getKeys  = __webpack_require__(6)
+	  , gOPS     = __webpack_require__(40)
+	  , pIE      = __webpack_require__(41)
+	  , toObject = __webpack_require__(4)
+	  , IObject  = __webpack_require__(10)
+	  , $assign  = Object.assign;
+
+	// should work with symbols and should have deterministic property order (V8 bug)
+	module.exports = !$assign || __webpack_require__(32)(function(){
+	  var A = {}
+	    , B = {}
+	    , S = Symbol()
+	    , K = 'abcdefghijklmnopqrst';
+	  A[S] = 7;
+	  K.split('').forEach(function(k){ B[k] = k; });
+	  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
+	}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
+	  var T     = toObject(target)
+	    , aLen  = arguments.length
+	    , index = 1
+	    , getSymbols = gOPS.f
+	    , isEnum     = pIE.f;
+	  while(aLen > index){
+	    var S      = IObject(arguments[index++])
+	      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
+	      , length = keys.length
+	      , j      = 0
+	      , key;
+	    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
+	  } return T;
+	} : $assign;
+
+/***/ },
+/* 40 */
+/***/ function(module, exports) {
+
+	exports.f = Object.getOwnPropertySymbols;
+
+/***/ },
+/* 41 */
+/***/ function(module, exports) {
+
+	exports.f = {}.propertyIsEnumerable;
+
+/***/ },
+/* 42 */
 /***/ function(module, exports) {
 
 	module.exports = require("react");
 
 /***/ },
-/* 37 */
+/* 43 */
 /***/ function(module, exports) {
 
 	module.exports = require("validator");
 
 /***/ },
-/* 38 */
-/***/ function(module, exports) {
-
-	module.exports = require("lodash.isfunction");
-
-/***/ },
-/* 39 */
-/***/ function(module, exports) {
-
-	module.exports = require("lodash.assign");
-
-/***/ },
-/* 40 */
+/* 44 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -599,7 +661,7 @@
 	};
 
 /***/ },
-/* 41 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -608,17 +670,18 @@
 
 	var _keys2 = _interopRequireDefault(_keys);
 
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(36);
-	var validator = __webpack_require__(37);
-	var classNames = __webpack_require__(42);
-	var objectAssign = __webpack_require__(39);
-	var isObject = __webpack_require__(43);
-	var isFunction = __webpack_require__(38);
-	var noop = __webpack_require__(44);
-	var includes = __webpack_require__(45);
-	var errors = __webpack_require__(40);
+	var React = __webpack_require__(42);
+	var validator = __webpack_require__(43);
+	var classNames = __webpack_require__(46);
+	var isObject = __webpack_require__(47);
+	var noop = __webpack_require__(48);
+	var errors = __webpack_require__(44);
 
 	/**
 	 * Describe Form component
@@ -663,10 +726,10 @@
 	        // TODO: refactor whole method
 	        var validations = component.props.validations;
 	        var state = {
-	            isValid: true
+	            isValid: true,
+	            shouldUpdate: component.state.isUsed && component.state.isChanged || forceValidate
 	        };
 	        var className = {};
-	        var errorMessage = null;
 	        var boundInput = null;
 
 	        className[component.props.className] = true;
@@ -674,6 +737,7 @@
 	        for (var i = 0; i < validations.length; i++) {
 	            var validation = validations[i];
 	            var boundValue;
+
 	            boundInput = this._inputs[validation.name];
 
 	            if (boundInput) {
@@ -686,27 +750,27 @@
 	                }
 
 	                if (boundInput) {
-	                    if (boundInput.state.isUsed && boundInput.state.isChanged) {
-	                        if (!validate(validation, boundValue)) {
+	                    if (state.shouldUpdate) {
+	                        if (!this._validateState(component, validation, boundValue, state, className)) {
 	                            break;
 	                        }
 	                    }
 	                } else {
-	                    if (!validate(validation, boundValue)) {
+	                    if (!this._validateState(component, validation, boundValue, state, className)) {
 	                        break;
 	                    }
 	                }
 	            } catch (error) {
+	                console.warn(error);
 	                console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' + 'See Validation.extendErrors public method.');
 	            }
 	        }
 
 	        className = classNames(className);
 
-	        if (component.state.isUsed && component.state.isChanged || forceValidate) {
-	            objectAssign(state, {
-	                className: className,
-	                errorMessage: errorMessage
+	        if (state.shouldUpdate) {
+	            (0, _assign2.default)(state, {
+	                className: className
 	            });
 	        }
 
@@ -714,30 +778,34 @@
 
 	        this._validations[component.props.name] = state.isValid;
 	        this._toggleButtons(this._submitButtons, this._validations);
+	    },
 
-	        function validate(validation, boundValue) {
-	            var isValid = true;
+	    _validateState: function _validateState(component, validation, boundValue, state, className) {
+	        state.isValid = validator[validation.rule](component.state.value.toString(), boundValue);
+	        state.errorMessage = state.shouldUpdate && !state.isValid ? this._getErrorMessage(validation) : null;
 
-	            if (!validator[validation.rule](component.state.value, boundValue)) {
-	                state.isValid = false;
-	                setErrorState(validation);
-	                (component.props.onError || noop)(validation);
-
-	                isValid = false;
-	            }
-
-	            return isValid;
+	        if (!state.isValid) {
+	            (0, _assign2.default)(className, this._getErrorClassName(component, validation));
+	            (component.props.onError || noop)(validation);
 	        }
 
-	        function setErrorState(validation) {
+	        return state.isValid;
+	    },
 
-	            var hasRule = errors[validation.rule];
-	            var hasErrorClassName = hasRule && errors[validation.rule].className;
+	    _getErrorMessage: function _getErrorMessage(validation) {
+	        var hasRule = errors[validation.rule];
 
-	            className[component.props.invalidClassName || errors.defaultInvalidClassName] = true;
-	            className[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
-	            errorMessage = validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
-	        }
+	        return validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
+	    },
+
+	    _getErrorClassName: function _getErrorClassName(component, validation) {
+	        var errorClassName = {};
+	        var hasErrorClassName = errors[validation.rule] && errors[validation.rule].className;
+
+	        errorClassName[component.props.invalidClassName || errors.defaultInvalidClassName] = true;
+	        errorClassName[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
+
+	        return errorClassName;
 	    },
 
 	    /**
@@ -767,7 +835,17 @@
 	     * @private
 	     */
 	    _hasFalsyFlag: function _hasFalsyFlag(model) {
-	        return includes(model, false);
+	        var hasFalsyFlag = false;
+
+	        for (var key in model) {
+	            if (model.hasOwnProperty(key) && !model[key]) {
+	                hasFalsyFlag = true;
+
+	                break;
+	            }
+	        }
+
+	        return hasFalsyFlag;
 	    },
 
 	    /**
@@ -818,6 +896,7 @@
 	            }
 
 	            var childProps = {};
+	            var isValidElement = React.isValidElement(child);
 	            var shouldValidate = Array.isArray(child.props.validations) && child.props.validations.length;
 
 	            if (shouldValidate) {
@@ -826,23 +905,24 @@
 	                childProps._validate = this._validate;
 	            }
 
-	            // TODO: Check this condition
-	            if (child.props.type === 'submit' && isFunction(child.type)) {
-	                childProps._id = child.props.type + $idx;
-	                $idx++;
-	                childProps._registerSubmit = this._registerSubmit;
-	                childProps._unregisterSubmit = this._unregisterSubmit;
-	            }
+	            if (isValidElement) {
+	                if (child.props.type === 'submit') {
+	                    childProps._id = child.props.type + $idx;
+	                    $idx++;
+	                    childProps._registerSubmit = this._registerSubmit;
+	                    childProps._unregisterSubmit = this._unregisterSubmit;
+	                }
 
-	            if (child.props.blocking === 'input' && isFunction(child.type)) {
-	                childProps._registerControl = this._registerControl;
-	                childProps._blocking = this._blocking;
-	            }
+	                if (child.props.blocking === 'input') {
+	                    childProps._registerControl = this._registerControl;
+	                    childProps._blocking = this._blocking;
+	                }
 
-	            if (child.props.blocking === 'button' && isFunction(child.type)) {
-	                childProps._id = child.props.blocking + $idx;
-	                $idx++;
-	                childProps._registerBlocking = this._registerBlocking;
+	                if (child.props.blocking === 'button') {
+	                    childProps._id = child.props.blocking + $idx;
+	                    $idx++;
+	                    childProps._registerBlocking = this._registerBlocking;
+	                }
 	            }
 
 	            childProps.children = this._recursiveCloneChildren(child.props.children, $idx);
@@ -892,7 +972,7 @@
 	            _this._inputs[name].props._validate(_this._inputs[name], false, showErrors);
 	        });
 
-	        return objectAssign({}, _this._validations);
+	        return (0, _assign2.default)({}, _this._validations);
 	    },
 
 	    render: function render() {
@@ -905,47 +985,44 @@
 	});
 
 /***/ },
-/* 42 */
+/* 46 */
 /***/ function(module, exports) {
 
 	module.exports = require("classnames");
 
 /***/ },
-/* 43 */
+/* 47 */
 /***/ function(module, exports) {
 
 	module.exports = require("lodash.isobject");
 
 /***/ },
-/* 44 */
+/* 48 */
 /***/ function(module, exports) {
 
 	module.exports = require("lodash.noop");
 
 /***/ },
-/* 45 */
-/***/ function(module, exports) {
-
-	module.exports = require("lodash.includes");
-
-/***/ },
-/* 46 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _extends2 = __webpack_require__(47);
+	var _extends2 = __webpack_require__(50);
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(36);
-	var noop = __webpack_require__(44);
-	var getElement = __webpack_require__(54);
-	var objectAssign = __webpack_require__(39);
-	var shared = __webpack_require__(55);
-	var errors = __webpack_require__(40);
+	var React = __webpack_require__(42);
+	var noop = __webpack_require__(48);
+	var getElement = __webpack_require__(51);
+	var shared = __webpack_require__(52);
+	var errors = __webpack_require__(44);
 
 	/**
 	 * Describe Input component
@@ -1045,7 +1122,7 @@
 
 	        if (this.props.wrapper) {
 	            try {
-	                props = objectAssign({}, this.props.wrapper.props, this.props);
+	                props = (0, _assign2.default)({}, this.props.wrapper.props, this.props);
 
 	                input = React.createElement(this.props.wrapper.component, (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur }));
 	            } catch (e) {
@@ -1066,14 +1143,14 @@
 	});
 
 /***/ },
-/* 47 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	exports.__esModule = true;
 
-	var _assign = __webpack_require__(48);
+	var _assign = __webpack_require__(36);
 
 	var _assign2 = _interopRequireDefault(_assign);
 
@@ -1094,79 +1171,7 @@
 	};
 
 /***/ },
-/* 48 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(49), __esModule: true };
-
-/***/ },
-/* 49 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(50);
-	module.exports = __webpack_require__(23).Object.assign;
-
-/***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// 19.1.3.1 Object.assign(target, source)
-	var $export = __webpack_require__(22);
-
-	$export($export.S + $export.F, 'Object', {assign: __webpack_require__(51)});
-
-/***/ },
 /* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	// 19.1.2.1 Object.assign(target, source, ...)
-	var getKeys  = __webpack_require__(6)
-	  , gOPS     = __webpack_require__(52)
-	  , pIE      = __webpack_require__(53)
-	  , toObject = __webpack_require__(4)
-	  , IObject  = __webpack_require__(10)
-	  , $assign  = Object.assign;
-
-	// should work with symbols and should have deterministic property order (V8 bug)
-	module.exports = !$assign || __webpack_require__(32)(function(){
-	  var A = {}
-	    , B = {}
-	    , S = Symbol()
-	    , K = 'abcdefghijklmnopqrst';
-	  A[S] = 7;
-	  K.split('').forEach(function(k){ B[k] = k; });
-	  return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
-	}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
-	  var T     = toObject(target)
-	    , aLen  = arguments.length
-	    , index = 1
-	    , getSymbols = gOPS.f
-	    , isEnum     = pIE.f;
-	  while(aLen > index){
-	    var S      = IObject(arguments[index++])
-	      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
-	      , length = keys.length
-	      , j      = 0
-	      , key;
-	    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
-	  } return T;
-	} : $assign;
-
-/***/ },
-/* 52 */
-/***/ function(module, exports) {
-
-	exports.f = Object.getOwnPropertySymbols;
-
-/***/ },
-/* 53 */
-/***/ function(module, exports) {
-
-	exports.f = {}.propertyIsEnumerable;
-
-/***/ },
-/* 54 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1178,14 +1183,14 @@
 	};
 
 /***/ },
-/* 55 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var errors = __webpack_require__(40);
-	var noop = __webpack_require__(44);
-	var classNames = __webpack_require__(42);
+	var errors = __webpack_require__(44);
+	var noop = __webpack_require__(48);
+	var classNames = __webpack_require__(46);
 
 	module.exports = {
 	    componentWillMount: function componentWillMount() {
@@ -1255,22 +1260,22 @@
 	};
 
 /***/ },
-/* 56 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _extends2 = __webpack_require__(47);
+	var _extends2 = __webpack_require__(50);
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(36);
-	var noop = __webpack_require__(44);
-	var getElement = __webpack_require__(54);
-	var shared = __webpack_require__(55);
-	var errors = __webpack_require__(40);
+	var React = __webpack_require__(42);
+	var noop = __webpack_require__(48);
+	var getElement = __webpack_require__(51);
+	var shared = __webpack_require__(52);
+	var errors = __webpack_require__(44);
 
 	/**
 	 * Describe Select component
@@ -1339,22 +1344,22 @@
 	});
 
 /***/ },
-/* 57 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _extends2 = __webpack_require__(47);
+	var _extends2 = __webpack_require__(50);
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var React = __webpack_require__(36);
-	var noop = __webpack_require__(44);
-	var getElement = __webpack_require__(54);
-	var classNames = __webpack_require__(42);
-	var errors = __webpack_require__(40);
+	var React = __webpack_require__(42);
+	var noop = __webpack_require__(48);
+	var getElement = __webpack_require__(51);
+	var classNames = __webpack_require__(46);
+	var errors = __webpack_require__(44);
 
 	/**
 	 * Describe Button component

@@ -1,11 +1,8 @@
 var React = require('react');
 var validator = require('validator');
 var classNames = require('classnames');
-var objectAssign = require('lodash.assign');
 var isObject = require('lodash.isobject');
-var isFunction = require('lodash.isfunction');
 var noop = require('lodash.noop');
-var includes = require('lodash.includes');
 var errors = require('./../errors/index');
 
 /**
@@ -49,10 +46,10 @@ module.exports = React.createClass({
         // TODO: refactor whole method
         var validations = component.props.validations;
         var state = {
-            isValid: true
+            isValid: true,
+            shouldUpdate: (component.state.isUsed && component.state.isChanged) || forceValidate
         };
         var className = {};
-        var errorMessage = null;
         var boundInput = null;
 
         className[component.props.className] = true;
@@ -60,6 +57,7 @@ module.exports = React.createClass({
         for (var i = 0; i < validations.length; i++) {
             var validation = validations[i];
             var boundValue;
+
             boundInput = this._inputs[validation.name];
 
             if (boundInput) {
@@ -72,17 +70,18 @@ module.exports = React.createClass({
                 }
 
                 if (boundInput) {
-                    if (boundInput.state.isUsed && boundInput.state.isChanged) {
-                        if (!validate(validation, boundValue)) {
+                    if (state.shouldUpdate) {
+                        if (!this._validateState(component, validation, boundValue, state, className)) {
                             break;
                         }
                     }
                 } else {
-                    if (!validate(validation, boundValue)) {
+                    if (!this._validateState(component, validation, boundValue, state, className)) {
                         break;
                     }
                 }
             } catch (error) {
+                console.warn(error);
                 console.warn('You probably didn\'t specified (extend) Validation for ' + validation.rule + ' rule.' +
                     'See Validation.extendErrors public method.');
             }
@@ -90,10 +89,9 @@ module.exports = React.createClass({
 
         className = classNames(className);
 
-        if ((component.state.isUsed && component.state.isChanged) || forceValidate) {
-            objectAssign(state, {
-                className: className,
-                errorMessage: errorMessage
+        if (state.shouldUpdate) {
+            Object.assign(state, {
+                className: className
             });
         }
 
@@ -101,30 +99,34 @@ module.exports = React.createClass({
 
         this._validations[component.props.name] = state.isValid;
         this._toggleButtons(this._submitButtons, this._validations);
+    },
 
-        function validate(validation, boundValue) {
-            var isValid = true;
+    _validateState: function(component, validation, boundValue, state, className) {
+        state.isValid = validator[validation.rule](component.state.value.toString(), boundValue);
+        state.errorMessage = state.shouldUpdate && !state.isValid ? this._getErrorMessage(validation) : null;
 
-            if (!validator[validation.rule](component.state.value, boundValue)) {
-                state.isValid = false;
-                setErrorState(validation);
-                (component.props.onError || noop)(validation);
-
-                isValid = false;
-            }
-
-            return isValid;
+        if (!state.isValid) {
+            Object.assign(className, this._getErrorClassName(component, validation));
+            (component.props.onError || noop)(validation);
         }
 
-        function setErrorState(validation) {
+        return state.isValid;
+    },
 
-            var hasRule = errors[validation.rule];
-            var hasErrorClassName = hasRule && errors[validation.rule].className;
+    _getErrorMessage: function(validation) {
+        var hasRule = errors[validation.rule];
 
-            className[component.props.invalidClassName || errors.defaultInvalidClassName] = true;
-            className[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
-            errorMessage = validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
-        }
+        return validation.errorMessage || (hasRule ? errors[validation.rule].message : errors.defaultMessage);
+    },
+
+    _getErrorClassName: function(component, validation) {
+        var errorClassName = {};
+        var hasErrorClassName = errors[validation.rule] && errors[validation.rule].className;
+
+        errorClassName[component.props.invalidClassName || errors.defaultInvalidClassName] = true;
+        errorClassName[hasErrorClassName ? errors[validation.rule].className : errors.defaultInvalidClassName] = true;
+
+        return errorClassName;
     },
 
     /**
@@ -154,7 +156,17 @@ module.exports = React.createClass({
      * @private
      */
     _hasFalsyFlag: function(model) {
-        return includes(model, false);
+        var hasFalsyFlag = false;
+
+        for (var key in model) {
+            if (model.hasOwnProperty(key) && !model[key]) {
+                hasFalsyFlag = true;
+
+                break;
+            }
+        }
+
+        return hasFalsyFlag;
     },
 
     /**
@@ -205,6 +217,7 @@ module.exports = React.createClass({
             }
 
             var childProps = {};
+            var isValidElement = React.isValidElement(child);
             var shouldValidate = Array.isArray(child.props.validations) && child.props.validations.length;
 
             if (shouldValidate) {
@@ -213,23 +226,24 @@ module.exports = React.createClass({
                 childProps._validate = this._validate;
             }
 
-            // TODO: Check this condition
-            if (child.props.type === 'submit' && isFunction(child.type)) {
-                childProps._id = child.props.type + $idx;
-                $idx++;
-                childProps._registerSubmit = this._registerSubmit;
-                childProps._unregisterSubmit = this._unregisterSubmit;
-            }
+            if (isValidElement) {
+                if (child.props.type === 'submit') {
+                    childProps._id = child.props.type + $idx;
+                    $idx++;
+                    childProps._registerSubmit = this._registerSubmit;
+                    childProps._unregisterSubmit = this._unregisterSubmit;
+                }
 
-            if (child.props.blocking === 'input' && isFunction(child.type)) {
-                childProps._registerControl = this._registerControl;
-                childProps._blocking = this._blocking;
-            }
+                if (child.props.blocking === 'input') {
+                    childProps._registerControl = this._registerControl;
+                    childProps._blocking = this._blocking;
+                }
 
-            if (child.props.blocking === 'button' && isFunction(child.type)) {
-                childProps._id = child.props.blocking + $idx;
-                $idx++;
-                childProps._registerBlocking = this._registerBlocking;
+                if (child.props.blocking === 'button') {
+                    childProps._id = child.props.blocking + $idx;
+                    $idx++;
+                    childProps._registerBlocking = this._registerBlocking;
+                }
             }
 
             childProps.children = this._recursiveCloneChildren(child.props.children, $idx);
@@ -279,7 +293,7 @@ module.exports = React.createClass({
             _this._inputs[name].props._validate(_this._inputs[name], false, showErrors);
         });
 
-        return objectAssign({}, _this._validations);
+        return Object.assign({}, _this._validations);
     },
 
     render: function() {

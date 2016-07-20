@@ -49,7 +49,7 @@ module.exports = React.createClass({
     },
 
     render: function() {
-        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName} role='alert'>{this.state.errorMessage}</span> : null;
 
         return <div className={this.props.containerClassName || errors.defaultContainerClassName}>
             <select ref='element' {...this.props} className={this.state.className} onChange={this._handleChange} value={this.state.value}>

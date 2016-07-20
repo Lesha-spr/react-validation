@@ -69,6 +69,7 @@
 	    Input: __webpack_require__(49),
 	    Select: __webpack_require__(53),
 	    Button: __webpack_require__(54),
+	    Textarea: __webpack_require__(55),
 
 	    /**
 	     * Public method to extend default error object
@@ -657,6 +658,7 @@
 	    defaultInvalidClassName: 'ui-input_state_invalid',
 	    defaultDisabledClassName: 'ui-button_state_disabled',
 	    defaultHintClassName: 'ui-hint',
+	    defaultHintProps: {},
 	    defaultContainerClassName: ''
 	};
 
@@ -1113,23 +1115,28 @@
 
 	    render: function render() {
 	        var input;
-	        var props;
+	        var props = (0, _assign2.default)({}, this.props);
 	        var hint = this.state.errorMessage ? React.createElement(
 	            'span',
-	            { className: errors.defaultHintClassName },
+	            (0, _extends3.default)({ className: errors.defaultHintClassName }, errors.defaultHintProps),
 	            this.state.errorMessage
 	        ) : null;
 
+	        delete props._validate;
+	        delete props.validations;
+	        delete props._registerControl;
+	        delete props._unregisterControl;
+
 	        if (this.props.wrapper) {
 	            try {
-	                props = (0, _assign2.default)({}, this.props.wrapper.props, this.props);
+	                props = (0, _assign2.default)({}, this.props.wrapper.props, props);
 
 	                input = React.createElement(this.props.wrapper.component, (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, checked: this.state.checked, onChange: this._handleChange, onBlur: this._handleBlur }));
 	            } catch (e) {
 	                console.log(e);
 	            }
 	        } else {
-	            input = React.createElement('input', (0, _extends3.default)({ ref: 'element' }, this.props, { className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur }));
+	            input = React.createElement('input', (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, checked: this.state.checked, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur }));
 	        }
 	        // TODO: rework hint appearance
 
@@ -1265,6 +1272,10 @@
 
 	'use strict';
 
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
 	var _extends2 = __webpack_require__(50);
 
 	var _extends3 = _interopRequireDefault(_extends2);
@@ -1326,16 +1337,22 @@
 	    render: function render() {
 	        var hint = this.state.errorMessage ? React.createElement(
 	            'span',
-	            { className: errors.defaultHintClassName },
+	            (0, _extends3.default)({ className: errors.defaultHintClassName }, errors.defaultHintProps),
 	            this.state.errorMessage
 	        ) : null;
+	        var props = (0, _assign2.default)({}, this.props);
+
+	        delete props._validate;
+	        delete props.validations;
+	        delete props._registerControl;
+	        delete props._unregisterControl;
 
 	        return React.createElement(
 	            'div',
 	            { className: this.props.containerClassName || errors.defaultContainerClassName },
 	            React.createElement(
 	                'select',
-	                (0, _extends3.default)({ ref: 'element' }, this.props, { className: this.state.className, onChange: this._handleChange, value: this.state.value }),
+	                (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, onChange: this._handleChange, value: this.state.value }),
 	                this.props.children
 	            ),
 	            hint
@@ -1352,6 +1369,10 @@
 	var _extends2 = __webpack_require__(50);
 
 	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1396,6 +1417,11 @@
 
 	    render: function render() {
 	        var className = {};
+	        var props = (0, _assign2.default)({}, this.props);
+
+	        delete props._id;
+	        delete props._registerSubmit;
+	        delete props._unregisterSubmit;
 
 	        if (this.props.className) {
 	            className[this.props.className] = true;
@@ -1405,7 +1431,119 @@
 	        className = classNames(className);
 
 	        // NOTE: Disabled state would be override by passing 'disabled' prop
-	        return React.createElement('input', (0, _extends3.default)({ ref: 'element', disabled: this.state.isDisabled }, this.props, { className: className }));
+	        return React.createElement('input', (0, _extends3.default)({ ref: 'element', disabled: this.state.isDisabled }, props, { className: className }));
+	    }
+	});
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends2 = __webpack_require__(50);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _assign = __webpack_require__(36);
+
+	var _assign2 = _interopRequireDefault(_assign);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var React = __webpack_require__(42);
+	var noop = __webpack_require__(48);
+	var getElement = __webpack_require__(51);
+	var shared = __webpack_require__(52);
+	var errors = __webpack_require__(44);
+
+	/**
+	 * Describe Input component
+	 * It is a common component and contains inputs, checkboxes and radios
+	 */
+	module.exports = React.createClass({
+	    displayName: 'exports',
+
+	    mixins: [shared, getElement],
+
+	    propTypes: {
+	        name: React.PropTypes.string.isRequired
+	    },
+
+	    getInitialState: function getInitialState() {
+	        var value = this.props.value || '';
+
+	        return {
+	            value: value,
+	            className: this.props.className || '',
+	            isValid: true,
+	            isUsed: false,
+	            isChanged: false,
+	            errorMessage: null
+	        };
+	    },
+
+	    /**
+	     * Public value setter
+	     * @param value {String|Number} value to be setted
+	     * @param event {Event|Boolean} event object or flag to prevent errors to show
+	     */
+	    setValue: function setValue(value, event) {
+	        var isEventPassed = event && event.nativeEvent instanceof Event;
+	        var isChanged;
+
+	        if (isEventPassed) {
+	            // Persist the event since we will need this event outside this event loop.
+	            event.persist();
+	        }
+
+	        isChanged = value !== this.state.value || value && value !== this.state.lastValue;
+
+	        this.setState({
+	            isChanged: isChanged,
+	            isUsed: this.state.isUsed || !event,
+	            value: value
+	        }, function () {
+	            (this.props._blocking || noop)(this);
+	            (this.props._validate || noop)(this);
+	            (this.props.onChange || noop)(isEventPassed ? event : undefined);
+	        });
+	    },
+
+	    /**
+	     * Blur handler
+	     * @param event {Event} event object
+	     * @private
+	     */
+	    _handleBlur: function _handleBlur(event) {
+	        this.setState({
+	            isUsed: true,
+	            lastValue: event.currentTarget.value
+	        }, function () {
+	            (this.props._validate || noop)(this);
+	            (this.props.onBlur || noop)(event);
+	        });
+	    },
+
+	    render: function render() {
+	        var props = (0, _assign2.default)({}, this.props);
+	        var hint = this.state.errorMessage ? React.createElement(
+	            'span',
+	            (0, _extends3.default)({ className: errors.defaultHintClassName }, errors.defaultHintProps),
+	            this.state.errorMessage
+	        ) : null;
+
+	        delete props._validate;
+	        delete props.validations;
+	        delete props._registerControl;
+	        delete props._unregisterControl;
+
+	        return React.createElement(
+	            'div',
+	            { className: this.props.containerClassName || errors.defaultContainerClassName },
+	            React.createElement('textarea', (0, _extends3.default)({ ref: 'element' }, props, { className: this.state.className, value: this.state.value, onChange: this._handleChange, onBlur: this._handleBlur })),
+	            hint
+	        );
 	    }
 	});
 

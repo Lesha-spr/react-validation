@@ -11,6 +11,7 @@ var Validation = {
     Input: require('./components/Input.jsx'),
     Select: require('./components/Select.jsx'),
     Button: require('./components/Button.jsx'),
+    Textarea: require('./components/Textarea.jsx'),
 
     /**
      * Public method to extend default error object

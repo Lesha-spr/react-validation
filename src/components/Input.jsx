@@ -91,19 +91,24 @@ module.exports = React.createClass({
 
     render: function() {
         var input;
-        var props;
-        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
+        var props = Object.assign({}, this.props);
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName} {...errors.defaultHintProps}>{this.state.errorMessage}</span> : null;
+
+        delete props._validate;
+        delete props.validations;
+        delete props._registerControl;
+        delete props._unregisterControl;
 
         if (this.props.wrapper) {
             try {
-                props = Object.assign({}, this.props.wrapper.props, this.props);
+                props = Object.assign({}, this.props.wrapper.props, props);
 
                 input = <this.props.wrapper.component ref='element' {...props} className={this.state.className} checked={this.state.checked} onChange={this._handleChange} onBlur={this._handleBlur}/>;
             } catch(e) {
                 console.log(e);
             }
         } else {
-            input = <input ref='element' {...this.props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>;
+            input = <input ref='element' {...props} className={this.state.className} checked={this.state.checked} value={this.state.value} onChange={this._handleChange} onBlur={this._handleBlur}/>;
         }
         // TODO: rework hint appearance
 

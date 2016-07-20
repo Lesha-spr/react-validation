@@ -37,6 +37,11 @@ module.exports = React.createClass({
 
     render: function() {
         var className = {};
+        var props = Object.assign({}, this.props);
+
+        delete props._id;
+        delete props._registerSubmit;
+        delete props._unregisterSubmit;
 
         if (this.props.className) {
             className[this.props.className] = true;
@@ -46,6 +51,6 @@ module.exports = React.createClass({
         className = classNames(className);
 
         // NOTE: Disabled state would be override by passing 'disabled' prop
-        return <input ref='element' disabled={this.state.isDisabled} {...this.props} className={className}/>;
+        return <input ref='element' disabled={this.state.isDisabled} {...props} className={className}/>;
     }
 });

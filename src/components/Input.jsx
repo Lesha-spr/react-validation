@@ -92,7 +92,7 @@ module.exports = React.createClass({
     render: function() {
         var input;
         var props;
-        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName}>{this.state.errorMessage}</span> : null;
+        var hint = this.state.errorMessage ? <span className={errors.defaultHintClassName} role='alert'>{this.state.errorMessage}</span> : null;
 
         if (this.props.wrapper) {
             try {

@@ -1,39 +1,37 @@
 'use strict';
 
 const path = require('path');
-const webpack = require('webpack');
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
     entry: {
-        'demo': './demo.js'
+        'app': './src/app.jsx'
+    },
+
+    watch: NODE_ENV === 'development',
+
+    watchOptions: {
+        aggregateTimeout: 100
     },
 
     output: {
         path: path.join(__dirname + '/build'),
         publicPath: '/build/',
-        filename: '[name].js'
+        filename: '[name].js',
+        //libraryTarget: 'commonjs'
     },
 
-    watch: true,
-    watchOptions: {
-        aggregateTimeout: 100
-    },
+    //externals: {
+    //    "react": "react",
+    //    "react-addons-pure-render-mixin": "react-addons-pure-render-mixin",
+    //    "validator": "validator"
+    //},
+
+    plugins: require('./webpack/plugins'),
 
     module: {
-        loaders: [
-            {
-                test: /\.jsx$/,
-                loader: 'jsx-loader'
-            },
-            {
-                test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel',
-                query: {
-                    presets: ['react', 'es2015'],
-                    plugins: ['transform-runtime']
-                }
-            }
-        ]
-    }
+        loaders: require('./webpack/loaders')
+    },
+
+    eslint: require('./webpack/eslint/.eslintrc.json')
 };

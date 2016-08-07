@@ -61,7 +61,7 @@ Object.assign(Validation.rules, {
             return validator.isEmail(value);
         },
         hint: value => {
-            return <span className='form-error is-visible'>{value} isn't an Email.</span>
+            return <span className='form-error is-visible'>{value} isnt an Email.</span>
         }
     },
     // This example shows a way to handle common task - compare two fields for equality
@@ -136,7 +136,9 @@ All of them are just a custom wrappers around the native components. They can ac
 
 ### Form component
 
-```Validation.components.Form```
+```
+Validation.components.Form
+```
 
 The most important component which provides a hart of react-validation. It basically clones all it's children and mixes the binding between form itself and child react-validation components.
 Whatever valid props can easily be passed to ```Form```, such ```onSubmit``` and ```method```.
@@ -191,7 +193,9 @@ export default class Comment extends Component {
 
 ### Input component
 
-```Validation.components.Input```
+```
+Validation.components.Input
+```
 
 The wrapper around the native ```input```. It accepts a ```validations``` prop - array of strings which refers to rules object keys.
 
@@ -206,7 +210,9 @@ In the example above for ```really long value with d1g1t``` input's value the ``
 
 ### Textarea component
 
-```Validation.components.Teaxtarea```
+```
+Validation.components.Teaxtarea
+```
 
 The wrapper around the native ```textarea```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
 
@@ -216,7 +222,9 @@ The wrapper around the native ```textarea```. Like the ```Input``` accepts ```va
 
 ### Select component
 
-```Validation.components.Select```
+```
+Validation.components.Select
+```
 
 The wrapper around the native ```select```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
 
@@ -231,7 +239,9 @@ The wrapper around the native ```select```. Like the ```Input``` accepts ```vali
 
 ### Button component
 
-```Validation.components.Button```
+```
+Validation.components.Button
+```
 
 The wrapper around the native ```button```. React-validation disables (adds ```disabled``` prop) the button on error occur. This behavior could be suppressed by passing ```disabled``` prop directly to component.
 

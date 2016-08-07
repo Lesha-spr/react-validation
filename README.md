@@ -1,18 +1,15 @@
 # react-validation
 
-Component to simple form validation using <a href="https://github.com/chriso/validator.js">validator</a> for check rules.
+Component to simple form validation for react components. It uses [Controlled Components](https://facebook.github.io/react/docs/forms.html#controlled-components) approach for validation.
 
-It is not easy to validate forms with React. The reason is one-way data flow style.
-In this case we can't affect forms from the inputs in easy way.
+It is not easy to validate forms with React. The reason is a one-way data flow style. In this case we can't affect forms from the inputs in easy way.
 React-validation provides several components which are 'connected' to form via input's method attached by Form component.
 
-### UPDATE: ```ui-input``` className is no longer setted by default. Please check your render method.
+### [DEMO](http://lesha-spr.github.io/react-validation/)
 
-<h3><a href="http://lesha-spr.github.io/react-validation/">DEMO</a></h3>
+It is just a validation and doesn't provide any model or something similar. You can use FormData or something like [form-serialize](https://www.npmjs.com/package/form-serialize) to get form data.
 
-It is just a validation and doesn't provide any model or something similar. You can use FormData or something like <a href="https://www.npmjs.com/package/form-serialize">form-serialize</a> to get form data.
-
-<b>Be aware to always pass ```name``` prop. It is required.</b>
+##### NOTE: Be aware to always pass ```name``` prop. It is required.
 
 Additional markup is allowed inside the Validation.Form markup.
 
@@ -20,298 +17,249 @@ Any additional props (such event handlers) can also be passed to components.
 
 If you find any bug or error, please feel free to raise an issue. Pull requests are also welcome.
 
-# Installation
+## Installation
 
 ``
 npm install react-validation
 ``
 
-# Example usage
+## Example usage
 
-Please check <a href="https://github.com/chriso/validator.js">validator</a> reference to see all existing rules.
-For known reasons it is better to use ```validator```'s rules where it's possible.
-You can extend ```Validation``` with public ```Validation.extendErrors``` method to configure rule, hint message and error className.
-
-Here is huge example below with many features used.
+With @2.*, react-validation is no longer dependent on external ```validator```. You may use whatever validation strategy you want by extending ```rules``` object.
+Let's take a look on it's initial state:
 
 ```javascript
-var Validation = require('react-validation');
-var validator = require('validator');
-// You can use Validation Input component with some other wrappers around
-var MaskedInput = require('react-maskedinput');
-
-// Extend Validation with custom rules
-Validation.extendErrors({
-    isNotValidUser: {
-        className: 'ui-input_state_invalid-user',
-        message: 'not equal to "Alex"',
-        rule: function(value) {
-            // Validation provides ref to 'validator' module, so you don't need to install it separately
-            return validator.trim(value) === 'Alex';
-        }
-    },
-    isRequired: {
-        className: 'ui-input_state_empty',
-        message: 'required',
-        rule: function(value) {
-            return Boolean(validator.trim(value));
-        }
-    },
-    isEmail: {
-        className: 'ui-input_state_email-pattern-failed',
-        // validator already has strong email-pattern, so we don't have to extend it by custom
-        message: 'should be email'
-    }
-});
-
-var Form = React.createClass({
-    onSubmit: function(event) {
-        event.preventDefault();
-        console.log(event);
-    },
-
-    render: function() {
-        return (
-            <Validation.Form onSubmit={this.onSubmit}>
-                <label>
-                    Just a label for username
-                    <Validation.Input
-                        blocking='input'
-                        className='ui-input'
-                        validations={[
-                          {
-                              rule: 'isRequired'
-                          },
-                          {
-                              rule: 'isNotValidUser'
-                          }
-                        ]}
-                        invalidClassName='ui-input_state_custom-error-classname'
-                        name='username'
-                        type='text'/>
-                </label>
-                // Passing wrapper prop will extra wrap the input with passed Component and it's props
-                <Validation.Input wrapper={{component: MaskedInput, props: {mask: '11/11/1111'}}} name='birthday' onChange={function(event) {console.log(event.target.value)}} validations={[
-                    {
-                        rule: 'isRequired'
-                    }
-                ]} />
-                <Validation.Input
-                    blocking='input'
-                    className='ui-input'
-                    validations={[
-                        {
-                            rule: 'isEmail'
-                        }
-                    ]}
-                    name='email'
-                    type='text'/>
-                <Validation.Input
-                    blocking='input'
-                    className='ui-input'
-                    validations={[
-                        {
-                            rule: 'isRequired',
-                            errorMessage: 'required'
-                        }
-                    ]}
-                    name='password'
-                    type='password'/>
-                <Validation.Button blocking='button' value='submit'/>
-            </Validation.Form>
-        );
-    }
-});
+module.exports = {};
 ```
 
-# Components and props
+That's it, just an empty object literal. We don't have any validation rules OOTB because of extremely high amount of possibilities but it's still recommended to use well tested library for known reasons.
 
-<h3>Form component</h3>
+So first of all let's extend it and add some rules:
 
-Form is just a wrapper for form DOM element. You might want to add ```onSubmit={this.onSubmit}``` prop to it to handle the submit event.
-Right now it has only one public method ```form.isValidForm() // returns Boolean```
-
-<h3>Input component</h3>
-
-Input component provides several public methods and props.
-
-```validations``` prop attaches validations to Input. It should be an array of objects with ```rule``` and (optional) ```errorMessage```
-There is also optional prop ```onError``` callback. It would be called on validation fail and pass the first validation object it is failed on.
-
-<b>Example</b>
 ```javascript
-<Validation.Input
-    name='my-input'
-    invalidClassName='ui-error'
-    blocking='input'
-    onError={function(validation) {console.log(validation.rule)}}
-    validations={[
-        {
-            rule: 'isRequired',
-            errorMessage: 'mandatory field'
+import React from 'react';
+import Validation from 'react-validation';
+import validator from 'validator';
+
+// Use Object.assign or any similar API to merge a rules
+Object.assign(Validation.rules, {
+    // Key name maps the rule
+    required: {
+        // Function to validate value
+        rule: (value, component, form) => {
+            return value.trim();
         },
-        {
-            rule: 'isEmail',
-            errorMessage: 'should be email'
+        // Function to return hint
+        // You may use current value to inject it in some way to the hint
+        hint: value => {
+            return <span className='form-error is-visible'>Required</span>
         }
-    ]} 
-/>
-```
-
-In the example above we've described Input with two validation rules ```'isRequired'``` and ```'isEmail'```. This rules should be a references to ```validator``` rules as we extended it in example (```'isEmail'``` is a native validator's rule).
-You can apply whatever count of validations on the same Input component in order you want them to apply errors.
-
-```blocking``` prop serving empty value and "blocks" Buttons components (sets ```disabled``` prop and className) if it's length is equal to 0 without any errors. It might be deprecated in the future. By default Validation blocks only ```submit``` input.
-
-```invalidClassName``` prop is overriding default invalidClassName.
-
-<b>Example</b>
-
-```javascript
-var Registration = React.createClass({
-    onSubmit: function(event) {
-        event.preventDefault();
-        this.refs.username.showError('Registration is now closed. We are sorry :(', 'ui-closed-registration-error');
     },
+    email: {
+        // Example usage with external 'validator'
+        rule: value => {
+            return validator.isEmail(value);
+        },
+        hint: value => {
+            return <span className='form-error is-visible'>{value} isn't an Email.</span>
+        }
+    },
+    // This example shows a way to handle common task - compare two fields for equality
+    password: {
+        // rule function can accept 2 extra arguments:
+        // component - current checked component
+        // form - form component which has 'states' inside native 'state' object
+        rule: (value, component, form) => {
+            // form.state.states[name] - name of corresponding field
+            let password = form.state.states.password;
+            let passwordConfirm = form.state.states.passwordConfirm;
+            // isUsed, isChanged - public properties
+            let isBothUsed = password && passwordConfirm && password.isUsed && passwordConfirm.isUsed;
+            let isBothChanged = isBothUsed && password.isChanged && passwordConfirm.isChanged;
 
-    render: function() {
-        return (
-            <Validation.Form onSubmit={this.onSubmit}>
-                <Validation.Input ref='username' name='username' validations={[{rule: 'isRequired'}]} />
-                <Validation.Input ref='password' name='password' validations={[{rule: 'isRequired'}]} />
-                <Validation.Button type='submit' />
-            </Validation.Form>
-        );
+            if (!isBothUsed || !isBothChanged) {
+                return true;
+            }
+
+            return password.value === passwordConfirm.value;
+        },
+        hint: value => {
+            return <span className='form-error is-visible'>Passwords should be equal.</span>
+        }
     }
 });
 ```
 
-<h3>Select component</h3>
+Now we've added ```required``` and ```email``` to our rules with provided hints. This might be separated file where all the rules are registered.
 
-Select is a wrapper for select DOM element. Be aware to pass empty value on the 'choose' option.
-
-<b>Example</b>
+That's it. We can now use it in our react components:
 
 ```javascript
-<Validation.Select name='city' validations={[{rule: 'isRequired'}]}>
-    <option value=''>Choose your City</option>
-    <option value='Kyiv'>Kyiv</option>
-    <option value='London'>London</option>
-</Validation.Select>
+import Validation from 'react-validation';
+import React, {Component, PropTypes} from 'react';
+
+export default class Registration extends Component {
+    render() {
+        return <Validation.components.Form>
+            <h3>Registration</h3>
+            <div>
+                <label>
+                    Email*
+                    <Validation.components.Input value='email@email.com' name='email' validations={['required', 'email']}/>
+                </label>
+            </div>
+            <div>
+                <label>
+                    Password*
+                    <Validation.components.Input type='password' value='' name='password' validations={['required']}/>
+                </label>
+            </div>
+            <div>
+                <Validation.components.Button>Submit</Validation.components.Button>
+            </div>
+        </Validation.components.Form>;
+    }
+}
 ```
 
-<h3>Button component</h3>
+Note the ```validations``` prop. It's an array of strings which maps to the rules keys we've extended.
 
-Button is connected to form via validations. It's disabled when invalid input occurs and if ```blocking='button'``` prop passed and there is some empty ```blocking='input'``` presents.
+## Components and props
 
-<b>Example</b>
+```react-validation``` provides ```components``` object which contains ```Form```, ```Input```, ```Select```, ```Textarea``` and ```Button``` components.
+All of them are just a custom wrappers around the native components. They can accept any valid attributes and a few extra:
+```containerClassName``` - ```Input```, ```Select``` and ```Textarea``` wraps a native components with extra block. This prop adds a ```className``` to the wrapper.
+```validations``` - ```Input```, ```Select``` and ```Textarea``` accepts an array of validations strings which refers to the rules object's keys.
+```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea``` adds it to ```className``` on error occur.
+
+##### NOTE: Be aware to always provide ```name``` prop to ```Input```, ```Select``` and ```Textarea```
+
+### Form component
+
+```Validation.components.Form```
+
+The most important component which provides a hart of react-validation. It basically clones all it's children and mixes the binding between form itself and child react-validation components.
+Whatever valid props can easily be passed to ```Form```, such ```onSubmit``` and ```method```.
+
+```Form``` provides three public methods:
+
+```validate(name)``` - validates input with passed name. The difference between this method and default validation that ```validate``` marks input as ```isUsed``` and ```isChanged```.
+
+```name``` - name of corresponding component.
+
+```showError(name [,hint])``` - helps to handle async API errors.
+
+```hint``` - optional hint to show.
+
+```hideError(name)``` - hides an corresponding component's error.
+
 
 ```javascript
-<Validation.Button type='submit' blocking='button' />
-```
-
-# Components API
-
-###Form component has an ```forceValidate``` method.
-
-```ref.forceValidate([,showErrors])``` - returns object with name keys and boolean valid values
-
-```showErrors``` - boolean flag to show errors.
-
-<b>Example</b>
-
-```javascript
-var Subscribe = React.createClass({
-    onSubmit: function(event) {
+export default class Comment extends Component {
+    handleSubmit(event) {
         event.preventDefault();
 
-        console.log(this.refs.form.forceValidate(true));
-    },
+        // Emulate async API call
+        setTimeout(() => {
+            this.refs.form.showError('username', <span onClick={this.removeApiError.bind(this)} className='form-error is-visible'>API Error. Click to hide out.</span>);
+        }, 1000);
+    }
 
-    render: function() {
-        return (
-            <Validation.Form onSubmit={this.onSubmit} ref='form'>
-                <h2>Subscription form</h2>
+    removeApiError() {
+        this.refs.form.hideError('username');
+    }
+
+    render() {
+        return <Validation.components.Form ref='form' onSubmit={this.handleSubmit.bind(this)}>
+            <div>
                 <label>
-                    Name
-                    <Validation.Input placeholder='' name='firstname' validations={[
-                        {
-                            rule: 'isRequired'
-                        },
-                        {
-                            rule: 'isAlpha'
-                        }
-                    ]} />
+                    <Validation.components.Input value='Username' name='username' validations={['required', 'alpha']}/>
                 </label>
+            </div>
+            <div>
                 <label>
-                    Email
-                    <Validation.Input placeholder='' name='email' validations={[
-                        {
-                            rule: 'isRequired'
-                        },
-                        {
-                            rule: 'isEmail'
-                        }
-                    ]} />
+                    <Validation.components.Textarea value='Comment' name='comment' validations={['required']}/>
                 </label>
-                <label>
-                    Send me all news
-                    <input type='checkbox' name='sendAll' value='1'/>
-                </label>
-                <br/>
-                <button type='submit' value='subscribe'>Subscribe</button>
-            </Validation.Form>
-        );
+            </div>
+            <div>
+                <Validation.components.Button>Submit</Validation.components.Button>
+            </div>
+        </Validation.components.Form>
+    }
+}
+```
+
+### Input component
+
+```Validation.components.Input```
+
+The wrapper around the native ```input```. It accepts a ```validations``` prop - array of strings which refers to rules object keys.
+
+```javascript
+<Validation.components.Input name='firstname' validations={['alpha', 'lt8']}/>
+```
+
+##### NOTE: For types ```radio``` and ```checkbox``` react-validation will drop the ```value``` to empty string when it's not checked. This is to avoid validation of non checked inputs.
+
+Assuming both of rules provided (lt8 - lesser than 8 value's length) react-validation will break with first occurred error.
+In the example above for ```really long value with d1g1t``` input's value the ```alpha``` rule will break validation first. We can control it by ordering rules within ```validations``` array.
+
+### Textarea component
+
+```Validation.components.Teaxtarea```
+
+The wrapper around the native ```textarea```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
+
+```javascript
+<Validation.components.Textarea name='comment' value='' validations={['required']}/>
+```
+
+### Select component
+
+```Validation.components.Select```
+
+The wrapper around the native ```select```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
+
+```javascript
+<Validation.components.Select name='city' value='' validations={['required']}>
+    <option value=''>Choose your city</option>
+    <option value='1'>London</option>
+    <option value='2'>Kyiv</option>
+    <option value='3'>New York</option>
+</Validation.components.Select>
+```
+
+### Button component
+
+```Validation.components.Button```
+
+The wrapper around the native ```button```. React-validation disables (adds ```disabled``` prop) the button on error occur. This behavior could be suppressed by passing ```disabled``` prop directly to component.
+
+## Migration from 1.*
+
+#### extendErrors API
+```extendErrors``` is no longer exists. Replace it with new approach of validation rules registration. ```hint``` appearance is now fully controlled:
+
+```javascript
+Object.assign(Validation.rules, {
+    required: {
+        rule: value => {
+            return value.trim();
+        },
+        hint: value => {
+            return <span className='form-error is-visible'>Required</span>
+        }
     }
 });
 ```
 
-###Controlled components (Input, Select) has ```setValue```, ```showError``` and ```hideError```, ```getElement``` methods.
+#### Defaults
+React-validation no longer has any defaults. This is TBD but for a 2.0.0 please provide ```errorClassName``` and ```containerClassName``` directly to the validation components.
 
-<b>Example</b>
+#### Validations
+```validations``` prop now accepts array of strings instead of objects. It's made to be more simple and reduce ```render``` code.
 
-```javascript
-var CitySelect = React.createClass({
-    onClick: function(event) {
-        event.preventDefault();
+#### Components
+```Validation.components``` sub-object now provides access to the Components.
 
-        this.refs.select.setValue('Kyiv');
-    },
-
-    render: function() {
-        return (
-            <Validation.Form>
-                <Validation.Select value='London' ref='select' validations={[{rule: 'isRequired'}]} name='city' className='ui-select'>
-                    <option value=''>Choose</option>
-                    <option value='Kyiv'>Kyiv</option>
-                    <option value='London'>London</option>
-                </Validation.Select>
-                <Validation.Button value='submit'/>
-                <a href='#' onClick={this.onClick}>Set Kyiv</a>
-            </Validation.Form>
-        );
-    }
-});
-```
-
-The example above shows how to set values to Components.
-
-```ref.setValue(value [,forceError])```
-
-```value``` - value to set.
-```forceError``` - force validate after setting.
-
-```ref.showError([message] [,additionalClassName])```
-
-```message``` - custom message to show in hint.
-```additionalClassName``` - custom className to add to element.
-
-```ref.hideError()``` - hides error.
-
-```ref.getElement()``` - returns input/select/button DOM element
-
-# Tests
-
-```
-npm test
-```
+Components API moved to Form API. ```forceValidate``` method is no longer exist.

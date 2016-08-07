@@ -1,10 +1,11 @@
 'use strict';
 
 const path = require('path');
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
     entry: {
-        'index': './src/index.jsx'
+        'index': './src/validation.jsx'
     },
 
     output: {
@@ -15,27 +16,14 @@ module.exports = {
     },
 
     externals: {
-        "react": "react",
-        "lodash.isobject": "lodash.isobject",
-        "lodash.isfunction": "lodash.isfunction",
-        "lodash.includes": "lodash.includes",
-        "lodash.noop": "lodash.noop",
-        "lodash.assign": "lodash.assign",
-        "classnames": "classnames",
-        "validator": "validator"
+        "react": "react"
     },
 
+    plugins: require('./webpack/plugins'),
+
     module: {
-        loaders: [
-            {
-                test: /\.js+x?$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel',
-                query: {
-                    presets: ['react', 'es2015'],
-                    plugins: ['transform-runtime']
-                }
-            }
-        ]
-    }
+        loaders: require('./webpack/loaders')
+    },
+
+    eslint: require('./webpack/eslint/.eslintrc.json')
 };

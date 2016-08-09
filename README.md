@@ -155,6 +155,8 @@ Whatever valid props can easily be passed to ```Form```, such ```onSubmit``` and
 
 ```hideError(name)``` - hides an corresponding component's error.
 
+```validateAll()``` - validates all react-validation components.
+
 
 ```javascript
 export default class Comment extends Component {

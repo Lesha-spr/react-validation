@@ -153,6 +153,7 @@
 	        _this._register = _this._register.bind(_this);
 	        _this._update = _this._update.bind(_this);
 	        _this._validate = _this._validate.bind(_this);
+	        _this.validate = _this.validate.bind(_this);
 	        return _this;
 	    }
 
@@ -263,6 +264,19 @@
 	            }, this);
 	        }
 	    }, {
+	        key: '_markUsedAndChanged',
+	        value: function _markUsedAndChanged(name) {
+	            // FIXME: remove mutation
+	            this.state.states[name] = this.state.states[name] || {};
+	            var componentState = this.state.states[name];
+
+	            (0, _assign2.default)(componentState, {
+	                value: this.state.states[name].value || this.components[name].props.value,
+	                isChanged: true,
+	                isUsed: true
+	            });
+	        }
+	    }, {
 	        key: 'showError',
 	        value: function showError(name, error) {
 	            var errors = (0, _assign2.default)({}, this.state.errors);
@@ -287,15 +301,13 @@
 	    }, {
 	        key: 'validate',
 	        value: function validate(name) {
-	            // FIXME: remove mutation
-	            this.state.states[name] = this.state.states[name] || {};
-	            var componentState = this.state.states[name];
-
-	            (0, _assign2.default)(componentState, {
-	                value: this.state.states[name].value || this.components[name].props.value,
-	                isChanged: true,
-	                isUsed: true
-	            });
+	            this._markUsedAndChanged(name);
+	            this._validate();
+	        }
+	    }, {
+	        key: 'validateAll',
+	        value: function validateAll() {
+	            (0, _keys2.default)(this.components).forEach(this.validate);
 
 	            this._validate();
 	        }

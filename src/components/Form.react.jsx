@@ -16,6 +16,7 @@ class Form extends Component {
         this._register = this._register.bind(this);
         this._update = this._update.bind(this);
         this._validate = this._validate.bind(this);
+        this.validate = this.validate.bind(this);
     }
 
     _extendProps(props) {
@@ -116,6 +117,18 @@ class Form extends Component {
         }, this);
     }
 
+    _markUsedAndChanged(name) {
+        // FIXME: remove mutation
+        this.state.states[name] = this.state.states[name] || {};
+        let componentState = this.state.states[name];
+
+        Object.assign(componentState, {
+            value: this.state.states[name].value || this.components[name].props.value,
+            isChanged: true,
+            isUsed: true
+        });
+    }
+
     showError(name, error) {
         let errors = Object.assign({}, this.state.errors);
 
@@ -137,15 +150,12 @@ class Form extends Component {
     }
 
     validate(name) {
-        // FIXME: remove mutation
-        this.state.states[name] = this.state.states[name] || {};
-        let componentState = this.state.states[name];
+        this._markUsedAndChanged(name);
+        this._validate();
+    }
 
-        Object.assign(componentState, {
-            value: this.state.states[name].value || this.components[name].props.value,
-            isChanged: true,
-            isUsed: true
-        });
+    validateAll() {
+        Object.keys(this.components).forEach(this.validate);
 
         this._validate();
     }

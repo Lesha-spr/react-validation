@@ -43,7 +43,7 @@ class Form extends Component {
         let checkbox = (component.props.type === 'checkbox' || component.props.type === 'radio');
 
         Object.assign(componentState, {
-            value: event.target.value,
+            value: event.target.selectedOptions ? Array.prototype.map.call(event.target.selectedOptions, option => option.value) : event.target.value,
             isChanged: isChanged || componentState.isChanged || event.type === 'change',
             isUsed: isUsed || checkbox || componentState.isUsed || event.type === 'blur',
             isChecked: !componentState.isChecked

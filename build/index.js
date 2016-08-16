@@ -185,7 +185,9 @@
 	            var checkbox = component.props.type === 'checkbox' || component.props.type === 'radio';
 
 	            (0, _assign2.default)(componentState, {
-	                value: event.target.value,
+	                value: event.target.selectedOptions ? Array.prototype.map.call(event.target.selectedOptions, function (option) {
+	                    return option.value;
+	                }) : event.target.value,
 	                isChanged: isChanged || componentState.isChanged || event.type === 'change',
 	                isUsed: isUsed || checkbox || componentState.isUsed || event.type === 'blur',
 	                isChecked: !componentState.isChecked

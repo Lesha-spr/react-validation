@@ -211,6 +211,8 @@
 	            this.setState({
 	                errors: errors
 	            });
+
+	            return errors;
 	        }
 	    }, {
 	        key: '_getError',
@@ -311,7 +313,7 @@
 	        value: function validateAll() {
 	            (0, _keys2.default)(this.components).forEach(this.validate);
 
-	            this._validate();
+	            return this._validate();
 	        }
 	    }, {
 	        key: 'render',

@@ -64,6 +64,8 @@ class Form extends Component {
         this.setState({
             errors
         });
+
+        return errors;
     }
 
     _getError(component) {
@@ -157,7 +159,7 @@ class Form extends Component {
     validateAll() {
         Object.keys(this.components).forEach(this.validate);
 
-        this._validate();
+        return this._validate();
     }
 
     render() {

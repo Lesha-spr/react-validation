@@ -155,7 +155,7 @@ Whatever valid props can easily be passed to ```Form```, such ```onSubmit``` and
 
 ```hideError(name)``` - hides an corresponding component's error.
 
-```validateAll()``` - validates all react-validation components.
+```validateAll()``` - validates all react-validation components. Returns map (key: field name prop, value: non passed validation rule) of invalid fields.
 
 
 ```javascript

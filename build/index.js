@@ -141,7 +141,7 @@
 	    function Form(props) {
 	        (0, _classCallCheck3.default)(this, Form);
 
-	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Form).call(this, props));
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (Form.__proto__ || (0, _getPrototypeOf2.default)(Form)).call(this, props));
 
 	        _this.state = {
 	            errors: {},
@@ -247,7 +247,7 @@
 	            var _this3 = this;
 
 	            return _react2.default.Children.map(children, function (child) {
-	                if ((typeof child === 'undefined' ? 'undefined' : (0, _typeof3.default)(child)) !== 'object') {
+	                if (!child || (typeof child === 'undefined' ? 'undefined' : (0, _typeof3.default)(child)) !== 'object') {
 	                    return child;
 	                }
 
@@ -595,7 +595,7 @@
 /* 13 */
 /***/ function(module, exports) {
 
-	var core = module.exports = {version: '2.3.0'};
+	var core = module.exports = {version: '2.4.0'};
 	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ },
@@ -811,6 +811,7 @@
 	  // Thrash, waste and sodomy: IE GC bug
 	  var iframe = __webpack_require__(23)('iframe')
 	    , i      = enumBugKeys.length
+	    , lt     = '<'
 	    , gt     = '>'
 	    , iframeDocument;
 	  iframe.style.display = 'none';
@@ -820,7 +821,7 @@
 	  // html.removeChild(iframe);
 	  iframeDocument = iframe.contentWindow.document;
 	  iframeDocument.open();
-	  iframeDocument.write('<script>document.F=Object</script' + gt);
+	  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
 	  iframeDocument.close();
 	  createDict = iframeDocument.F;
 	  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
@@ -838,6 +839,7 @@
 	  } else result = createDict();
 	  return Properties === undefined ? result : dPs(result, Properties);
 	};
+
 
 /***/ },
 /* 31 */
@@ -1209,6 +1211,7 @@
 	  , isEnum         = {}.propertyIsEnumerable
 	  , SymbolRegistry = shared('symbol-registry')
 	  , AllSymbols     = shared('symbols')
+	  , OPSymbols      = shared('op-symbols')
 	  , ObjectProto    = Object[PROTOTYPE]
 	  , USE_NATIVE     = typeof $Symbol == 'function'
 	  , QObject        = global.QObject;
@@ -1240,6 +1243,7 @@
 	};
 
 	var $defineProperty = function defineProperty(it, key, D){
+	  if(it === ObjectProto)$defineProperty(OPSymbols, key, D);
 	  anObject(it);
 	  key = toPrimitive(key, true);
 	  anObject(D);
@@ -1267,10 +1271,14 @@
 	};
 	var $propertyIsEnumerable = function propertyIsEnumerable(key){
 	  var E = isEnum.call(this, key = toPrimitive(key, true));
+	  if(this === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return false;
 	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
 	};
 	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
-	  var D = gOPD(it = toIObject(it), key = toPrimitive(key, true));
+	  it  = toIObject(it);
+	  key = toPrimitive(key, true);
+	  if(it === ObjectProto && has(AllSymbols, key) && !has(OPSymbols, key))return;
+	  var D = gOPD(it, key);
 	  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
 	  return D;
 	};
@@ -1279,16 +1287,19 @@
 	    , result = []
 	    , i      = 0
 	    , key;
-	  while(names.length > i)if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
-	  return result;
+	  while(names.length > i){
+	    if(!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)result.push(key);
+	  } return result;
 	};
 	var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
-	  var names  = gOPN(toIObject(it))
+	  var IS_OP  = it === ObjectProto
+	    , names  = gOPN(IS_OP ? OPSymbols : toIObject(it))
 	    , result = []
 	    , i      = 0
 	    , key;
-	  while(names.length > i)if(has(AllSymbols, key = names[i++]))result.push(AllSymbols[key]);
-	  return result;
+	  while(names.length > i){
+	    if(has(AllSymbols, key = names[i++]) && (IS_OP ? has(ObjectProto, key) : true))result.push(AllSymbols[key]);
+	  } return result;
 	};
 
 	// 19.4.1.1 Symbol([description])
@@ -1296,13 +1307,12 @@
 	  $Symbol = function Symbol(){
 	    if(this instanceof $Symbol)throw TypeError('Symbol is not a constructor!');
 	    var tag = uid(arguments.length > 0 ? arguments[0] : undefined);
-	    DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
-	      configurable: true,
-	      set: function(value){
-	        if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
-	        setSymbolDesc(this, tag, createDesc(1, value));
-	      }
-	    });
+	    var $set = function(value){
+	      if(this === ObjectProto)$set.call(OPSymbols, value);
+	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+	      setSymbolDesc(this, tag, createDesc(1, value));
+	    };
+	    if(DESCRIPTORS && setter)setSymbolDesc(ObjectProto, tag, {configurable: true, set: $set});
 	    return wrap(tag);
 	  };
 	  redefine($Symbol[PROTOTYPE], 'toString', function toString(){
@@ -2000,7 +2010,7 @@
 
 	    function Button() {
 	        (0, _classCallCheck3.default)(this, Button);
-	        return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Button).apply(this, arguments));
+	        return (0, _possibleConstructorReturn3.default)(this, (Button.__proto__ || (0, _getPrototypeOf2.default)(Button)).apply(this, arguments));
 	    }
 
 	    (0, _createClass3.default)(Button, [{
@@ -2129,7 +2139,7 @@
 	    function Input(props) {
 	        (0, _classCallCheck3.default)(this, Input);
 
-	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Input).call(this, props));
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (Input.__proto__ || (0, _getPrototypeOf2.default)(Input)).call(this, props));
 
 	        _this.props._register(_this);
 	        return _this;
@@ -2378,7 +2388,7 @@
 	    function Select(props) {
 	        (0, _classCallCheck3.default)(this, Select);
 
-	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Select).call(this, props));
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (Select.__proto__ || (0, _getPrototypeOf2.default)(Select)).call(this, props));
 
 	        _this.props._register(_this);
 	        return _this;
@@ -2474,7 +2484,7 @@
 	    function Textarea(props) {
 	        (0, _classCallCheck3.default)(this, Textarea);
 
-	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Textarea).call(this, props));
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (Textarea.__proto__ || (0, _getPrototypeOf2.default)(Textarea)).call(this, props));
 
 	        _this.props._register(_this);
 	        return _this;

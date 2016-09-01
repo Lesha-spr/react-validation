@@ -98,7 +98,7 @@ class Form extends Component {
 
     _clone(children) {
         return React.Children.map(children, child => {
-            if (typeof child !== 'object') {
+            if (!child || (typeof child !== 'object')) {
                 return child;
             }
 

@@ -71,8 +71,14 @@ class Form extends Component {
     _getError(component) {
         let validations = component.props.validations;
         let i = validations.length;
-        let hasError = false;
         let error = null;
+
+        if (this.state.errors[component.props.name] && this.state.errors[component.props.name].force) {
+            error = {};
+            error[component.props.name] = this.state.errors[component.props.name];
+
+            return error;
+        }
 
         while (i--) {
             let validation = validations[validations.length - i - 1];
@@ -87,7 +93,6 @@ class Form extends Component {
             if (!rules[validation].rule(value, component, this)) {
                 error = {};
                 error[component.props.name] = validation;
-                hasError = true;
 
                 break;
             }
@@ -134,7 +139,10 @@ class Form extends Component {
     showError(name, error) {
         let errors = Object.assign({}, this.state.errors);
 
-        errors[name] = error;
+        errors[name] = {
+            ...error,
+            force: true
+        };
 
         this.setState({
             errors

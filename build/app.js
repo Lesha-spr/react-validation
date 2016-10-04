@@ -19441,7 +19441,7 @@
 	(0, _assign2.default)(_validation2.default.rules, {
 	    required: {
 	        rule: function rule(value) {
-	            return value.trim();
+	            return value.toString().trim();
 	        },
 	        hint: function hint(value) {
 	            return _react2.default.createElement(

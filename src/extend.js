@@ -5,7 +5,7 @@ import validator from 'validator';
 Object.assign(Validation.rules, {
     required: {
         rule: value => {
-            return value.trim();
+            return value.toString().trim();
         },
         hint: value => {
             return <span className='form-error is-visible'>Required</span>

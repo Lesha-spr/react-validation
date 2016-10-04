@@ -3,18 +3,18 @@ import getViewData from './../helpers/get-view-data.js';
 import rules from './../rules.js';
 
 class Textarea extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
-        this.props._register(this);
+        context._register(this);
     }
 
     componentDidMount() {
-        this.props._validate(this);
+        this.context._validate(this);
     }
 
     handleChange(event) {
-        this.props._update(this, event);
+        this.context._update(this, event);
 
         event.persist();
 
@@ -22,7 +22,7 @@ class Textarea extends Component {
     }
 
     handleBlur(event) {
-        this.props._update(this, event);
+        this.context._update(this, event);
 
         event.persist();
 
@@ -30,7 +30,7 @@ class Textarea extends Component {
     }
 
     render() {
-        let data = getViewData(this.props);
+        let data = getViewData(this.props, this.context);
 
         return <div className={this.props.containerClassName || null}>
             <textarea
@@ -49,6 +49,14 @@ class Textarea extends Component {
 Textarea.propTypes = {
     onChange: PropTypes.func,
     onBlur: PropTypes.func
+};
+
+Textarea.contextTypes = {
+    _register: PropTypes.func,
+    _update: PropTypes.func,
+    _validate: PropTypes.func,
+    states: PropTypes.object,
+    errors: PropTypes.object
 };
 
 module.exports = Textarea;

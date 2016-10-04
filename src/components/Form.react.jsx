@@ -18,16 +18,16 @@ class Form extends Component {
         this._validate = this._validate.bind(this);
     }
 
-    _extendProps(props) {
-        let _register = this._register;
-        let _update = this._update;
-        let _validate = this._validate;
+    getChildContext() {
+        let _this = this;
 
-        return Object.assign(props, {
-            _register,
-            _update,
-            _validate
-        });
+        return {
+            _register: _this._register,
+            _update: _this._update,
+            _validate: _this._validate,
+            states: _this.state.states,
+            errors: _this.state.errors
+        }
     }
 
     _register(component) {
@@ -93,29 +93,6 @@ class Form extends Component {
         return error;
     }
 
-    _clone(children) {
-        return React.Children.map(children, child => {
-            if (typeof child !== 'object') {
-                return child;
-            }
-
-            let props = {};
-            let isValidationComponent = child.props.validations && child.props.validations.length;
-
-            if (child.type === Button || isValidationComponent) {
-                props = Object.assign({}, this.state);
-
-                if (isValidationComponent) {
-                    this._extendProps(props);
-                }
-            }
-
-            props.children = this._clone(child.props.children);
-
-            return React.cloneElement(child, props);
-        }, this);
-    }
-
     showError(name, error) {
         let errors = Object.assign({}, this.state.errors);
 
@@ -152,9 +129,17 @@ class Form extends Component {
 
     render() {
         return <form {...this.props}>
-            {this._clone(this.props.children)}
+            {this.props.children}
         </form>
     }
 }
+
+Form.childContextTypes = {
+    _register: PropTypes.func,
+    _update: PropTypes.func,
+    _validate: PropTypes.func,
+    states: PropTypes.object,
+    errors: PropTypes.object
+};
 
 module.exports = Form;

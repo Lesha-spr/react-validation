@@ -89,11 +89,19 @@
 
 	'use strict';
 
+<<<<<<< Updated upstream
 	var _typeof2 = __webpack_require__(2);
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
 	var _keys = __webpack_require__(70);
+=======
+	var _extends2 = __webpack_require__(2);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _keys = __webpack_require__(40);
+>>>>>>> Stashed changes
 
 	var _keys2 = _interopRequireDefault(_keys);
 
@@ -101,6 +109,7 @@
 
 	var _assign2 = _interopRequireDefault(_assign);
 
+<<<<<<< Updated upstream
 	var _getPrototypeOf = __webpack_require__(78);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -114,6 +123,21 @@
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	var _possibleConstructorReturn2 = __webpack_require__(86);
+=======
+	var _getPrototypeOf = __webpack_require__(44);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(48);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(49);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(53);
+>>>>>>> Stashed changes
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
@@ -141,33 +165,46 @@
 	    function Form(props) {
 	        (0, _classCallCheck3.default)(this, Form);
 
+<<<<<<< Updated upstream
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Form).call(this, props));
+=======
+	        var _this2 = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Form).call(this, props));
+>>>>>>> Stashed changes
 
-	        _this.state = {
+	        _this2.state = {
 	            errors: {},
 	            states: {}
 	        };
 
-	        _this.components = {};
+	        _this2.components = {};
 
+<<<<<<< Updated upstream
 	        _this._register = _this._register.bind(_this);
 	        _this._update = _this._update.bind(_this);
 	        _this._validate = _this._validate.bind(_this);
 	        return _this;
+=======
+	        _this2._register = _this2._register.bind(_this2);
+	        _this2._update = _this2._update.bind(_this2);
+	        _this2._validate = _this2._validate.bind(_this2);
+	        _this2.validate = _this2.validate.bind(_this2);
+	        return _this2;
+>>>>>>> Stashed changes
 	    }
 
 	    (0, _createClass3.default)(Form, [{
-	        key: '_extendProps',
-	        value: function _extendProps(props) {
-	            var _register = this._register;
-	            var _update = this._update;
-	            var _validate = this._validate;
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            var _this = this;
 
-	            return (0, _assign2.default)(props, {
-	                _register: _register,
-	                _update: _update,
-	                _validate: _validate
-	            });
+	            return {
+	                _register: _this._register,
+	                _update: _this._update,
+	                _validate: _this._validate,
+	                validate: _this.validate,
+	                states: _this.state.states,
+	                errors: _this.state.errors
+	            };
 	        }
 	    }, {
 	        key: '_register',
@@ -195,14 +232,14 @@
 	    }, {
 	        key: '_validate',
 	        value: function _validate() {
-	            var _this2 = this;
+	            var _this3 = this;
 
 	            var errors = (0, _assign2.default)({}, this.state.errors);
 
 	            (0, _keys2.default)(this.components).forEach(function (key) {
-	                var error = _this2._getError(_this2.components[key]);
+	                var error = _this3._getError(_this3.components[key]);
 
-	                error ? (0, _assign2.default)(errors, error) : delete errors[_this2.components[key].props.name];
+	                error ? (0, _assign2.default)(errors, error) : delete errors[_this3.components[key].props.name];
 	            });
 
 	            this.setState({
@@ -237,6 +274,7 @@
 	            return error;
 	        }
 	    }, {
+<<<<<<< Updated upstream
 	        key: '_clone',
 	        value: function _clone(children) {
 	            var _this3 = this;
@@ -261,6 +299,19 @@
 
 	                return _react2.default.cloneElement(child, props);
 	            }, this);
+=======
+	        key: '_markUsedAndChanged',
+	        value: function _markUsedAndChanged(name) {
+	            // FIXME: remove mutation
+	            this.state.states[name] = this.state.states[name] || {};
+	            var componentState = this.state.states[name];
+
+	            (0, _assign2.default)(componentState, {
+	                value: this.state.states[name].value || this.components[name].props.value,
+	                isChanged: true,
+	                isUsed: true
+	            });
+>>>>>>> Stashed changes
 	        }
 	    }, {
 	        key: 'showError',
@@ -305,12 +356,21 @@
 	            return _react2.default.createElement(
 	                'form',
 	                this.props,
-	                this._clone(this.props.children)
+	                this.props.children
 	            );
 	        }
 	    }]);
 	    return Form;
 	}(_react.Component);
+
+	Form.childContextTypes = {
+	    _register: _react.PropTypes.func,
+	    _update: _react.PropTypes.func,
+	    _validate: _react.PropTypes.func,
+	    validate: _react.PropTypes.func,
+	    states: _react.PropTypes.object,
+	    errors: _react.PropTypes.object
+	};
 
 	module.exports = Form;
 
@@ -946,6 +1006,422 @@
 /***/ },
 /* 39 */
 /***/ function(module, exports, __webpack_require__) {
+<<<<<<< Updated upstream
+=======
+
+	// 7.1.13 ToObject(argument)
+	var defined = __webpack_require__(28);
+	module.exports = function(it){
+	  return Object(defined(it));
+	};
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(41), __esModule: true };
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(42);
+	module.exports = __webpack_require__(8).Object.keys;
+
+/***/ },
+/* 42 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(39)
+	  , $keys    = __webpack_require__(22);
+
+	__webpack_require__(43)('keys', function(){
+	  return function keys(it){
+	    return $keys(toObject(it));
+	  };
+	});
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// most Object methods by ES6 should accept primitives
+	var $export = __webpack_require__(6)
+	  , core    = __webpack_require__(8)
+	  , fails   = __webpack_require__(17);
+	module.exports = function(KEY, exec){
+	  var fn  = (core.Object || {})[KEY] || Object[KEY]
+	    , exp = {};
+	  exp[KEY] = exec(fn);
+	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	};
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(45), __esModule: true };
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(46);
+	module.exports = __webpack_require__(8).Object.getPrototypeOf;
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.9 Object.getPrototypeOf(O)
+	var toObject        = __webpack_require__(39)
+	  , $getPrototypeOf = __webpack_require__(47);
+
+	__webpack_require__(43)('getPrototypeOf', function(){
+	  return function getPrototypeOf(it){
+	    return $getPrototypeOf(toObject(it));
+	  };
+	});
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+	var has         = __webpack_require__(24)
+	  , toObject    = __webpack_require__(39)
+	  , IE_PROTO    = __webpack_require__(33)('IE_PROTO')
+	  , ObjectProto = Object.prototype;
+
+	module.exports = Object.getPrototypeOf || function(O){
+	  O = toObject(O);
+	  if(has(O, IE_PROTO))return O[IE_PROTO];
+	  if(typeof O.constructor == 'function' && O instanceof O.constructor){
+	    return O.constructor.prototype;
+	  } return O instanceof Object ? ObjectProto : null;
+	};
+
+/***/ },
+/* 48 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	exports.default = function (instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	};
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _defineProperty = __webpack_require__(50);
+
+	var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  function defineProperties(target, props) {
+	    for (var i = 0; i < props.length; i++) {
+	      var descriptor = props[i];
+	      descriptor.enumerable = descriptor.enumerable || false;
+	      descriptor.configurable = true;
+	      if ("value" in descriptor) descriptor.writable = true;
+	      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
+	    }
+	  }
+
+	  return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	    if (staticProps) defineProperties(Constructor, staticProps);
+	    return Constructor;
+	  };
+	}();
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(51), __esModule: true };
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(52);
+	var $Object = __webpack_require__(8).Object;
+	module.exports = function defineProperty(it, key, desc){
+	  return $Object.defineProperty(it, key, desc);
+	};
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $export = __webpack_require__(6);
+	// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
+	$export($export.S + $export.F * !__webpack_require__(16), 'Object', {defineProperty: __webpack_require__(12).f});
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _typeof2 = __webpack_require__(54);
+
+	var _typeof3 = _interopRequireDefault(_typeof2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+
+	  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
+	};
+
+/***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _iterator = __webpack_require__(55);
+
+	var _iterator2 = _interopRequireDefault(_iterator);
+
+	var _symbol = __webpack_require__(74);
+
+	var _symbol2 = _interopRequireDefault(_symbol);
+
+	var _typeof = typeof _symbol2.default === "function" && typeof _iterator2.default === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj; };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.default) === "symbol" ? function (obj) {
+	  return typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	} : function (obj) {
+	  return obj && typeof _symbol2.default === "function" && obj.constructor === _symbol2.default ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
+	};
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(56), __esModule: true };
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(57);
+	__webpack_require__(69);
+	module.exports = __webpack_require__(73).f('iterator');
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var $at  = __webpack_require__(58)(true);
+
+	// 21.1.3.27 String.prototype[@@iterator]()
+	__webpack_require__(59)(String, 'String', function(iterated){
+	  this._t = String(iterated); // target
+	  this._i = 0;                // next index
+	// 21.1.5.2.1 %StringIteratorPrototype%.next()
+	}, function(){
+	  var O     = this._t
+	    , index = this._i
+	    , point;
+	  if(index >= O.length)return {value: undefined, done: true};
+	  point = $at(O, index);
+	  this._i += point.length;
+	  return {value: point, done: false};
+	});
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var toInteger = __webpack_require__(31)
+	  , defined   = __webpack_require__(28);
+	// true  -> String#at
+	// false -> String#codePointAt
+	module.exports = function(TO_STRING){
+	  return function(that, pos){
+	    var s = String(defined(that))
+	      , i = toInteger(pos)
+	      , l = s.length
+	      , a, b;
+	    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
+	    a = s.charCodeAt(i);
+	    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+	      ? TO_STRING ? s.charAt(i) : a
+	      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+	  };
+	};
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var LIBRARY        = __webpack_require__(60)
+	  , $export        = __webpack_require__(6)
+	  , redefine       = __webpack_require__(61)
+	  , hide           = __webpack_require__(11)
+	  , has            = __webpack_require__(24)
+	  , Iterators      = __webpack_require__(62)
+	  , $iterCreate    = __webpack_require__(63)
+	  , setToStringTag = __webpack_require__(67)
+	  , getPrototypeOf = __webpack_require__(47)
+	  , ITERATOR       = __webpack_require__(68)('iterator')
+	  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
+	  , FF_ITERATOR    = '@@iterator'
+	  , KEYS           = 'keys'
+	  , VALUES         = 'values';
+
+	var returnThis = function(){ return this; };
+
+	module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
+	  $iterCreate(Constructor, NAME, next);
+	  var getMethod = function(kind){
+	    if(!BUGGY && kind in proto)return proto[kind];
+	    switch(kind){
+	      case KEYS: return function keys(){ return new Constructor(this, kind); };
+	      case VALUES: return function values(){ return new Constructor(this, kind); };
+	    } return function entries(){ return new Constructor(this, kind); };
+	  };
+	  var TAG        = NAME + ' Iterator'
+	    , DEF_VALUES = DEFAULT == VALUES
+	    , VALUES_BUG = false
+	    , proto      = Base.prototype
+	    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
+	    , $default   = $native || getMethod(DEFAULT)
+	    , $entries   = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined
+	    , $anyNative = NAME == 'Array' ? proto.entries || $native : $native
+	    , methods, key, IteratorPrototype;
+	  // Fix native
+	  if($anyNative){
+	    IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
+	    if(IteratorPrototype !== Object.prototype){
+	      // Set @@toStringTag to native iterators
+	      setToStringTag(IteratorPrototype, TAG, true);
+	      // fix for some old engines
+	      if(!LIBRARY && !has(IteratorPrototype, ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
+	    }
+	  }
+	  // fix Array#{values, @@iterator}.name in V8 / FF
+	  if(DEF_VALUES && $native && $native.name !== VALUES){
+	    VALUES_BUG = true;
+	    $default = function values(){ return $native.call(this); };
+	  }
+	  // Define iterator
+	  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
+	    hide(proto, ITERATOR, $default);
+	  }
+	  // Plug for library
+	  Iterators[NAME] = $default;
+	  Iterators[TAG]  = returnThis;
+	  if(DEFAULT){
+	    methods = {
+	      values:  DEF_VALUES ? $default : getMethod(VALUES),
+	      keys:    IS_SET     ? $default : getMethod(KEYS),
+	      entries: $entries
+	    };
+	    if(FORCED)for(key in methods){
+	      if(!(key in proto))redefine(proto, key, methods[key]);
+	    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
+	  }
+	  return methods;
+	};
+
+/***/ },
+/* 60 */
+/***/ function(module, exports) {
+
+	module.exports = true;
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(11);
+
+/***/ },
+/* 62 */
+/***/ function(module, exports) {
+
+	module.exports = {};
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var create         = __webpack_require__(64)
+	  , descriptor     = __webpack_require__(20)
+	  , setToStringTag = __webpack_require__(67)
+	  , IteratorPrototype = {};
+
+	// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+	__webpack_require__(11)(IteratorPrototype, __webpack_require__(68)('iterator'), function(){ return this; });
+
+	module.exports = function(Constructor, NAME, next){
+	  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
+	  setToStringTag(Constructor, NAME + ' Iterator');
+	};
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+	var anObject    = __webpack_require__(13)
+	  , dPs         = __webpack_require__(65)
+	  , enumBugKeys = __webpack_require__(36)
+	  , IE_PROTO    = __webpack_require__(33)('IE_PROTO')
+	  , Empty       = function(){ /* empty */ }
+	  , PROTOTYPE   = 'prototype';
+
+	// Create object with fake `null` prototype: use iframe Object with cleared prototype
+	var createDict = function(){
+	  // Thrash, waste and sodomy: IE GC bug
+	  var iframe = __webpack_require__(18)('iframe')
+	    , i      = enumBugKeys.length
+	    , gt     = '>'
+	    , iframeDocument;
+	  iframe.style.display = 'none';
+	  __webpack_require__(66).appendChild(iframe);
+	  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+	  // createDict = iframe.contentWindow.Object;
+	  // html.removeChild(iframe);
+	  iframeDocument = iframe.contentWindow.document;
+	  iframeDocument.open();
+	  iframeDocument.write('<script>document.F=Object</script' + gt);
+	  iframeDocument.close();
+	  createDict = iframeDocument.F;
+	  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
+	  return createDict();
+	};
+>>>>>>> Stashed changes
 
 	var toInteger = __webpack_require__(7)
 	  , max       = Math.max
@@ -955,6 +1431,7 @@
 	  return index < 0 ? max(index + length, 0) : min(index, length);
 	};
 
+<<<<<<< Updated upstream
 /***/ },
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
@@ -967,6 +1444,10 @@
 
 /***/ },
 /* 41 */
+=======
+/***/ },
+/* 65 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	var global = __webpack_require__(12)
@@ -987,6 +1468,7 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 43 */
 /***/ function(module, exports) {
 
@@ -997,24 +1479,40 @@
 
 /***/ },
 /* 44 */
+=======
+/* 66 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(12).document && document.documentElement;
 
 /***/ },
+<<<<<<< Updated upstream
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var def = __webpack_require__(17).f
 	  , has = __webpack_require__(27)
 	  , TAG = __webpack_require__(46)('toStringTag');
+=======
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var def = __webpack_require__(12).f
+	  , has = __webpack_require__(24)
+	  , TAG = __webpack_require__(68)('toStringTag');
+>>>>>>> Stashed changes
 
 	module.exports = function(it, tag, stat){
 	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 46 */
+=======
+/* 68 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	var store      = __webpack_require__(41)('wks')
@@ -1030,6 +1528,7 @@
 	$exports.store = store;
 
 /***/ },
+<<<<<<< Updated upstream
 /* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1066,6 +1565,16 @@
 	  , hide          = __webpack_require__(16)
 	  , Iterators     = __webpack_require__(28)
 	  , TO_STRING_TAG = __webpack_require__(46)('toStringTag');
+=======
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(70);
+	var global        = __webpack_require__(7)
+	  , hide          = __webpack_require__(11)
+	  , Iterators     = __webpack_require__(62)
+	  , TO_STRING_TAG = __webpack_require__(68)('toStringTag');
+>>>>>>> Stashed changes
 
 	for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
 	  var NAME       = collections[i]
@@ -1076,6 +1585,7 @@
 	}
 
 /***/ },
+<<<<<<< Updated upstream
 /* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1084,12 +1594,26 @@
 	  , step             = __webpack_require__(52)
 	  , Iterators        = __webpack_require__(28)
 	  , toIObject        = __webpack_require__(34);
+=======
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var addToUnscopables = __webpack_require__(71)
+	  , step             = __webpack_require__(72)
+	  , Iterators        = __webpack_require__(62)
+	  , toIObject        = __webpack_require__(25);
+>>>>>>> Stashed changes
 
 	// 22.1.3.4 Array.prototype.entries()
 	// 22.1.3.13 Array.prototype.keys()
 	// 22.1.3.29 Array.prototype.values()
 	// 22.1.3.30 Array.prototype[@@iterator]()
+<<<<<<< Updated upstream
 	module.exports = __webpack_require__(9)(Array, 'Array', function(iterated, kind){
+=======
+	module.exports = __webpack_require__(59)(Array, 'Array', function(iterated, kind){
+>>>>>>> Stashed changes
 	  this._t = toIObject(iterated); // target
 	  this._i = 0;                   // next index
 	  this._k = kind;                // kind
@@ -1115,13 +1639,21 @@
 	addToUnscopables('entries');
 
 /***/ },
+<<<<<<< Updated upstream
 /* 51 */
+=======
+/* 71 */
+>>>>>>> Stashed changes
 /***/ function(module, exports) {
 
 	module.exports = function(){ /* empty */ };
 
 /***/ },
+<<<<<<< Updated upstream
 /* 52 */
+=======
+/* 72 */
+>>>>>>> Stashed changes
 /***/ function(module, exports) {
 
 	module.exports = function(done, value){
@@ -1129,6 +1661,7 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1152,10 +1685,36 @@
 
 /***/ },
 /* 56 */
+=======
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.f = __webpack_require__(68);
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(75), __esModule: true };
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(76);
+	__webpack_require__(85);
+	__webpack_require__(86);
+	__webpack_require__(87);
+	module.exports = __webpack_require__(8).Symbol;
+
+/***/ },
+/* 76 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	// ECMAScript 6 symbols shim
+<<<<<<< Updated upstream
 	var global         = __webpack_require__(12)
 	  , has            = __webpack_require__(27)
 	  , DESCRIPTORS    = __webpack_require__(21)
@@ -1181,6 +1740,33 @@
 	  , $GOPD          = __webpack_require__(66)
 	  , $DP            = __webpack_require__(17)
 	  , $keys          = __webpack_require__(32)
+=======
+	var global         = __webpack_require__(7)
+	  , has            = __webpack_require__(24)
+	  , DESCRIPTORS    = __webpack_require__(16)
+	  , $export        = __webpack_require__(6)
+	  , redefine       = __webpack_require__(61)
+	  , META           = __webpack_require__(77).KEY
+	  , $fails         = __webpack_require__(17)
+	  , shared         = __webpack_require__(34)
+	  , setToStringTag = __webpack_require__(67)
+	  , uid            = __webpack_require__(35)
+	  , wks            = __webpack_require__(68)
+	  , wksExt         = __webpack_require__(73)
+	  , wksDefine      = __webpack_require__(78)
+	  , keyOf          = __webpack_require__(79)
+	  , enumKeys       = __webpack_require__(80)
+	  , isArray        = __webpack_require__(81)
+	  , anObject       = __webpack_require__(13)
+	  , toIObject      = __webpack_require__(25)
+	  , toPrimitive    = __webpack_require__(19)
+	  , createDesc     = __webpack_require__(20)
+	  , _create        = __webpack_require__(64)
+	  , gOPNExt        = __webpack_require__(82)
+	  , $GOPD          = __webpack_require__(84)
+	  , $DP            = __webpack_require__(12)
+	  , $keys          = __webpack_require__(22)
+>>>>>>> Stashed changes
 	  , gOPD           = $GOPD.f
 	  , dP             = $DP.f
 	  , gOPN           = gOPNExt.f
@@ -1295,11 +1881,19 @@
 
 	  $GOPD.f = $getOwnPropertyDescriptor;
 	  $DP.f   = $defineProperty;
+<<<<<<< Updated upstream
 	  __webpack_require__(65).f = gOPNExt.f = $getOwnPropertyNames;
 	  __webpack_require__(62).f  = $propertyIsEnumerable;
 	  __webpack_require__(61).f = $getOwnPropertySymbols;
 
 	  if(DESCRIPTORS && !__webpack_require__(10)){
+=======
+	  __webpack_require__(83).f = gOPNExt.f = $getOwnPropertyNames;
+	  __webpack_require__(38).f  = $propertyIsEnumerable;
+	  __webpack_require__(37).f = $getOwnPropertySymbols;
+
+	  if(DESCRIPTORS && !__webpack_require__(60)){
+>>>>>>> Stashed changes
 	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
 	  }
 
@@ -1383,7 +1977,11 @@
 	setToStringTag(global.JSON, 'JSON', true);
 
 /***/ },
+<<<<<<< Updated upstream
 /* 57 */
+=======
+/* 77 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	var META     = __webpack_require__(42)('meta')
@@ -1441,6 +2039,7 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1449,13 +2048,27 @@
 	  , LIBRARY        = __webpack_require__(10)
 	  , wksExt         = __webpack_require__(53)
 	  , defineProperty = __webpack_require__(17).f;
+=======
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global         = __webpack_require__(7)
+	  , core           = __webpack_require__(8)
+	  , LIBRARY        = __webpack_require__(60)
+	  , wksExt         = __webpack_require__(73)
+	  , defineProperty = __webpack_require__(12).f;
+>>>>>>> Stashed changes
 	module.exports = function(name){
 	  var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
 	  if(name.charAt(0) != '_' && !(name in $Symbol))defineProperty($Symbol, name, {value: wksExt.f(name)});
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 59 */
+=======
+/* 79 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	var getKeys   = __webpack_require__(32)
@@ -1470,7 +2083,11 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 60 */
+=======
+/* 80 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	// all enumerable object keys, includes symbols
@@ -1490,6 +2107,7 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 61 */
 /***/ function(module, exports) {
 
@@ -1503,6 +2121,9 @@
 
 /***/ },
 /* 63 */
+=======
+/* 81 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	// 7.2.2 IsArray(argument)
@@ -1512,12 +2133,21 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 	var toIObject = __webpack_require__(34)
 	  , gOPN      = __webpack_require__(65).f
+=======
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+	var toIObject = __webpack_require__(25)
+	  , gOPN      = __webpack_require__(83).f
+>>>>>>> Stashed changes
 	  , toString  = {}.toString;
 
 	var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -1537,7 +2167,11 @@
 
 
 /***/ },
+<<<<<<< Updated upstream
 /* 65 */
+=======
+/* 83 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	// 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
@@ -1549,7 +2183,11 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 66 */
+=======
+/* 84 */
+>>>>>>> Stashed changes
 /***/ function(module, exports, __webpack_require__) {
 
 	var pIE            = __webpack_require__(62)
@@ -1570,12 +2208,17 @@
 	};
 
 /***/ },
+<<<<<<< Updated upstream
 /* 67 */
+=======
+/* 85 */
+>>>>>>> Stashed changes
 /***/ function(module, exports) {
 
 	
 
 /***/ },
+<<<<<<< Updated upstream
 /* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1785,11 +2428,18 @@
 	var $export = __webpack_require__(11);
 	// 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
 	$export($export.S + $export.F * !__webpack_require__(21), 'Object', {defineProperty: __webpack_require__(17).f});
+=======
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(78)('asyncIterator');
+>>>>>>> Stashed changes
 
 /***/ },
 /* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
+<<<<<<< Updated upstream
 	"use strict";
 
 	exports.__esModule = true;
@@ -1807,6 +2457,9 @@
 
 	  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
 	};
+=======
+	__webpack_require__(78)('observable');
+>>>>>>> Stashed changes
 
 /***/ },
 /* 87 */
@@ -1824,7 +2477,11 @@
 
 	var _create2 = _interopRequireDefault(_create);
 
+<<<<<<< Updated upstream
 	var _typeof2 = __webpack_require__(2);
+=======
+	var _typeof2 = __webpack_require__(54);
+>>>>>>> Stashed changes
 
 	var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -1883,7 +2540,11 @@
 	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
 	    function(test, buggy, set){
 	      try {
+<<<<<<< Updated upstream
 	        set = __webpack_require__(14)(Function.call, __webpack_require__(66).f(Object.prototype, '__proto__').set, 2);
+=======
+	        set = __webpack_require__(9)(Function.call, __webpack_require__(84).f(Object.prototype, '__proto__').set, 2);
+>>>>>>> Stashed changes
 	        set(test, []);
 	        buggy = !(test instanceof Array);
 	      } catch(e){ buggy = true; }
@@ -1919,7 +2580,11 @@
 
 	var $export = __webpack_require__(11)
 	// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+<<<<<<< Updated upstream
 	$export($export.S, 'Object', {create: __webpack_require__(30)});
+=======
+	$export($export.S, 'Object', {create: __webpack_require__(64)});
+>>>>>>> Stashed changes
 
 /***/ },
 /* 95 */
@@ -1945,7 +2610,11 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
+<<<<<<< Updated upstream
 	var _keys = __webpack_require__(70);
+=======
+	var _keys = __webpack_require__(40);
+>>>>>>> Stashed changes
 
 	var _keys2 = _interopRequireDefault(_keys);
 
@@ -1953,6 +2622,7 @@
 
 	var _objectWithoutProperties3 = _interopRequireDefault(_objectWithoutProperties2);
 
+<<<<<<< Updated upstream
 	var _getPrototypeOf = __webpack_require__(78);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -1966,6 +2636,21 @@
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	var _possibleConstructorReturn2 = __webpack_require__(86);
+=======
+	var _getPrototypeOf = __webpack_require__(44);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(48);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(49);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(53);
+>>>>>>> Stashed changes
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
@@ -1991,12 +2676,11 @@
 	        key: 'render',
 	        value: function render() {
 	            var _props = this.props;
-	            var errors = _props.errors;
 	            var errorClassName = _props.errorClassName;
 	            var states = _props.states;
-	            var props = (0, _objectWithoutProperties3.default)(_props, ['errors', 'errorClassName', 'states']);
+	            var props = (0, _objectWithoutProperties3.default)(_props, ['errorClassName', 'states']);
 
-	            var isDisabled = (0, _keys2.default)(errors).length;
+	            var isDisabled = (0, _keys2.default)(this.context.errors).length;
 	            var className = '' + (this.props.className ? this.props.className : '') + (isDisabled && errorClassName ? ' ' + errorClassName : '');
 
 	            return _react2.default.createElement(
@@ -2012,6 +2696,10 @@
 	    }]);
 	    return Button;
 	}(_react.Component);
+
+	Button.contextTypes = {
+	    errors: _react.PropTypes.object
+	};
 
 	module.exports = Button;
 
@@ -2073,6 +2761,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
+<<<<<<< Updated upstream
 	var _getPrototypeOf = __webpack_require__(78);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -2086,6 +2775,21 @@
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	var _possibleConstructorReturn2 = __webpack_require__(86);
+=======
+	var _getPrototypeOf = __webpack_require__(44);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(48);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(49);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(53);
+>>>>>>> Stashed changes
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
@@ -2101,33 +2805,40 @@
 
 	var _getViewData2 = _interopRequireDefault(_getViewData);
 
+<<<<<<< Updated upstream
 	var _rules = __webpack_require__(96);
 
 	var _rules2 = _interopRequireDefault(_rules);
 
+=======
+>>>>>>> Stashed changes
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Input = function (_Component) {
 	    (0, _inherits3.default)(Input, _Component);
 
-	    function Input(props) {
+	    function Input(props, context) {
 	        (0, _classCallCheck3.default)(this, Input);
 
+<<<<<<< Updated upstream
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Input).call(this, props));
+=======
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Input).call(this, props, context));
+>>>>>>> Stashed changes
 
-	        _this.props._register(_this);
+	        context._register(_this);
 	        return _this;
 	    }
 
 	    (0, _createClass3.default)(Input, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.props._validate(this);
+	            this.context._validate(this);
 	        }
 	    }, {
 	        key: 'handleChange',
 	        value: function handleChange(event) {
-	            this.props._update(this, event);
+	            this.context._update(this, event);
 
 	            event.persist();
 
@@ -2136,7 +2847,7 @@
 	    }, {
 	        key: 'handleBlur',
 	        value: function handleBlur(event) {
-	            this.props._update(this, event);
+	            this.context._update(this, event);
 
 	            event.persist();
 
@@ -2145,7 +2856,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var data = (0, _getViewData2.default)(this.props);
+	            var data = (0, _getViewData2.default)(this.props, this.context);
 
 	            return _react2.default.createElement(
 	                'div',
@@ -2169,6 +2880,15 @@
 	Input.propTypes = {
 	    onChange: _react.PropTypes.func,
 	    onBlur: _react.PropTypes.func
+	};
+
+	Input.contextTypes = {
+	    _register: _react.PropTypes.func,
+	    _update: _react.PropTypes.func,
+	    _validate: _react.PropTypes.func,
+	    validate: _react.PropTypes.func,
+	    states: _react.PropTypes.object,
+	    errors: _react.PropTypes.object
 	};
 
 	module.exports = Input;
@@ -2205,21 +2925,16 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	module.exports = function (props) {
+	module.exports = function (props, context) {
 	    var data = {};
-	    var _register = props._register;
-	    var _update = props._update;
-	    var _validate = props._validate;
 	    var validations = props.validations;
-	    var states = props.states;
-	    var errors = props.errors;
 	    var errorClassName = props.errorClassName;
 	    var containerClassName = props.containerClassName;
-	    var rest = (0, _objectWithoutProperties3.default)(props, ['_register', '_update', '_validate', 'validations', 'states', 'errors', 'errorClassName', 'containerClassName']);
+	    var rest = (0, _objectWithoutProperties3.default)(props, ['validations', 'errorClassName', 'containerClassName']);
 
 
-	    data.value = (0, _pullValue2.default)(props);
-	    data.error = (0, _pullError2.default)(props);
+	    data.value = (0, _pullValue2.default)(props, context);
+	    data.error = (0, _pullError2.default)(props, context);
 	    data.hint = (0, _pullHint2.default)(data.error, data.value, _rules2.default);
 	    data.className = (0, _pullClassName2.default)(data.error, props);
 	    data.props = rest;
@@ -2233,11 +2948,11 @@
 
 	"use strict";
 
-	module.exports = function (props) {
+	module.exports = function (props, context) {
 	    var value = props.value;
 
-	    if (props.states.hasOwnProperty(props.name)) {
-	        value = props.states[props.name].value;
+	    if (context.states.hasOwnProperty(props.name)) {
+	        value = context.states[props.name].value;
 	    }
 
 	    return value;
@@ -2264,9 +2979,9 @@
 	}
 
 	// TODO: Rework React.element appearance
-	module.exports = function (props) {
-	    var state = props.states[props.name];
-	    var error = props.errors[props.name];
+	module.exports = function (props, context) {
+	    var state = context.states[props.name];
+	    var error = context.errors[props.name];
 
 	    if (_react2.default.isValidElement(error) || error && error.includes(':')) {
 	        return error;
@@ -2322,6 +3037,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
+<<<<<<< Updated upstream
 	var _getPrototypeOf = __webpack_require__(78);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -2335,6 +3051,21 @@
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	var _possibleConstructorReturn2 = __webpack_require__(86);
+=======
+	var _getPrototypeOf = __webpack_require__(44);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(48);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(49);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(53);
+>>>>>>> Stashed changes
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
@@ -2350,28 +3081,35 @@
 
 	var _getViewData2 = _interopRequireDefault(_getViewData);
 
+<<<<<<< Updated upstream
 	var _rules = __webpack_require__(96);
 
 	var _rules2 = _interopRequireDefault(_rules);
 
+=======
+>>>>>>> Stashed changes
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Select = function (_Component) {
 	    (0, _inherits3.default)(Select, _Component);
 
-	    function Select(props) {
+	    function Select(props, context) {
 	        (0, _classCallCheck3.default)(this, Select);
 
+<<<<<<< Updated upstream
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Select).call(this, props));
+=======
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Select).call(this, props, context));
+>>>>>>> Stashed changes
 
-	        _this.props._register(_this);
+	        context._register(_this);
 	        return _this;
 	    }
 
 	    (0, _createClass3.default)(Select, [{
 	        key: 'handleChange',
 	        value: function handleChange(event) {
-	            this.props._update(this, event, true, true);
+	            this.context._update(this, event, true, true);
 
 	            event.persist();
 
@@ -2380,7 +3118,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var data = (0, _getViewData2.default)(this.props);
+	            var data = (0, _getViewData2.default)(this.props, this.context);
 
 	            return _react2.default.createElement(
 	                'div',
@@ -2406,6 +3144,15 @@
 	    onChange: _react.PropTypes.func
 	};
 
+	Select.contextTypes = {
+	    _register: _react.PropTypes.func,
+	    _update: _react.PropTypes.func,
+	    _validate: _react.PropTypes.func,
+	    validate: _react.PropTypes.func,
+	    states: _react.PropTypes.object,
+	    errors: _react.PropTypes.object
+	};
+
 	module.exports = Select;
 
 /***/ },
@@ -2418,6 +3165,7 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
+<<<<<<< Updated upstream
 	var _getPrototypeOf = __webpack_require__(78);
 
 	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -2431,6 +3179,21 @@
 	var _createClass3 = _interopRequireDefault(_createClass2);
 
 	var _possibleConstructorReturn2 = __webpack_require__(86);
+=======
+	var _getPrototypeOf = __webpack_require__(44);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(48);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(49);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(53);
+>>>>>>> Stashed changes
 
 	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
@@ -2455,24 +3218,28 @@
 	var Textarea = function (_Component) {
 	    (0, _inherits3.default)(Textarea, _Component);
 
-	    function Textarea(props) {
+	    function Textarea(props, context) {
 	        (0, _classCallCheck3.default)(this, Textarea);
 
+<<<<<<< Updated upstream
 	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Textarea).call(this, props));
+=======
+	        var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(Textarea).call(this, props, context));
+>>>>>>> Stashed changes
 
-	        _this.props._register(_this);
+	        context._register(_this);
 	        return _this;
 	    }
 
 	    (0, _createClass3.default)(Textarea, [{
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
-	            this.props._validate(this);
+	            this.context._validate(this);
 	        }
 	    }, {
 	        key: 'handleChange',
 	        value: function handleChange(event) {
-	            this.props._update(this, event);
+	            this.context._update(this, event);
 
 	            event.persist();
 
@@ -2481,7 +3248,7 @@
 	    }, {
 	        key: 'handleBlur',
 	        value: function handleBlur(event) {
-	            this.props._update(this, event);
+	            this.context._update(this, event);
 
 	            event.persist();
 
@@ -2490,7 +3257,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var data = (0, _getViewData2.default)(this.props);
+	            var data = (0, _getViewData2.default)(this.props, this.context);
 
 	            return _react2.default.createElement(
 	                'div',
@@ -2513,6 +3280,15 @@
 	Textarea.propTypes = {
 	    onChange: _react.PropTypes.func,
 	    onBlur: _react.PropTypes.func
+	};
+
+	Textarea.contextTypes = {
+	    _register: _react.PropTypes.func,
+	    _update: _react.PropTypes.func,
+	    _validate: _react.PropTypes.func,
+	    validate: _react.PropTypes.func,
+	    states: _react.PropTypes.object,
+	    errors: _react.PropTypes.object
 	};
 
 	module.exports = Textarea;

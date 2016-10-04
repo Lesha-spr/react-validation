@@ -1,20 +1,19 @@
 import React, {Component, PropTypes} from 'react';
 import getViewData from './../helpers/get-view-data.js';
-import rules from './../rules.js';
 
 class Input extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
-        this.props._register(this);
+        context._register(this);
     }
 
     componentDidMount() {
-        this.props._validate(this);
+        this.context._validate(this);
     }
 
     handleChange(event) {
-        this.props._update(this, event);
+        this.context._update(this, event);
 
         event.persist();
 
@@ -22,7 +21,7 @@ class Input extends Component {
     }
 
     handleBlur(event) {
-        this.props._update(this, event);
+        this.context._update(this, event);
 
         event.persist();
 
@@ -30,7 +29,7 @@ class Input extends Component {
     }
 
     render() {
-        let data = getViewData(this.props);
+        let data = getViewData(this.props, this.context);
 
         return <div className={this.props.containerClassName || null}>
             <input
@@ -50,6 +49,14 @@ class Input extends Component {
 Input.propTypes = {
     onChange: PropTypes.func,
     onBlur: PropTypes.func
+};
+
+Input.contextTypes = {
+    _register: PropTypes.func,
+    _update: PropTypes.func,
+    _validate: PropTypes.func,
+    states: PropTypes.object,
+    errors: PropTypes.object
 };
 
 module.exports = Input;

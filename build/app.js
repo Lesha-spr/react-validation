@@ -22088,8 +22088,7 @@
 	        value: function render() {
 	            var _props = this.props;
 	            var errorClassName = _props.errorClassName;
-	            var states = _props.states;
-	            var props = (0, _objectWithoutProperties3.default)(_props, ['errorClassName', 'states']);
+	            var props = (0, _objectWithoutProperties3.default)(_props, ['errorClassName']);
 
 	            var isDisabled = (0, _keys2.default)(this.context.errors).length;
 	            var className = '' + (this.props.className ? this.props.className : '') + (isDisabled && errorClassName ? ' ' + errorClassName : '');

@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 
 class Button extends Component {
     render() {
-        let {errorClassName, states, ...props} = this.props;
+        let {errorClassName, ...props} = this.props;
         let isDisabled = Object.keys(this.context.errors).length;
         let className = `${this.props.className ? this.props.className : ''}${isDisabled && errorClassName ? ' ' + errorClassName : ''}`;
 

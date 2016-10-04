@@ -1,16 +1,15 @@
 import React, {Component, PropTypes} from 'react';
 import getViewData from './../helpers/get-view-data.js';
-import rules from './../rules.js';
 
 class Select extends Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
 
-        this.props._register(this);
+        context._register(this);
     }
 
     handleChange(event) {
-        this.props._update(this, event, true, true);
+        this.context._update(this, event, true, true);
 
         event.persist();
 
@@ -18,7 +17,7 @@ class Select extends Component {
     }
 
     render() {
-        let data = getViewData(this.props);
+        let data = getViewData(this.props, this.context);
 
         return <div className={this.props.containerClassName || null}>
             <select
@@ -36,6 +35,15 @@ class Select extends Component {
 
 Select.propTypes = {
     onChange: PropTypes.func
+};
+
+Select.contextTypes = {
+    _register: PropTypes.func,
+    _update: PropTypes.func,
+    _validate: PropTypes.func,
+    validate: PropTypes.func,
+    states: PropTypes.object,
+    errors: PropTypes.object
 };
 
 module.exports = Select;

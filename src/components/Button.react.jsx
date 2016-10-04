@@ -2,8 +2,8 @@ import React, {Component, PropTypes} from 'react';
 
 class Button extends Component {
     render() {
-        let {errors, errorClassName, states, ...props} = this.props;
-        let isDisabled = Object.keys(errors).length;
+        let {errorClassName, ...props} = this.props;
+        let isDisabled = Object.keys(this.context.errors).length;
         let className = `${this.props.className ? this.props.className : ''}${isDisabled && errorClassName ? ' ' + errorClassName : ''}`;
 
         return <button
@@ -15,5 +15,9 @@ class Button extends Component {
         </button>
     }
 }
+
+Button.contextTypes = {
+    errors: PropTypes.object
+};
 
 module.exports = Button;

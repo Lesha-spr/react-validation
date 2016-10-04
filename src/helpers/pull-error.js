@@ -8,9 +8,9 @@ if (!String.prototype.includes) {
 }
 
 // TODO: Rework React.element appearance
-module.exports = props => {
-    let state = props.states[props.name];
-    let error = props.errors[props.name];
+module.exports = (props, context) => {
+    let state = context.states[props.name];
+    let error = context.errors[props.name];
 
     if (React.isValidElement(error) || error && error.includes(':')) {
         return error;

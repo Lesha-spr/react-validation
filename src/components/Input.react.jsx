@@ -16,6 +16,12 @@ class Input extends Component {
         this.context._unregister(this);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value !== this.props.value) {
+            this.context._updateFromProps(this, nextProps.value);
+        }
+    }
+
     handleChange(event) {
         this.context._update(this, event);
 
@@ -59,6 +65,7 @@ Input.contextTypes = {
     _register: PropTypes.func,
     _unregister: PropTypes.func,
     _update: PropTypes.func,
+    _updateFromProps: PropTypes.func,
     _validate: PropTypes.func,
     states: PropTypes.object,
     errors: PropTypes.object

@@ -16,6 +16,7 @@ class Form extends Component {
         this._register = this._register.bind(this);
         this._unregister = this._unregister.bind(this);
         this._update = this._update.bind(this);
+        this._updateFromProps = this._updateFromProps.bind(this);
         this._validate = this._validate.bind(this);
     }
 
@@ -26,6 +27,7 @@ class Form extends Component {
             _register: _this._register,
             _unregister: _this._unregister,
             _update: _this._update,
+            _updateFromProps: _this._updateFromProps,
             _validate: _this._validate,
             states: _this.state.states,
             errors: _this.state.errors
@@ -63,6 +65,18 @@ class Form extends Component {
             isChanged: isChanged || componentState.isChanged || event.type === 'change',
             isUsed: isUsed || checkbox || componentState.isUsed || event.type === 'blur',
             isChecked: !componentState.isChecked
+        });
+
+        this._validate();
+    }
+
+    _updateFromProps(component, value) {
+        // FIXME: remove mutation
+        this.state.states[component.props.name] = this.state.states[component.props.name] || {};
+        let componentState = this.state.states[component.props.name];
+
+        Object.assign(componentState, {
+            value
         });
 
         this._validate();
@@ -155,6 +169,7 @@ Form.childContextTypes = {
     _register: PropTypes.func,
     _unregister: PropTypes.func,
     _update: PropTypes.func,
+    _updateFromProps: PropTypes.func,
     _validate: PropTypes.func,
     states: PropTypes.object,
     errors: PropTypes.object

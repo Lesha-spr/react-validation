@@ -8,6 +8,10 @@ class Select extends Component {
         context._register(this);
     }
 
+    componentWillUnmount() {
+        this.context._unregister(this);
+    }
+
     handleChange(event) {
         this.context._update(this, event, true, true);
 
@@ -39,9 +43,9 @@ Select.propTypes = {
 
 Select.contextTypes = {
     _register: PropTypes.func,
+    _unregister: PropTypes.func,
     _update: PropTypes.func,
     _validate: PropTypes.func,
-    validate: PropTypes.func,
     states: PropTypes.object,
     errors: PropTypes.object
 };

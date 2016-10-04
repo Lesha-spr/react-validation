@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import getViewData from './../helpers/get-view-data.js';
+import rules from './../rules.js';
 
 class Textarea extends Component {
     constructor(props, context) {
@@ -10,6 +11,10 @@ class Textarea extends Component {
 
     componentDidMount() {
         this.context._validate(this);
+    }
+
+    componentWillUnmount() {
+        this.context._unregister(this);
     }
 
     handleChange(event) {
@@ -52,9 +57,9 @@ Textarea.propTypes = {
 
 Textarea.contextTypes = {
     _register: PropTypes.func,
+    _unregister: PropTypes.func,
     _update: PropTypes.func,
     _validate: PropTypes.func,
-    validate: PropTypes.func,
     states: PropTypes.object,
     errors: PropTypes.object
 };

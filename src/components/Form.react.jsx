@@ -14,9 +14,9 @@ class Form extends Component {
         this.components = {};
 
         this._register = this._register.bind(this);
+        this._unregister = this._unregister.bind(this);
         this._update = this._update.bind(this);
         this._validate = this._validate.bind(this);
-        this.validate = this.validate.bind(this);
     }
 
     getChildContext() {
@@ -24,9 +24,9 @@ class Form extends Component {
 
         return {
             _register: _this._register,
+            _unregister: _this._unregister,
             _update: _this._update,
             _validate: _this._validate,
-            validate: _this.validate,
             states: _this.state.states,
             errors: _this.state.errors
         }
@@ -34,6 +34,21 @@ class Form extends Component {
 
     _register(component) {
         this.components[component.props.name] = component;
+    }
+
+    // TODO: Should be refactored
+    _unregister(component) {
+        let states = Object.assign({}, this.state.states);
+        let errors = Object.assign({}, this.state.errors);
+
+        delete states[component.props.name];
+        delete errors[component.props.name];
+        delete this.components[component.props.name];
+
+        this.setState({
+            states,
+            errors
+        });
     }
 
     _update(component, event, isChanged, isUsed) {
@@ -44,7 +59,7 @@ class Form extends Component {
         let checkbox = (component.props.type === 'checkbox' || component.props.type === 'radio');
 
         Object.assign(componentState, {
-            value: event.target.selectedOptions ? Array.prototype.map.call(event.target.selectedOptions, option => option.value) : event.target.value,
+            value: event.target.value,
             isChanged: isChanged || componentState.isChanged || event.type === 'change',
             isUsed: isUsed || checkbox || componentState.isUsed || event.type === 'blur',
             isChecked: !componentState.isChecked
@@ -65,21 +80,13 @@ class Form extends Component {
         this.setState({
             errors
         });
-
-        return errors;
     }
 
     _getError(component) {
         let validations = component.props.validations;
         let i = validations.length;
+        let hasError = false;
         let error = null;
-
-        if (this.state.errors[component.props.name] && this.state.errors[component.props.name].force) {
-            error = {};
-            error[component.props.name] = this.state.errors[component.props.name];
-
-            return error;
-        }
 
         while (i--) {
             let validation = validations[validations.length - i - 1];
@@ -94,6 +101,7 @@ class Form extends Component {
             if (!rules[validation].rule(value, component, this)) {
                 error = {};
                 error[component.props.name] = validation;
+                hasError = true;
 
                 break;
             }
@@ -102,25 +110,10 @@ class Form extends Component {
         return error;
     }
 
-    _markUsedAndChanged(name) {
-        // FIXME: remove mutation
-        this.state.states[name] = this.state.states[name] || {};
-        let componentState = this.state.states[name];
-
-        Object.assign(componentState, {
-            value: this.state.states[name].value || this.components[name].props.value,
-            isChanged: true,
-            isUsed: true
-        });
-    }
-
     showError(name, error) {
         let errors = Object.assign({}, this.state.errors);
 
-        errors[name] = {
-            ...error,
-            force: true
-        };
+        errors[name] = error;
 
         this.setState({
             errors
@@ -138,14 +131,17 @@ class Form extends Component {
     }
 
     validate(name) {
-        this._markUsedAndChanged(name);
+        // FIXME: remove mutation
+        this.state.states[name] = this.state.states[name] || {};
+        let componentState = this.state.states[name];
+
+        Object.assign(componentState, {
+            value: this.state.states[name].value || this.components[name].props.value,
+            isChanged: true,
+            isUsed: true
+        });
+
         this._validate();
-    }
-
-    validateAll() {
-        Object.keys(this.components).forEach(this.validate);
-
-        return this._validate();
     }
 
     render() {
@@ -157,9 +153,9 @@ class Form extends Component {
 
 Form.childContextTypes = {
     _register: PropTypes.func,
+    _unregister: PropTypes.func,
     _update: PropTypes.func,
     _validate: PropTypes.func,
-    validate: PropTypes.func,
     states: PropTypes.object,
     errors: PropTypes.object
 };

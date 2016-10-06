@@ -9,7 +9,6 @@ describe('pullError', () => {
         };
 
         let context = {
-            name: 'mock_name',
             states: {
                 'mock_name': {
                     isUsed: false,
@@ -50,7 +49,6 @@ describe('pullError', () => {
         };
 
         let context = {
-            name: 'mock_name',
             states: {
                 'mock_name': {
                     isUsed: true,

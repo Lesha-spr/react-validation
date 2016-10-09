@@ -1,19 +1,19 @@
 # react-validation
 
-Component to simple form validation for react components. It uses [Controlled Components](https://facebook.github.io/react/docs/forms.html#controlled-components) approach for validation.
+Component to provide simple form validation for React components. It uses the [Controlled Components](https://facebook.github.io/react/docs/forms.html#controlled-components) approach for validation.
 
-It is not easy to validate forms with React. The reason is a one-way data flow style. In this case we can't affect forms from the inputs in easy way.
-React-validation provides several components which are 'connected' to form via input's method attached by Form component.
+It is not easy to validate forms with React. The reason is a one-way data flow style. In this case we can't affect forms from the inputs in an easy way.
+React-validation provides several components which are 'connected' to the form via the input's method attached by the Form component.
 
 ### [DEMO](http://lesha-spr.github.io/react-validation/)
 
 It is just a validation and doesn't provide any model or something similar. You can use FormData or something like [form-serialize](https://www.npmjs.com/package/form-serialize) to get form data.
 
-##### NOTE: Be aware to always pass ```name``` prop. It is required.
+##### NOTE: Always pass the ```name``` prop. It is required.
 
 Additional markup is allowed inside the Validation.Form markup.
 
-Any additional props (such event handlers) can also be passed to components.
+Any additional props (such as event handlers) can also be passed to components.
 
 If you find any bug or error, please feel free to raise an issue. Pull requests are also welcome.
 
@@ -25,14 +25,14 @@ npm install react-validation
 
 ## Example usage
 
-With @2.*, react-validation is no longer dependent on external ```validator```. You may use whatever validation strategy you want by extending ```rules``` object.
-Let's take a look on it's initial state:
+With @2.*, react-validation is no longer dependent on the external ```validator```. You may use whatever validation strategy you want by extending the ```rules``` object.
+Let's take a look at its initial state:
 
 ```javascript
 module.exports = {};
 ```
 
-That's it, just an empty object literal. We don't have any validation rules OOTB because of extremely high amount of possibilities but it's still recommended to use well tested library for known reasons.
+That's it, just an empty object literal. We don't have any validation rules OOTB because of an extremely high number of possibilities, but it's still recommended to use a well-tested library for known reasons.
 
 So first of all let's extend it and add some rules:
 
@@ -90,9 +90,9 @@ Object.assign(Validation.rules, {
 });
 ```
 
-Now we've added ```required``` and ```email``` to our rules with provided hints. This might be separated file where all the rules are registered.
+Now we've added ```required``` and ```email``` to our rules with provided hints. This might be separated in a file where all the rules are registered.
 
-That's it. We can now use it in our react components:
+That's it. We can now use it in our React components:
 
 ```javascript
 import Validation from 'react-validation';
@@ -122,17 +122,18 @@ export default class Registration extends Component {
 }
 ```
 
-Note the ```validations``` prop. It's an array of strings which maps to the rules keys we've extended.
+Note the ```validations``` prop. It's an array of strings that maps to the rules keys we've extended.
 
 ## Components and props
 
-```react-validation``` provides ```components``` object which contains ```Form```, ```Input```, ```Select```, ```Textarea``` and ```Button``` components.
-All of them are just a custom wrappers around the native components. They can accept any valid attributes and a few extra:
-```containerClassName``` - ```Input```, ```Select``` and ```Textarea``` wraps a native components with extra block. This prop adds a ```className``` to the wrapper.
-```validations``` - ```Input```, ```Select``` and ```Textarea``` accepts an array of validations strings which refers to the rules object's keys.
-```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea``` adds it to ```className``` on error occur.
+```react-validation``` provides a ```components``` object that contains ```Form```, ```Input```, ```Select```, ```Textarea``` and ```Button``` components.
+All of them are just custom wrappers around the native components. They can accept any valid attributes and a few extra:
 
-##### NOTE: Be aware to always provide ```name``` prop to ```Input```, ```Select``` and ```Textarea```
+1. ```containerClassName``` - ```Input```, ```Select``` and ```Textarea```: `react-validation` wraps the native components with an extra block. This prop adds a ```className``` to the wrapper.
+2. ```validations``` - ```Input```, ```Select``` and ```Textarea```: accepts an array of validations strings that refers to the rules object's keys.
+3. ```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea```: adds the passed value to ```className``` on error occurrences.
+
+##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```
 
 ### Form component
 
@@ -140,22 +141,18 @@ All of them are just a custom wrappers around the native components. They can ac
 Validation.components.Form
 ```
 
-The most important component which provides a hart of react-validation. It basically clones all it's children and mixes the binding between form itself and child react-validation components.
-Whatever valid props can easily be passed to ```Form```, such ```onSubmit``` and ```method```.
+The most important component, which provides the heart of react-validation. It basically clones all its children and mixes the binding between the form itself and child react-validation components.
+Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```method```.
 
-```Form``` provides three public methods:
+```Form``` provides four public methods:
 
-```validate(name)``` - validates input with passed name. The difference between this method and default validation that ```validate``` marks input as ```isUsed``` and ```isChanged```.
+1. ```validate(name)``` - validates input with the passed name. The difference between this method and default validation is that ```validate``` marks the input as ```isUsed``` and ```isChanged```. ```name``` - name of the corresponding component.
 
-```name``` - name of corresponding component.
+2. ```showError(name [,hint])``` - helps to handle async API errors. ```hint``` - optional hint to show.
 
-```showError(name [,hint])``` - helps to handle async API errors.
+3. ```hideError(name)``` - hides a corresponding component's error.
 
-```hint``` - optional hint to show.
-
-```hideError(name)``` - hides an corresponding component's error.
-
-```validateAll()``` - validates all react-validation components. Returns map (key: field name prop, value: non passed validation rule) of invalid fields.
+4. ```validateAll()``` - validates all react-validation components. Returns a map (key: field name prop, value: non passed validation rule) of invalid fields.
 
 
 ```javascript
@@ -199,16 +196,15 @@ export default class Comment extends Component {
 Validation.components.Input
 ```
 
-The wrapper around the native ```input```. It accepts a ```validations``` prop - array of strings which refers to rules object keys.
+A wrapper around the native ```input```. It accepts a ```validations``` prop - an array of strings that refers to rules object keys.
 
 ```javascript
 <Validation.components.Input name='firstname' validations={['alpha', 'lt8']}/>
 ```
 
-##### NOTE: For types ```radio``` and ```checkbox``` react-validation will drop the ```value``` to empty string when it's not checked. This is to avoid validation of non checked inputs.
+##### NOTE: For types ```radio``` and ```checkbox```, react-validation will drop the ```value``` to an empty string when it's not checked. This is to avoid validation of non-checked inputs.
 
-Assuming both of rules provided (lt8 - lesser than 8 value's length) react-validation will break with first occurred error.
-In the example above for ```really long value with d1g1t``` input's value the ```alpha``` rule will break validation first. We can control it by ordering rules within ```validations``` array.
+`react-validation` will break with the first listed rule, if more than one rule is broken. In the example above (lt8 - value length less than 8), for ```really long value with d1g1t``` input value, the ```alpha``` rule will break validation first. We can control it by ordering rules within the ```validations``` array.
 
 ### Textarea component
 
@@ -216,7 +212,7 @@ In the example above for ```really long value with d1g1t``` input's value the ``
 Validation.components.Teaxtarea
 ```
 
-The wrapper around the native ```textarea```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
+A wrapper around the native ```textarea```. Like ```Input```, it accepts a ```validations``` prop. Nothing special here:
 
 ```javascript
 <Validation.components.Textarea name='comment' value='' validations={['required']}/>
@@ -228,7 +224,7 @@ The wrapper around the native ```textarea```. Like the ```Input``` accepts ```va
 Validation.components.Select
 ```
 
-The wrapper around the native ```select```. Like the ```Input``` accepts ```validations``` prop. Nothing special here:
+A wrapper around the native ```select```. Like ```Input```, it accepts a ```validations``` prop. Nothing special here:
 
 ```javascript
 <Validation.components.Select name='city' value='' validations={['required']}>
@@ -245,12 +241,12 @@ The wrapper around the native ```select```. Like the ```Input``` accepts ```vali
 Validation.components.Button
 ```
 
-The wrapper around the native ```button```. React-validation disables (adds ```disabled``` prop) the button on error occur. This behavior could be suppressed by passing ```disabled``` prop directly to component.
+A wrapper around the native ```button```. React-validation disables (adds ```disabled``` prop) the button on error occurrences. This behavior could be suppressed by passing the ```disabled``` prop directly to a component.
 
 ## Migration from 1.*
 
 #### extendErrors API
-```extendErrors``` is no longer exists. Replace it with new approach of validation rules registration. ```hint``` appearance is now fully controlled:
+```extendErrors``` no longer exists. Replace it with the new approach of validation rules registration. ```hint``` appearance is now fully controlled:
 
 ```javascript
 Object.assign(Validation.rules, {
@@ -269,9 +265,9 @@ Object.assign(Validation.rules, {
 React-validation no longer has any defaults. This is TBD but for a 2.0.0 please provide ```errorClassName``` and ```containerClassName``` directly to the validation components.
 
 #### Validations
-```validations``` prop now accepts array of strings instead of objects. It's made to be more simple and reduce ```render``` code.
+```validations``` prop now accepts an array of strings instead of objects. It's made to be more simple and reduce ```render``` code.
 
 #### Components
 ```Validation.components``` sub-object now provides access to the Components.
 
-Components API moved to Form API. ```forceValidate``` method is no longer exist.
+Components API moved to Form API. ```forceValidate``` method no longer exist.

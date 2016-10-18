@@ -9,7 +9,7 @@ React-validation provides several components which are 'connected' to the form v
 
 It is just a validation and doesn't provide any model or something similar. You can use FormData or something like [form-serialize](https://www.npmjs.com/package/form-serialize) to get form data.
 
-##### NOTE: Always pass the ```name``` prop. It is required.
+##### NOTE: Always pass the ```name``` and ```validations``` props. They are required.
 
 Additional markup is allowed inside the Validation.Form markup.
 
@@ -133,7 +133,7 @@ All of them are just custom wrappers around the native components. They can acce
 2. ```validations``` - ```Input```, ```Select``` and ```Textarea```: accepts an array of validations strings that refers to the rules object's keys.
 3. ```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea```: adds the passed value to ```className``` on error occurrences.
 
-##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```
+##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```. Always pass the ```validations``` prop to ```Input```, ```Select```, ```Textarea```, and ```Button```. 
 
 ### Form component
 

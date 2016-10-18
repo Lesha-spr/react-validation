@@ -13,11 +13,23 @@ describe('getViewData', () => {
             errors: true,
             errorClassName: true,
             containerClassName: true,
-            mock_key: 'mock_value'
+            name: 'mock_name',
+            mock_key: 'mock_value',
         };
 
-        let data = getViewData(props);
+        let context = {
+            states: {
+                'mock_key': {
+                    isUsed: false,
+                    isChanged: false
+                },
+                mock_name: {},
+            },
+            errors: {},
+        };
 
-        expect(Object.keys(data.props).length === 1 && data.props.hasOwnProperty('mock_key')).toBe(true);
+        let data = getViewData(props, context);
+
+        expect(data.props.hasOwnProperty('mock_key')).toBe(true);
     });
 });

@@ -12853,6 +12853,8 @@
 	
 	'use strict';
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _react = __webpack_require__(14);
 	
 	var _react2 = _interopRequireDefault(_react);
@@ -12867,7 +12869,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	Object.assign(_validation2.default.rules, {
+	_validation2.default.rules = _extends({}, _validation2.default.rules, {
 	    required: {
 	        rule: function rule(value) {
 	            return value.toString().trim();

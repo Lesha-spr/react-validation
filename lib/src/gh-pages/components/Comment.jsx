@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component } from 'react';
 import Validation from './../../validation';
 
 export default class Comment extends Component {
@@ -7,38 +7,58 @@ export default class Comment extends Component {
 
         // Emulate async API call
         setTimeout(() => {
-            this.refs.form.showError('username', value => {
-                return <span onClick={this.removeApiError.bind(this)} className='form-error is-visible'>API Error on <b>"{value}"</b> value. Click to hide out.</span>;
-            });
+            this.form.showError('username', value =>
+                <button
+                  onClick={this.removeApiError.bind(this)}
+                  className="form-error is-visible"
+                >
+                    API Error on "{value}" value. Click to hide out.
+                </button>
+            );
         }, 1000);
     }
 
     removeApiError() {
-        this.refs.form.hideError('username');
+        this.form.hideError("username");
     }
 
     render() {
-        return <Validation.components.Form ref='form' onSubmit={this.handleSubmit.bind(this)}>
-            <div className='row'>
-                <div className='small-12 columns'>
+        return <Validation.components.Form ref={c => { this.form = c }} onSubmit={this.handleSubmit.bind(this)}>
+            <div className="row">
+                <div className="small-12 columns">
                     <h3>Leave a comment</h3>
                 </div>
             </div>
-            <div className='row'>
-                <div className='small-12 medium-4 columns'>
+            <div className="row">
+                <div className="small-12 medium-4 columns">
                     <label>
-                        <Validation.components.Input placeholder='username' type="text" errorClassName='is-invalid-input' containerClassName='' value='Username' name='username' validations={['required', 'alpha']}/>
+                        <Validation.components.Input
+                          placeholder="username"
+                          type="text"
+                          errorClassName="is-invalid-input"
+                          containerClassName=""
+                          value="Username"
+                          name="username"
+                          validations={['required', 'alpha']}
+                        />
                     </label>
                 </div>
-                <div className='small-12 medium-8 columns'>
+                <div className="small-12 medium-8 columns">
                     <label>
-                        <Validation.components.Textarea placeholder='Leave your comment...' errorClassName='is-invalid-input' containerClassName='' value='Comment' name='comment' validations={['required']}/>
+                        <Validation.components.Textarea
+                          placeholder="Leave your comment..."
+                          errorClassName="is-invalid-input"
+                          containerClassName=""
+                          value="Comment"
+                          name="comment"
+                          validations={['required']}
+                        />
                     </label>
                 </div>
             </div>
-            <div className='row'>
-                <div className='small-12 medium-6 columns'>
-                    <Validation.components.Button className='button'>Submit</Validation.components.Button>
+            <div className="row">
+                <div className="small-12 medium-6 columns">
+                    <Validation.components.Button className="button">Submit</Validation.components.Button>
                 </div>
             </div>
         </Validation.components.Form>

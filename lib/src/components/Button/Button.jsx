@@ -2,9 +2,7 @@ import React, { PropTypes } from 'react';
 import cx from 'classnames';
 
 const Button = (props, context) => {
-    /* eslint-disable */
     const { errorClassName, className, ...rest } = props;
-    /* eslint-enable */
     const isDisabled = Object.keys(context.errors).length;
 
     return (
@@ -20,7 +18,9 @@ const Button = (props, context) => {
 };
 
 Button.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    errorClassName: PropTypes.string,
+    className: PropTypes.string
 };
 
 Button.contextTypes = {

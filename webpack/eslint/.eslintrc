@@ -4,6 +4,7 @@
     "browser": true,
     "node": true
   },
+  "parser": "babel-eslint",
   "rules": {
     "comma-dangle": ["error", "only-multiline"],
     "indent": ["error", 4],

@@ -1,15 +1,15 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
 import { render } from 'react-dom';
-import './extend.js';
+import './extend.jsx';
 import Registration from './components/Registration';
 import Comment from './components/Comment';
 
-let App = () => {
-    return <div>
+const App = () => (
+    <div>
         <Registration/>
         <Comment/>
-    </div>;
-};
+    </div>
+);
 
 render(
     <App/>,

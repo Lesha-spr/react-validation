@@ -67,6 +67,9 @@ describe('<Select/>', () => {
             );
 
             node.setContext({
+                register,
+                unregister,
+                validateState,
                 errors: {}
             });
 

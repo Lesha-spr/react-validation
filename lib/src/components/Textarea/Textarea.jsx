@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import cx from 'classnames';
 import Base from './../Base/Base';
 
 export default class Textarea extends Base {
+    static propTypes = {
+        errorClassName: PropTypes.string,
+        containerClassName: PropTypes.string,
+        errorContainerClassName: PropTypes.string
+    };
+
     constructor(props, context) {
         super(props, context);
 
@@ -17,9 +23,15 @@ export default class Textarea extends Base {
     }
 
     render() {
-        /* eslint-disable */
-        const { validations, errorClassName, containerClassName, errorContainerClassName, className, ...rest } = this.props;
-        /* eslint-enable */
+        const {
+            /* eslint-disable */
+            validations,
+            /* eslint-enable */
+            errorClassName,
+            containerClassName,
+            errorContainerClassName,
+            className,
+            ...rest } = this.props;
         // TODO: Refactor conditions
         const isInvalid = this.state.isUsed &&
             this.state.isChanged &&

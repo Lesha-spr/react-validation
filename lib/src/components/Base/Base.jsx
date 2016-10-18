@@ -1,28 +1,27 @@
-import React, { Component, PropTypes } from 'react';
+import { Component, PropTypes } from 'react';
 import noop from './../../utils/noop';
 
 class Base extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     componentWillReceiveProps(nextProps) {
-        nextProps.value !== this.props.value && this.setState({
-            value: nextProps.value,
-            isChanged: true
-        }, () => {
-            this.context.validateState(this.props.name);
-        });
+        if (nextProps.value !== this.props.value) {
+            this.setState({
+                value: nextProps.value,
+                isChanged: true
+            }, () => {
+                this.context.validateState(this.props.name);
+            });
+        }
     }
 
     componentWillUnmount() {
         this.context.unregister(this);
     }
 
-    onChange = event => {
+    onChange = (event) => {
         // TODO: Refactor conditions
         const isChecked = this.state.isCheckbox ? !this.state.isChecked : true;
-        const value = this.state.isCheckbox ? isChecked ? event.target.value : '' : event.target.value;
+        const checkboxValue = isChecked ? event.target.value : '';
+        const value = this.state.isCheckbox ? checkboxValue : event.target.value;
 
         this.setState({
             value,
@@ -37,7 +36,7 @@ class Base extends Component {
         });
     };
 
-    onBlur = event => {
+    onBlur = (event) => {
         this.setState({
             isUsed: true
         }, () => {
@@ -54,10 +53,7 @@ Base.propTypes = {
     value: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    errorClassName: PropTypes.string,
-    containerClassName: PropTypes.string,
-    errorContainerClassName: PropTypes.string
+    onBlur: PropTypes.func
 };
 
 Base.contextTypes = {

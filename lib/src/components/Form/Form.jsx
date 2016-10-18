@@ -6,37 +6,51 @@ class Form extends Component {
         super(props);
 
         this.components = {};
-        this.errors = {};
 
         this.state = {
             errors: {}
-        }
+        };
     }
 
-    register = component => {
+    getChildContext() {
+        return {
+            register: this.register,
+            unregister: this.unregister,
+            validateState: this.validateState,
+            errors: this.state.errors
+        };
+    }
+
+    componentDidMount() {
+        this.validateState();
+    }
+
+    register = (component) => {
         this.components[component.props.name] = component;
     };
 
-    unregister = component => {
+    unregister = (component) => {
         const errors = Object.assign({}, this.state.errors);
 
         delete this.components[component.props.name];
         delete errors[component.props.name];
 
         this.setState({ errors });
-    }
+    };
 
     validateState = () => {
-        let errors = {};
+        const errors = {};
 
         Object.keys(this.components).reduce((prev, name) => {
             const component = this.components[name];
             const validations = component.props.validations;
             const length = validations.length;
 
-            for (var i = 0; i < length; i++) {
+            for (let i = 0; i < length; i += 1) {
                 if (!rules[validations[i]].rule(component.state.value)) {
+                    /* eslint-disable */
                     prev[name] = rules[validations[i]].hint(component.state.value);
+                    /* eslint-enable */
 
                     break;
                 }
@@ -45,20 +59,18 @@ class Form extends Component {
             return prev;
         }, errors);
 
-        this.setState({
-            errors
-        });
+        this.setState({ errors });
     };
 
-    validate = name => {
+    validate = (name) => {
         this.components[name].setState({
             isUsed: true,
             isChanged: true
         }, this.validateState);
-    }
+    };
 
     validateAll() {
-        Object.keys(this.components).forEach(name => {
+        Object.keys(this.components).forEach((name) => {
             this.components[name].setState({
                 isUsed: true,
                 isChanged: true
@@ -78,33 +90,22 @@ class Form extends Component {
                 }
             });
         });
-    }
+    };
 
-    hideError = name => {
+    hideError = (name) => {
         const errors = Object.assign({}, this.state.errors);
 
         delete errors[name];
 
         this.setState({ errors });
-    }
-
-    getChildContext() {
-        return {
-            register: this.register,
-            unregister: this.unregister,
-            validateState: this.validateState,
-            errors: this.state.errors
-        }
-    }
-
-    componentDidMount() {
-        this.validateState();
-    }
+    };
 
     render() {
-        return <form {...this.props}>
-            {this.props.children}
-        </form>
+        return (
+            <form {...this.props}>
+                {this.props.children}
+            </form>
+        );
     }
 }
 

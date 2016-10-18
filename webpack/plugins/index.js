@@ -1,11 +1,6 @@
 'use strict';
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
-
 module.exports = [
-    require('./define')
+    require('./optimize'),
+    require('./no-errors')
 ];
-
-if (NODE_ENV === 'production') {
-    module.exports.push(require('./uglify'));
-}

@@ -38,7 +38,10 @@ So first of all let's extend it and add some rules:
 
 ```javascript
 import React from 'react';
+// NOTE: Deprecated
 import Validation from 'react-validation';
+// From v2.10.0
+// import { rules, Form, Input, Select, Textarea, Button } from 'react-validation/lib/build/validation.rc'
 import validator from 'validator';
 
 // Use Object.assign or any similar API to merge a rules
@@ -152,7 +155,7 @@ Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```m
 
 3. ```hideError(name)``` - hides a corresponding component's error.
 
-4. ```validateAll()``` - validates all react-validation components. Returns a map (key: field name prop, value: non passed validation rule) of invalid fields.
+4. ```validateAll()``` - validates all react-validation components. Returns a map (key: field name prop, value: non passed validation rule) of invalid fields. <strong>UPD: from 2.10.0 returns ```undefined```. TBD.</strong>
 
 
 ```javascript

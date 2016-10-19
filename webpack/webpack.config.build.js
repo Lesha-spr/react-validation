@@ -19,7 +19,8 @@ module.exports = Object.assign({}, require('./webpack.config.base'), {
     },
 
     externals: {
-        "react": "react"
+        "react": "react",
+        "classnames": "classnames"
     },
 
     eslint: {

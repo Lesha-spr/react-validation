@@ -6,6 +6,7 @@ It is not easy to validate forms with React. The reason is a one-way data flow s
 React-validation provides several components which are 'connected' to the form via the input's method attached by the Form component.
 
 ### [DEMO](http://lesha-spr.github.io/react-validation/)
+### [DEMO src](https://github.com/Lesha-spr/react-validation/tree/master/lib/src/gh-pages)
 
 It is just a validation and doesn't provide any model or something similar. You can use FormData or something like [form-serialize](https://www.npmjs.com/package/form-serialize) to get form data.
 
@@ -69,16 +70,16 @@ Object.assign(Validation.rules, {
     },
     // This example shows a way to handle common task - compare two fields for equality
     password: {
-        // rule function can accept 2 extra arguments:
-        // component - current checked component
-        // form - form component which has 'states' inside native 'state' object
-        rule: (value, component, form) => {
-            // form.state.states[name] - name of corresponding field
-            let password = form.state.states.password;
-            let passwordConfirm = form.state.states.passwordConfirm;
-            // isUsed, isChanged - public properties
-            let isBothUsed = password && passwordConfirm && password.isUsed && passwordConfirm.isUsed;
-            let isBothChanged = isBothUsed && password.isChanged && passwordConfirm.isChanged;
+        // rule function can accept argument:
+        // components - components registered to Form mapped by name
+        rule: (value, components) => {
+            const password = components.password.state;
+            const passwordConfirm = components.passwordConfirm.state;
+            const isBothUsed = password
+                && passwordConfirm
+                && password.isUsed
+                && passwordConfirm.isUsed;
+            const isBothChanged = isBothUsed && password.isChanged && passwordConfirm.isChanged;
 
             if (!isBothUsed || !isBothChanged) {
                 return true;
@@ -86,9 +87,7 @@ Object.assign(Validation.rules, {
 
             return password.value === passwordConfirm.value;
         },
-        hint: value => {
-            return <span className='form-error is-visible'>Passwords should be equal.</span>
-        }
+        hint: () => <span className="form-error is-visible">Passwords should be equal.</span>
     }
 });
 ```
@@ -136,7 +135,7 @@ All of them are just custom wrappers around the native components. They can acce
 2. ```validations``` - ```Input```, ```Select``` and ```Textarea```: accepts an array of validations strings that refers to the rules object's keys.
 3. ```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea```: adds the passed value to ```className``` on error occurrences.
 
-##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```. Always pass the ```validations``` prop to ```Input```, ```Select```, ```Textarea```, and ```Button```. 
+##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```. Always pass the ```validations``` prop to ```Input```, ```Select``` and ```Textarea```.
 
 ### Form component
 

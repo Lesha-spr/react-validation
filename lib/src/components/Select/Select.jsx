@@ -10,6 +10,13 @@ export default class Select extends Base {
         errorContainerClassName: PropTypes.string
     };
 
+    static contextTypes = {
+        register: PropTypes.func.isRequired,
+        unregister: PropTypes.func.isRequired,
+        validateState: PropTypes.func.isRequired,
+        errors: PropTypes.objectOf(PropTypes.any)
+    };
+
     constructor(props, context) {
         super(props, context);
 

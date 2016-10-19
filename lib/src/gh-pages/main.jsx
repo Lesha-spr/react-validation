@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import './extend.jsx';
+import './extend';
 import Registration from './components/Registration';
 import Comment from './components/Comment';
 

@@ -2,8 +2,7 @@ import React from 'react';
 import validator from 'validator';
 import Validation from './../validation';
 
-Validation.rules = {
-    ...Validation.rules,
+Object.assign(Validation.rules, {
     required: {
         rule: value => value.toString().trim(),
         hint: () => <span className="form-error is-visible">Required</span>
@@ -41,4 +40,4 @@ Validation.rules = {
         },
         hint: () => <span className="form-error is-visible">Passwords should be equal.</span>
     }
-};
+});

@@ -30,7 +30,7 @@ With @2.*, react-validation is no longer dependent on the external ```validator`
 Let's take a look at its initial state:
 
 ```javascript
-module.exports = {};
+export default = {};
 ```
 
 That's it, just an empty object literal. We don't have any validation rules OOTB because of an extremely high number of possibilities, but it's still recommended to use a well-tested library for known reasons.

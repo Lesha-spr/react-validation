@@ -46,12 +46,14 @@ import Validation from 'react-validation';
 import validator from 'validator';
 
 // Use Object.assign or any similar API to merge a rules
+// NOTE: IE10 doesn't have Object.assign API natively. Use polyfill/babel plugin.
 Object.assign(Validation.rules, {
     // Key name maps the rule
     required: {
         // Function to validate value
-        rule: (value, component, form) => {
-            return value.trim();
+        // NOTE: value might be a number -> force to string
+        rule: value => {
+            return value.toString().trim();
         },
         // Function to return hint
         // You may use current value to inject it in some way to the hint
@@ -132,8 +134,9 @@ Note the ```validations``` prop. It's an array of strings that maps to the rules
 All of them are just custom wrappers around the native components. They can accept any valid attributes and a few extra:
 
 1. ```containerClassName``` - ```Input```, ```Select``` and ```Textarea```: `react-validation` wraps the native components with an extra block. This prop adds a ```className``` to the wrapper.
-2. ```validations``` - ```Input```, ```Select``` and ```Textarea```: accepts an array of validations strings that refers to the rules object's keys.
-3. ```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea```: adds the passed value to ```className``` on error occurrences.
+2. ```errorContainerClassName```: wrapper's error modifier className.
+3. ```validations``` - ```Input```, ```Select``` and ```Textarea```: accepts an array of validations strings that refers to the rules object's keys.
+4. ```errorClassName``` - ```Input```, ```Select```, ```Button``` and ```Textarea```: adds the passed value to ```className``` on error occurrences.
 
 ##### NOTE: Always provide a ```name``` prop to ```Input```, ```Select``` and ```Textarea```. Always pass the ```validations``` prop to ```Input```, ```Select``` and ```Textarea```.
 
@@ -143,7 +146,7 @@ All of them are just custom wrappers around the native components. They can acce
 Validation.components.Form
 ```
 
-The most important component, which provides the heart of react-validation. It basically clones all its children and mixes the binding between the form itself and child react-validation components.
+The most important component, which provides the heart of react-validation. It basically mixes the binding between the form itself and child react-validation components via ```context```.
 Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```method```.
 
 ```Form``` provides four public methods:
@@ -164,28 +167,59 @@ export default class Comment extends Component {
 
         // Emulate async API call
         setTimeout(() => {
-            this.refs.form.showError('username', <span onClick={this.removeApiError.bind(this)} className='form-error is-visible'>API Error. Click to hide out.</span>);
+            this.form.showError('username', value =>
+                <button
+                  onClick={this.removeApiError.bind(this)}
+                  className="form-error is-visible"
+                >
+                    API Error on "{value}" value. Click to hide out.
+                </button>
+            );
         }, 1000);
     }
 
     removeApiError() {
-        this.refs.form.hideError('username');
+        this.form.hideError("username");
     }
 
     render() {
-        return <Validation.components.Form ref='form' onSubmit={this.handleSubmit.bind(this)}>
-            <div>
-                <label>
-                    <Validation.components.Input value='Username' name='username' validations={['required', 'alpha']}/>
-                </label>
+        return <Validation.components.Form ref={c => { this.form = c }} onSubmit={this.handleSubmit.bind(this)}>
+            <div className="row">
+                <div className="small-12 columns">
+                    <h3>Leave a comment</h3>
+                </div>
             </div>
-            <div>
-                <label>
-                    <Validation.components.Textarea value='Comment' name='comment' validations={['required']}/>
-                </label>
+            <div className="row">
+                <div className="small-12 medium-4 columns">
+                    <label>
+                        <Validation.components.Input
+                          placeholder="username"
+                          type="text"
+                          errorClassName="is-invalid-input"
+                          containerClassName=""
+                          value="Username"
+                          name="username"
+                          validations={['required', 'alpha']}
+                        />
+                    </label>
+                </div>
+                <div className="small-12 medium-8 columns">
+                    <label>
+                        <Validation.components.Textarea
+                          placeholder="Leave your comment..."
+                          errorClassName="is-invalid-input"
+                          containerClassName=""
+                          value="Comment"
+                          name="comment"
+                          validations={['required']}
+                        />
+                    </label>
+                </div>
             </div>
-            <div>
-                <Validation.components.Button>Submit</Validation.components.Button>
+            <div className="row">
+                <div className="small-12 medium-6 columns">
+                    <Validation.components.Button className="button">Submit</Validation.components.Button>
+                </div>
             </div>
         </Validation.components.Form>
     }
@@ -268,8 +302,5 @@ React-validation no longer has any defaults. This is TBD but for a 2.0.0 please 
 
 #### Validations
 ```validations``` prop now accepts an array of strings instead of objects. It's made to be more simple and reduce ```render``` code.
-
-#### Components
-```Validation.components``` sub-object now provides access to the Components.
 
 Components API moved to Form API. ```forceValidate``` method no longer exist.

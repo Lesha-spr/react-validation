@@ -24,6 +24,10 @@ module.exports = Object.assign({}, require('./webpack.config.base'), {
     }
 });
 
+Array.prototype.push.apply(module.exports.module.loaders, [
+    require('./loaders/js-dev')
+]);
+
 Array.prototype.push.apply(module.exports.plugins, [
     require('./plugins/hot-module-replacement'),
     require('./plugins/define-dev')

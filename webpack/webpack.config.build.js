@@ -29,6 +29,10 @@ module.exports = Object.assign({}, require('./webpack.config.base'), {
     }
 });
 
+Array.prototype.push.apply(module.exports.module.loaders, [
+    require('./loaders/js-build')
+]);
+
 Array.prototype.push.apply(module.exports.plugins, [
     require('./plugins/uglify'),
     require('./plugins/define-build')

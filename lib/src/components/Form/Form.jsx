@@ -49,7 +49,7 @@ class Form extends Component {
             for (let i = 0; i < length; i += 1) {
                 if (!rules[validations[i]].rule(component.state.value, this.components)) {
                     /* eslint-disable */
-                    prev[name] = rules[validations[i]].hint(component.state.value);
+                    prev[name] = rules[validations[i]].hint(component.state.value, this.components);
                     /* eslint-enable */
 
                     break;

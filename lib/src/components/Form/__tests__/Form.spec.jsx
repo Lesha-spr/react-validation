@@ -176,7 +176,7 @@ describe('<Form/>', () => {
             node.instance().validateState();
 
             expect(mock_rule).toHaveBeenCalledWith(mockComponent.state.value, node.instance().components);
-            expect(mock_hint).toHaveBeenCalledWith(mockComponent.state.value);
+            expect(mock_hint).toHaveBeenCalledWith(mockComponent.state.value, node.instance().components);
         });
 
         it('should set error state on rule invalidation', () => {

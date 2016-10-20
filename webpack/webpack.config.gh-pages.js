@@ -21,3 +21,7 @@ module.exports = Object.assign({}, require('./webpack.config.base'), {
         emitWarning: true
     }
 });
+
+Array.prototype.push.apply(module.exports.module.loaders, [
+    require('./loaders/js-build')
+]);

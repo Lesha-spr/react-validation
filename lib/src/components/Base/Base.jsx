@@ -23,14 +23,14 @@ class Base extends Component {
         const checkboxValue = isChecked ? event.target.value : '';
         const value = this.state.isCheckbox ? checkboxValue : event.target.value;
 
+        event.persist();
+
         this.setState({
             value,
             isChanged: true,
             isChecked
         }, () => {
             this.context.validateState(this.props.name);
-
-            event.persist();
 
             (this.props.onChange || noop)(event);
         });

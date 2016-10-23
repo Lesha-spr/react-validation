@@ -33,6 +33,7 @@ export default class Comment extends Component {
                 <div className="small-12 medium-4 columns">
                     <label>
                         <Validation.components.Input
+                          onChange={event => console.log(event.target.value)}
                           placeholder="username"
                           type="text"
                           errorClassName="is-invalid-input"

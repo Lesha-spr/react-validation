@@ -1,6 +1,6 @@
 # react-validation
 
-[![npm version](https://badge.fury.io/js/react-validation.svg)](https://badge.fury.io/js/react-validation)
+[![npm version](https://badge.fury.io/js/react-validation.svg)](https://badge.fury.io/js/react-validation) [![Build Status](https://travis-ci.org/Lesha-spr/react-validation.svg?branch=master)](https://travis-ci.org/Lesha-spr/react-validation)
 
 Component to provide simple form validation for React components. It uses the [Controlled Components](https://facebook.github.io/react/docs/forms.html#controlled-components) approach for validation.
 

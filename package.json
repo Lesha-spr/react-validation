@@ -9,11 +9,10 @@
     "react validation"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "node --harmony_proxies node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "dev": "node dev-server",
     "build": "webpack --config ./webpack/webpack.config.build",
-    "gh-pages": "webpack --config ./webpack/webpack.config.gh-pages",
-    "coveralls": "jest && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "gh-pages": "webpack --config ./webpack/webpack.config.gh-pages"
   },
   "main": "lib/build/validation.js",
   "repository": {

@@ -1,5 +1,7 @@
 # react-validation
 
+[![npm version](https://badge.fury.io/js/react-validation.svg)](https://badge.fury.io/js/react-validation)
+
 Component to provide simple form validation for React components. It uses the [Controlled Components](https://facebook.github.io/react/docs/forms.html#controlled-components) approach for validation.
 
 It is not easy to validate forms with React. The reason is a one-way data flow style. In this case we can't affect forms from the inputs in an easy way.

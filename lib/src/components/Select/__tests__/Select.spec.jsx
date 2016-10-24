@@ -208,7 +208,7 @@ describe('<Select/>', () => {
 
             node.find('select').simulate('change', eventData);
 
-            expect(node.instance().props.onChange).toHaveBeenCalledWith(eventData);
+            expect(onChange).toHaveBeenCalledWith(eventData);
         });
     });
 
@@ -266,7 +266,7 @@ describe('<Select/>', () => {
 
             node.find('select').simulate('blur', eventData);
 
-            expect(node.instance().props.onBlur).toHaveBeenCalled();
+            expect(onBlur).toHaveBeenCalled();
         });
     });
 

@@ -310,7 +310,7 @@ describe('<Input/>', () => {
 
             node.find('input').simulate('change', eventData);
 
-            expect(node.instance().props.onChange).toHaveBeenCalledWith(eventData);
+            expect(onChange).toHaveBeenCalledWith(eventData);
         });
     });
 
@@ -374,7 +374,7 @@ describe('<Input/>', () => {
 
             node.find('input').simulate('blur', eventData);
 
-            expect(node.instance().props.onBlur).toHaveBeenCalled();
+            expect(onBlur).toHaveBeenCalled();
         });
     });
 

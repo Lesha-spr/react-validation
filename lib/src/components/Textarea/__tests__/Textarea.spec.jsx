@@ -233,7 +233,7 @@ describe('<Textarea/>', () => {
 
             node.find('textarea').simulate('change', eventData);
 
-            expect(node.instance().props.onChange).toHaveBeenCalledWith(eventData);
+            expect(onChange).toHaveBeenCalledWith(eventData);
         });
     });
 
@@ -296,7 +296,7 @@ describe('<Textarea/>', () => {
 
             node.find('textarea').simulate('blur', eventData);
 
-            expect(node.instance().props.onBlur).toHaveBeenCalled();
+            expect(onBlur).toHaveBeenCalled();
         });
     });
 

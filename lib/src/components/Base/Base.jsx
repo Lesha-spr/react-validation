@@ -60,6 +60,7 @@ Base.contextTypes = {
     register: PropTypes.func.isRequired,
     unregister: PropTypes.func.isRequired,
     validateState: PropTypes.func.isRequired,
+    components: PropTypes.objectOf(PropTypes.any),
     errors: PropTypes.objectOf(PropTypes.any)
 };
 

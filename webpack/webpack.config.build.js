@@ -34,6 +34,5 @@ Array.prototype.push.apply(module.exports.module.loaders, [
 ]);
 
 Array.prototype.push.apply(module.exports.plugins, [
-    require('./plugins/uglify'),
     require('./plugins/define-build')
 ]);

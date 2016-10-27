@@ -1,6 +1,15 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import Input from './../Input';
+import rules from './../../../rules';
+
+Object.assign(rules, {
+    required: {
+        hint() {
+            return <span className="error"/>
+        }
+    }
+});
 
 describe('<Input/>', () => {
     const register = jest.fn();
@@ -13,7 +22,7 @@ describe('<Input/>', () => {
         unregister,
         validateState,
         errors: {
-            'mock_name': <span className="error" />
+            'mock_name': ['required']
         }
     };
 

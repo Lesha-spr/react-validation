@@ -1,7 +1,28 @@
 import React, { Component, PropTypes } from 'react';
+import Button from './../Button/Button';
+import Input from './../Input/Input';
+import Select from './../Select/Select';
+import Textarea from './../Textarea/Textarea';
 import rules from './../../rules';
 
-class Form extends Component {
+export default class Form extends Component {
+    static propTypes = {
+        children: PropTypes.node
+    };
+
+    static childContextTypes = {
+        register: PropTypes.func.isRequired,
+        unregister: PropTypes.func.isRequired,
+        validateState: PropTypes.func.isRequired,
+        components: PropTypes.objectOf(PropTypes.oneOfType([
+            PropTypes.instanceOf(Button),
+            PropTypes.instanceOf(Input),
+            PropTypes.instanceOf(Select),
+            PropTypes.instanceOf(Textarea)
+        ])),
+        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+    };
+
     constructor(props) {
         super(props);
 
@@ -17,6 +38,7 @@ class Form extends Component {
             register: this.register,
             unregister: this.unregister,
             validateState: this.validateState,
+            components: this.components,
             errors: this.state.errors
         };
     }
@@ -24,6 +46,23 @@ class Form extends Component {
     componentDidMount() {
         this.validateState();
     }
+
+    getErrors = () => Object.keys(this.components).reduce((prev, name) => {
+        const component = this.components[name];
+        const validations = component.props.validations;
+        const length = validations.length;
+
+        for (let i = 0; i < length; i += 1) {
+            if (!rules[validations[i]].rule(component.state.value, this.components)) {
+                /* eslint-disable */
+                prev[name] = prev[name] || [];
+                prev[name].push(validations[i]);
+                /* eslint-enable */
+            }
+        }
+
+        return prev;
+    }, {});
 
     register = (component) => {
         this.components[component.props.name] = component;
@@ -39,25 +78,7 @@ class Form extends Component {
     };
 
     validateState = () => {
-        const errors = {};
-
-        Object.keys(this.components).reduce((prev, name) => {
-            const component = this.components[name];
-            const validations = component.props.validations;
-            const length = validations.length;
-
-            for (let i = 0; i < length; i += 1) {
-                if (!rules[validations[i]].rule(component.state.value, this.components)) {
-                    /* eslint-disable */
-                    prev[name] = rules[validations[i]].hint(component.state.value, this.components);
-                    /* eslint-enable */
-
-                    break;
-                }
-            }
-
-            return prev;
-        }, errors);
+        const errors = this.getErrors();
 
         this.setState({ errors });
     };
@@ -76,9 +97,11 @@ class Form extends Component {
                 isChanged: true
             });
         });
+
+        return this.getErrors();
     }
 
-    showError = (name, hint) => {
+    showError = (name, error) => {
         this.components[name].setState({
             isUsed: true,
             isChanged: true
@@ -86,7 +109,7 @@ class Form extends Component {
             this.setState({
                 errors: {
                     ...this.state.errors,
-                    [name]: hint(this.components[name].state.value)
+                    [name]: [error]
                 }
             });
         });
@@ -108,16 +131,3 @@ class Form extends Component {
         );
     }
 }
-
-Form.propTypes = {
-    children: PropTypes.node
-};
-
-Form.childContextTypes = {
-    register: PropTypes.func.isRequired,
-    unregister: PropTypes.func.isRequired,
-    validateState: PropTypes.func.isRequired,
-    errors: PropTypes.objectOf(PropTypes.any)
-};
-
-export default Form;

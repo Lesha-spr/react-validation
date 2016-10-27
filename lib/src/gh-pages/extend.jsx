@@ -3,6 +3,16 @@ import validator from 'validator';
 import Validation from './../validation';
 
 Object.assign(Validation.rules, {
+    api: {
+        hint: value => (
+            <button
+                className="form-error is-visible"
+            >
+                API Error on "{value}" value. Focus to hide.
+            </button>
+        )
+    },
+
     required: {
         rule: value => value.toString().trim(),
         hint: () => <span className="form-error is-visible">Required</span>

@@ -98,6 +98,17 @@ Object.assign(Validation.rules, {
             return password.value === passwordConfirm.value;
         },
         hint: () => <span className="form-error is-visible">Passwords should be equal.</span>
+    },
+    // Define API rule to show hint after API error response
+    api: {
+        // We don't need the rule here because we will call the 'showError' method by hand on API error
+        hint: value => (
+            <button
+                className="form-error is-visible"
+            >
+                API Error on "{value}" value. Focus to hide.
+            </button>
+        )
     }
 });
 ```
@@ -165,30 +176,24 @@ Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```m
 
 3. ```hideError(name)``` - hides a corresponding component's error.
 
-4. ```validateAll()``` - validates all react-validation components. Returns a map (key: field name prop, value: non passed validation rule) of invalid fields. <strong>UPD: from 2.10.0 returns ```undefined```. TBD.</strong>
+4. ```validateAll()``` - validates all react-validation components. Returns a map (key: field name prop, value: `<Array>` non passed validation rules) of invalid fields.
 
 
 ```javascript
 export default class Comment extends Component {
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         // Emulate async API call
         setTimeout(() => {
-            this.form.showError('username', value =>
-                <button
-                  onClick={this.removeApiError.bind(this)}
-                  className="form-error is-visible"
-                >
-                    API Error on "{value}" value. Click to hide out.
-                </button>
-            );
+            // NOTE: 'api' should be defined on 'extend' step
+            this.form.showError('username', 'api');
         }, 1000);
-    }
+    };
 
-    removeApiError() {
-        this.form.hideError("username");
-    }
+    removeApiError = () => {
+        this.form.hideError('username');
+    };
 
     render() {
         return <Validation.components.Form ref={c => { this.form = c }} onSubmit={this.handleSubmit.bind(this)}>
@@ -201,6 +206,7 @@ export default class Comment extends Component {
                 <div className="small-12 medium-4 columns">
                     <label>
                         <Validation.components.Input
+                          onFocus={this.removeApiError}
                           placeholder="username"
                           type="text"
                           errorClassName="is-invalid-input"

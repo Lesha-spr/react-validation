@@ -24,7 +24,7 @@ Button.propTypes = {
 };
 
 Button.contextTypes = {
-    errors: PropTypes.objectOf(PropTypes.any)
+    errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
 };
 
 export default Button;

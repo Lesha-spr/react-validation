@@ -2,11 +2,29 @@ import React, {Component, PropTypes} from 'react';
 import Validation from './../../validation';
 
 export default class Registration extends Component {
+    constructor() {
+        super();
+
+        this.state = {
+            errors: {}
+        };
+    }
+
+    onClick = (event) => {
+        event.preventDefault();
+
+        this.setState({
+            errors: this.form.validateAll()
+        });
+    };
+
     render() {
-        return <Validation.components.Form>
+        return <Validation.components.Form ref={c => this.form = c} onSubmit={this.onSubmit}>
             <div className='row'>
                 <div className='small-12 columns'>
                     <h3>Registration</h3>
+                    <button className="button" onClick={this.onClick}>Show errors model (validateAll)</button>
+                    <div>Errors model: {JSON.stringify(this.state.errors)}</div>
                 </div>
                 <div className='small-12 medium-6 columns'>
                     <label>

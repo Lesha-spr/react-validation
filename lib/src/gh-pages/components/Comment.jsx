@@ -2,28 +2,21 @@ import React, { Component } from 'react';
 import Validation from './../../validation';
 
 export default class Comment extends Component {
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         // Emulate async API call
         setTimeout(() => {
-            this.form.showError('username', value =>
-                <button
-                  onClick={this.removeApiError.bind(this)}
-                  className="form-error is-visible"
-                >
-                    API Error on "{value}" value. Click to hide out.
-                </button>
-            );
+            this.form.showError('username', 'api');
         }, 1000);
-    }
+    };
 
-    removeApiError() {
-        this.form.hideError("username");
-    }
+    removeApiError = () => {
+        this.form.hideError('username');
+    };
 
     render() {
-        return <Validation.components.Form ref={c => { this.form = c }} onSubmit={this.handleSubmit.bind(this)}>
+        return <Validation.components.Form ref={c => { this.form = c }} onSubmit={this.handleSubmit}>
             <div className="row">
                 <div className="small-12 columns">
                     <h3>Leave a comment</h3>
@@ -33,6 +26,7 @@ export default class Comment extends Component {
                 <div className="small-12 medium-4 columns">
                     <label>
                         <Validation.components.Input
+                          onFocus={this.removeApiError}
                           onChange={event => console.log(event.target.value)}
                           placeholder="username"
                           type="text"

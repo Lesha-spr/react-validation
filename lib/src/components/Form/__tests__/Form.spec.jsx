@@ -1,5 +1,5 @@
 const mock_rule = jest.fn((value) => value === 'mock_value');
-const mock_hint = jest.fn((value) => <span>{value}</span>);
+const mock_hint = <span>hint</span>;
 
 jest.mock('./../../../rules', () => {
     return {
@@ -62,7 +62,7 @@ describe('<Form/>', () => {
             node.instance().register(mockComponent);
             node.setState({
                 errors: {
-                    'mock_component_name': <span className="mock_error">Error</span>
+                    'mock_component_name': ['required']
                 }
             });
 
@@ -90,7 +90,7 @@ describe('<Form/>', () => {
             node.instance().register(mockComponent);
             node.setState({
                 errors: {
-                    'mock_component_name': <span className="mock_error">Error</span>
+                    'mock_component_name': ['required']
                 }
             });
 
@@ -156,7 +156,7 @@ describe('<Form/>', () => {
     });
 
     describe('#validateState', () => {
-        it('should call mapped rules methods: rule, hint', () => {
+        it('should call mapped rules method', () => {
             const mockComponent = {
                 props: {
                     name: 'mock_component_name',
@@ -176,7 +176,6 @@ describe('<Form/>', () => {
             node.instance().validateState();
 
             expect(mock_rule).toHaveBeenCalledWith(mockComponent.state.value, node.instance().components);
-            expect(mock_hint).toHaveBeenCalledWith(mockComponent.state.value, node.instance().components);
         });
 
         it('should set error state on rule invalidation', () => {
@@ -200,7 +199,7 @@ describe('<Form/>', () => {
 
             expect(setState).toHaveBeenCalledWith({
                 errors: {
-                    'mock_component_name': <span>mock_value_invalid</span>
+                    'mock_component_name': ['required']
                 }
             });
         });
@@ -239,23 +238,30 @@ describe('<Form/>', () => {
                     <div className="mock_class">Mock text</div>
                 </Form>
             );
+            const cb = jest.fn();
 
             node.instance().components = {
                 'mock_component_1': {
-                    setState: setState_1
+                    setState: setState_1,
+                    props: {
+                        validations: []
+                    }
                 },
                 'mock_component_2': {
-                    setState: setState_2
+                    setState: setState_2,
+                    props: {
+                        validations: []
+                    }
                 }
             };
 
-            node.instance().validateAll();
+            node.instance().validateAll(cb);
 
-            expect(setState_1).toHaveBeenCalledWith({
+            expect(setState_1.mock.calls[0][0]).toEqual({
                 isUsed: true,
                 isChanged: true,
             });
-            expect(setState_2).toHaveBeenCalledWith({
+            expect(setState_2.mock.calls[0][0]).toEqual({
                 isUsed: true,
                 isChanged: true,
             });
@@ -281,7 +287,7 @@ describe('<Form/>', () => {
 
             node.instance().register(mockComponent);
             node.instance().setState = setState;
-            node.instance().showError('mock_component_name', mock_hint);
+            node.instance().showError('mock_component_name', 'required');
 
             expect(mockComponent.setState.mock.calls[0][0]).toEqual({
                 isUsed: true,
@@ -290,7 +296,7 @@ describe('<Form/>', () => {
 
             expect(setState).toHaveBeenCalledWith({
                 errors: {
-                    'mock_component_name': <span>mock_value</span>
+                    'mock_component_name': ['required']
                 }
             });
         });
@@ -306,7 +312,7 @@ describe('<Form/>', () => {
 
             node.setState({
                 errors: {
-                    'mock_name': <span />
+                    'mock_name': ['required']
                 }
             });
 

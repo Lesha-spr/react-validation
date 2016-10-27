@@ -5,7 +5,7 @@ import Button from './../Button';
 describe('<Button/>', () => {
     const context = {
         errors: {
-            'mock_name': <span className="error" />
+            'mock_name': ['required']
         }
     };
 

@@ -1,6 +1,15 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import Textarea from './../Textarea';
+import rules from './../../../rules';
+
+Object.assign(rules, {
+    required: {
+        hint() {
+            return <span className="error"/>
+        }
+    }
+});
 
 describe('<Textarea/>', () => {
     const register = jest.fn();
@@ -13,7 +22,7 @@ describe('<Textarea/>', () => {
         unregister,
         validateState,
         errors: {
-            'mock_name': <span className="error" />
+            'mock_name': ['required']
         }
     };
 

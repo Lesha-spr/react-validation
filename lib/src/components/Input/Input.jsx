@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import cx from 'classnames';
+import rules from './../../rules';
 import Base from './../Base/Base';
 
 export default class Input extends Base {
@@ -14,7 +15,8 @@ export default class Input extends Base {
         register: PropTypes.func.isRequired,
         unregister: PropTypes.func.isRequired,
         validateState: PropTypes.func.isRequired,
-        errors: PropTypes.objectOf(PropTypes.any)
+        components: PropTypes.objectOf(PropTypes.any),
+        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
     };
 
     constructor(props, context) {
@@ -49,8 +51,11 @@ export default class Input extends Base {
         const isInvalid = this.state.isUsed
             && this.state.isChanged
             && !!this.context.errors[this.props.name];
-        const error = isInvalid ? this.context.errors[this.props.name] : null;
         const value = this.state.isCheckbox ? this.props.value : this.state.value;
+        const error = isInvalid
+            ? rules[this.context.errors[this.props.name][0]]
+                .hint(this.state.value, this.context.components)
+            : null;
 
         return (
             <div

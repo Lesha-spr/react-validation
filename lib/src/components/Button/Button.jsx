@@ -1,30 +1,30 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import cx from 'classnames';
 
-const Button = (props, context) => {
-    const { errorClassName, className, ...rest } = props;
-    const isDisabled = Object.keys(context.errors).length;
+export default class Button extends Component {
+    static propTypes = {
+        children: PropTypes.node,
+        errorClassName: PropTypes.string,
+        className: PropTypes.string
+    };
 
-    return (
-        <button
-          className={cx({
-              [className]: !!className,
-              [errorClassName]: isDisabled && errorClassName
-          })}
-          disabled={isDisabled}
-          {...rest}
-        >{props.children}</button>
-    );
-};
+    static contextTypes = {
+        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+    };
 
-Button.propTypes = {
-    children: PropTypes.node,
-    errorClassName: PropTypes.string,
-    className: PropTypes.string
-};
+    render() {
+        const { errorClassName, className, ...rest } = this.props;
+        const isDisabled = Object.keys(this.context.errors).length;
 
-Button.contextTypes = {
-    errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
-};
-
-export default Button;
+        return (
+            <button
+              className={cx({
+                  [className]: !!className,
+                  [errorClassName]: isDisabled && errorClassName
+              })}
+              disabled={isDisabled}
+              {...rest}
+            >{this.props.children}</button>
+        );
+    }
+}

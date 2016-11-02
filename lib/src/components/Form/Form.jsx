@@ -20,7 +20,7 @@ export default class Form extends Component {
             PropTypes.instanceOf(Select),
             PropTypes.instanceOf(Textarea)
         ])),
-        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+        errors: PropTypes.objectOf(PropTypes.array)
     };
 
     constructor(props) {

@@ -172,7 +172,7 @@ Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```m
 
 1. ```validate(name)``` - validates input with the passed name. The difference between this method and default validation is that ```validate``` marks the input as ```isUsed``` and ```isChanged```. ```name``` - name of the corresponding component.
 
-2. ```showError(name [,hint])``` - helps to handle async API errors. ```hint``` - optional hint to show.
+2. ```showError(name [,hint])``` - helps to handle async API errors. ```hint``` - optional hint to show. Can be string (error key, ex 'required') or function which returns hint (jsx).
 
 3. ```hideError(name)``` - hides a corresponding component's error.
 

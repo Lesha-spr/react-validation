@@ -9,7 +9,7 @@ export default class Button extends Component {
     };
 
     static contextTypes = {
-        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+        errors: PropTypes.objectOf(PropTypes.array)
     };
 
     render() {

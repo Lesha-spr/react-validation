@@ -16,7 +16,7 @@ export default class Input extends Base {
         unregister: PropTypes.func.isRequired,
         validateState: PropTypes.func.isRequired,
         components: PropTypes.objectOf(PropTypes.any),
-        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+        errors: PropTypes.objectOf(PropTypes.array)
     };
 
     constructor(props, context) {
@@ -52,10 +52,12 @@ export default class Input extends Base {
             && this.state.isChanged
             && !!this.context.errors[this.props.name];
         const value = this.state.isCheckbox ? this.props.value : this.state.value;
-        const error = isInvalid
-            ? rules[this.context.errors[this.props.name][0]]
-                .hint(this.state.value, this.context.components)
-            : null;
+        const error = isInvalid && this.context.errors[this.props.name][0];
+        let hint = null;
+
+        if (isInvalid) {
+            hint = typeof error === 'function' ? error(value, this.context.components) : rules[error].hint(value, this.context.components);
+        }
 
         return (
             <div
@@ -74,7 +76,7 @@ export default class Input extends Base {
                   onChange={this.onChange}
                   onBlur={this.onBlur} value={value}
                 />
-                {error}
+                {hint}
             </div>
         );
     }

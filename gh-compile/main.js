@@ -4869,15 +4869,13 @@
 	    onChange: _react.PropTypes.func,
 	    onBlur: _react.PropTypes.func
 	};
-	
 	Base.contextTypes = {
 	    register: _react.PropTypes.func.isRequired,
 	    unregister: _react.PropTypes.func.isRequired,
 	    validateState: _react.PropTypes.func.isRequired,
 	    components: _react.PropTypes.objectOf(_react.PropTypes.any),
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.any)
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.array)
 	};
-	
 	exports.default = Base;
 
 /***/ },
@@ -7425,7 +7423,7 @@
 	    className: _react.PropTypes.string
 	};
 	Button.contextTypes = {
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.string))
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.array)
 	};
 	exports.default = Button;
 
@@ -7513,7 +7511,12 @@
 	
 	            var isInvalid = this.state.isUsed && this.state.isChanged && !!this.context.errors[this.props.name];
 	            var value = this.state.isCheckbox ? this.props.value : this.state.value;
-	            var error = isInvalid ? _rules2.default[this.context.errors[this.props.name][0]].hint(this.state.value, this.context.components) : null;
+	            var error = isInvalid && this.context.errors[this.props.name][0];
+	            var hint = null;
+	
+	            if (isInvalid) {
+	                hint = typeof error === 'function' ? error(value, this.context.components) : _rules2.default[error].hint(value, this.context.components);
+	            }
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -7526,7 +7529,7 @@
 	                    onChange: this.onChange,
 	                    onBlur: this.onBlur, value: value
 	                })),
-	                error
+	                hint
 	            );
 	        }
 	    }]);
@@ -7545,7 +7548,7 @@
 	    unregister: _react.PropTypes.func.isRequired,
 	    validateState: _react.PropTypes.func.isRequired,
 	    components: _react.PropTypes.objectOf(_react.PropTypes.any),
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.string))
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.array)
 	};
 	exports.default = Input;
 
@@ -7628,7 +7631,12 @@
 	
 	
 	            var isInvalid = this.state.isUsed && this.state.isChanged && !!this.context.errors[this.props.name];
-	            var error = isInvalid ? _rules2.default[this.context.errors[this.props.name][0]].hint(this.state.value, this.context.components) : null;
+	            var error = isInvalid && this.context.errors[this.props.name][0];
+	            var hint = null;
+	
+	            if (isInvalid) {
+	                hint = typeof error === 'function' ? error(this.state.value, this.context.components) : _rules2.default[error].hint(this.state.value, this.context.components);
+	            }
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -7645,7 +7653,7 @@
 	                    }),
 	                    this.props.children
 	                ),
-	                error
+	                hint
 	            );
 	        }
 	    }]);
@@ -7664,7 +7672,7 @@
 	    unregister: _react.PropTypes.func.isRequired,
 	    validateState: _react.PropTypes.func.isRequired,
 	    components: _react.PropTypes.objectOf(_react.PropTypes.any),
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.string))
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.node])))
 	};
 	exports.default = Select;
 
@@ -7746,7 +7754,12 @@
 	
 	
 	            var isInvalid = this.state.isUsed && this.state.isChanged && !!this.context.errors[this.props.name];
-	            var error = isInvalid ? _rules2.default[this.context.errors[this.props.name][0]].hint(this.state.value, this.context.components) : null;
+	            var error = isInvalid && this.context.errors[this.props.name][0];
+	            var hint = null;
+	
+	            if (isInvalid) {
+	                hint = typeof error === 'function' ? error(this.state.value, this.context.components) : _rules2.default[error].hint(this.state.value, this.context.components);
+	            }
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -7759,7 +7772,7 @@
 	                    onBlur: this.onBlur,
 	                    value: this.state.value
 	                })),
-	                error
+	                hint
 	            );
 	        }
 	    }]);
@@ -7778,7 +7791,7 @@
 	    unregister: _react.PropTypes.func.isRequired,
 	    validateState: _react.PropTypes.func.isRequired,
 	    components: _react.PropTypes.objectOf(_react.PropTypes.any),
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.string))
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.array)
 	};
 	exports.default = Textarea;
 
@@ -12244,7 +12257,14 @@
 	
 	            // Emulate async API call
 	            setTimeout(function () {
-	                _this.form.showError('username', 'api');
+	                _this.form.showError('username', function (value) {
+	                    return _react2.default.createElement(
+	                        'span',
+	                        null,
+	                        'Errors with ',
+	                        value
+	                    );
+	                });
 	            }, 1000);
 	        }, _this.removeApiError = function () {
 	            _this.form.hideError('username');
@@ -12866,7 +12886,7 @@
 	    unregister: _react.PropTypes.func.isRequired,
 	    validateState: _react.PropTypes.func.isRequired,
 	    components: _react.PropTypes.objectOf(_react.PropTypes.oneOfType([_react.PropTypes.instanceOf(_Button2.default), _react.PropTypes.instanceOf(_Input2.default), _react.PropTypes.instanceOf(_Select2.default), _react.PropTypes.instanceOf(_Textarea2.default)])),
-	    errors: _react.PropTypes.objectOf(_react.PropTypes.arrayOf(_react.PropTypes.string))
+	    errors: _react.PropTypes.objectOf(_react.PropTypes.array)
 	};
 	exports.default = Form;
 

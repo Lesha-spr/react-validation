@@ -16,7 +16,12 @@ export default class Select extends Base {
         unregister: PropTypes.func.isRequired,
         validateState: PropTypes.func.isRequired,
         components: PropTypes.objectOf(PropTypes.any),
-        errors: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+        errors: PropTypes.objectOf(PropTypes.arrayOf(
+            PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.node
+            ])
+        ))
     };
 
     constructor(props, context) {
@@ -47,10 +52,12 @@ export default class Select extends Base {
         const isInvalid = this.state.isUsed
             && this.state.isChanged
             && !!this.context.errors[this.props.name];
-        const error = isInvalid
-            ? rules[this.context.errors[this.props.name][0]]
-                .hint(this.state.value, this.context.components)
-            : null;
+        const error = isInvalid && this.context.errors[this.props.name][0];
+        let hint = null;
+
+        if (isInvalid) {
+            hint = typeof error === 'function' ? error(this.state.value, this.context.components) : rules[error].hint(this.state.value, this.context.components);
+        }
 
         return (
             <div
@@ -71,7 +78,7 @@ export default class Select extends Base {
                 >
                     {this.props.children}
                 </select>
-                {error}
+                {hint}
             </div>
         );
     }

@@ -7,7 +7,7 @@ export default class Comment extends Component {
 
         // Emulate async API call
         setTimeout(() => {
-            this.form.showError('username', 'api');
+            this.form.showError('username', (value) => <span>Errors with {value}</span>);
         }, 1000);
     };
 

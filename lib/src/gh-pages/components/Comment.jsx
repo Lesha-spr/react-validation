@@ -28,6 +28,7 @@ export default class Comment extends Component {
                         <Validation.components.Input
                           onFocus={this.removeApiError}
                           onChange={event => console.log(event.target.value)}
+                          onBlur={event => console.log(event.target.value)}
                           placeholder="username"
                           type="text"
                           errorClassName="is-invalid-input"

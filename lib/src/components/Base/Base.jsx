@@ -37,12 +37,12 @@ class Base extends Component {
     };
 
     onBlur = (event) => {
+        event.persist();
+
         this.setState({
             isUsed: true
         }, () => {
             this.context.validateState(this.props.name);
-
-            event.persist();
 
             (this.props.onBlur || noop)(event);
         });

@@ -4827,12 +4827,12 @@
 	                (_this.props.onChange || _noop2.default)(event);
 	            });
 	        }, _this.onBlur = function (event) {
+	            event.persist();
+	
 	            _this.setState({
 	                isUsed: true
 	            }, function () {
 	                _this.context.validateState(_this.props.name);
-	
-	                event.persist();
 	
 	                (_this.props.onBlur || _noop2.default)(event);
 	            });
@@ -12286,6 +12286,9 @@
 	                            _react2.default.createElement(_validation2.default.components.Input, {
 	                                onFocus: this.removeApiError,
 	                                onChange: function onChange(event) {
+	                                    return console.log(event.target.value);
+	                                },
+	                                onBlur: function onBlur(event) {
 	                                    return console.log(event.target.value);
 	                                },
 	                                placeholder: 'username',

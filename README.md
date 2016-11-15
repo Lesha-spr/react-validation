@@ -259,7 +259,7 @@ A wrapper around the native ```input```. It accepts a ```validations``` prop - a
 ### Textarea component
 
 ```
-Validation.components.Teaxtarea
+Validation.components.Textarea
 ```
 
 A wrapper around the native ```textarea```. Like ```Input```, it accepts a ```validations``` prop. Nothing special here:

@@ -5,7 +5,8 @@ export default class Button extends Component {
     static propTypes = {
         children: PropTypes.node,
         errorClassName: PropTypes.string,
-        className: PropTypes.string
+        className: PropTypes.string,
+        forceDisabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -14,7 +15,7 @@ export default class Button extends Component {
 
     render() {
         const { errorClassName, className, ...rest } = this.props;
-        const isDisabled = Object.keys(this.context.errors).length;
+        const isDisabled = this.props.forceDisabled || Object.keys(this.context.errors).length;
 
         return (
             <button

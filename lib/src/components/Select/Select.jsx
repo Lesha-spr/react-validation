@@ -6,18 +6,18 @@ export default makeCustomSelect(React.createClass({
         const { containerClassName, hint, ...rest } = this.props;
 
         return (
-          <div className={containerClassName}>
-              <select
-                {...rest}
-                className={this.props.className}
-                onChange={this.props.onChange}
-                onBlur={this.props.onBlur}
-                value={this.props.value}
-              >
-                  {this.props.children}
-              </select>
-              {hint}
-          </div>
-      );
+            <div className={containerClassName}>
+                <select
+                    {...rest}
+                    className={this.props.className}
+                    onChange={this.props.onChange}
+                    onBlur={this.props.onBlur}
+                    value={this.props.value}
+                >
+                    {this.props.children}
+                </select>
+                {hint}
+            </div>
+        );
     }
 }));

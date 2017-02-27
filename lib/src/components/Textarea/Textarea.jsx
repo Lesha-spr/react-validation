@@ -13,7 +13,7 @@ export default makeCustomTextarea(React.createClass({
                     onChange={this.props.onChange}
                     onBlur={this.props.onBlur}
                     value={this.props.value}
-                    />
+                />
                 {hint}
             </div>
         )

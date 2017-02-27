@@ -4,8 +4,8 @@ import cx from 'classnames';
 import rules from './../../rules';
 import Base from './../Base/Base';
 
-export const makeCustomInput = function(WrappedComponent) {
-    class CustomInput extends Base {
+export function makeCustomTextarea(WrappedComponent) {
+    class CustomTextarea extends Base {
         static propTypes = {
             validations: PropTypes.arrayOf(PropTypes.string).isRequired,
             errorClassName: PropTypes.string,
@@ -24,16 +24,11 @@ export const makeCustomInput = function(WrappedComponent) {
         constructor(props, context) {
             super(props, context);
 
-            const isCheckbox = !!(props.type === 'checkbox' || props.type === 'radio');
-            const checkboxValue = props.checked ? props.value : '';
-
-            // TODO: Refactor conditions
             this.state = {
-                value: isCheckbox ? checkboxValue : props.value,
-                isChanged: isCheckbox ? props.checked : !!props.value,
-                isCheckbox,
-                isUsed: isCheckbox,
-                isChecked: isCheckbox ? !!props.checked : true
+                value: props.value,
+                isChanged: !!props.value,
+                isUsed: false,
+                isChecked: true
             };
 
             context.register(this);
@@ -53,15 +48,14 @@ export const makeCustomInput = function(WrappedComponent) {
                 onBlur,
                 ...rest } = this.props;
             // TODO: Refactor conditions
-            const isInvalid = this.state.isUsed
-                && this.state.isChanged
-                && !!this.context.errors[this.props.name];
-            const changedValue = this.state.isCheckbox ? this.props.value : this.state.value;
+            const isInvalid = this.state.isUsed &&
+                this.state.isChanged &&
+                !!this.context.errors[this.props.name];
             const error = isInvalid && this.context.errors[this.props.name][0];
             let hint = null;
 
             if (isInvalid) {
-                hint = typeof error === 'function' ? error(changedValue, this.context.components) : rules[error].hint(changedValue, this.context.components);
+                hint = typeof error === 'function' ? error(this.state.value, this.context.components) : rules[error].hint(this.state.value, this.context.components);
             }
 
             const wrappedProps = {
@@ -73,11 +67,9 @@ export const makeCustomInput = function(WrappedComponent) {
                     [className]: !!className,
                     [errorClassName]: !!error && errorClassName
                 }),
-                checked: this.state.isChecked,
                 onChange: this.onChange,
                 onBlur: this.onBlur,
-                type: this.props.type || 'text',
-                value: changedValue,
+                value: this.state.value,
                 hint,
                 ...rest
             };
@@ -86,5 +78,5 @@ export const makeCustomInput = function(WrappedComponent) {
         }
     }
 
-    return hoistStatics(CustomInput, WrappedComponent);
-};
+    return hoistStatics(CustomTextarea, WrappedComponent);
+}

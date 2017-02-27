@@ -1,4 +1,4 @@
-import React, { PropTypes, createElement } from 'react';
+import { PropTypes, createElement } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import cx from 'classnames';
 import rules from './../../rules';

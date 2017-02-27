@@ -50,6 +50,8 @@ export function makeCustomSelect(WrappedComponent) {
                 errorContainerClassName,
                 className,
                 value,
+                onChange,
+                onBlur,
                 ...rest } = this.props;
             // TODO: Refactor conditions
             const isInvalid = this.state.isUsed

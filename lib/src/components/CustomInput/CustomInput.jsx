@@ -50,6 +50,8 @@ export const makeCustomInput = function(WrappedComponent) {
                 errorContainerClassName,
                 className,
                 value,
+                onChange,
+                onBlur,
                 ...rest } = this.props;
             // TODO: Refactor conditions
             const isInvalid = this.state.isUsed
@@ -60,7 +62,7 @@ export const makeCustomInput = function(WrappedComponent) {
             let hint = null;
 
             if (isInvalid) {
-                hint = typeof error === 'function' ? error(value, this.context.components) : rules[error].hint(value, this.context.components);
+                hint = typeof error === 'function' ? error(changedValue, this.context.components) : rules[error].hint(changedValue, this.context.components);
             }
 
             const wrappedProps = {

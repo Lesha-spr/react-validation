@@ -1,10 +1,10 @@
 import { PropTypes, createElement } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 import cx from 'classnames';
-import rules from './../../rules';
-import Base from './../Base/Base';
+import rules from './../rules';
+import Base from './../components/Base/Base';
 
-export function makeCustomSelect(WrappedComponent) {
+export default function selectFactory(WrappedComponent) {
     class CustomSelect extends Base {
         static propTypes = {
             validations: PropTypes.arrayOf(PropTypes.string).isRequired,

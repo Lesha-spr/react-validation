@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { makeCustomTextarea } from './../CustomTextarea/CustomTextarea';
+import textareaFactory from './../../factories/textareaFactory';
 
 class Textarea extends Component {
     render() {
@@ -20,4 +20,4 @@ class Textarea extends Component {
     }
 }
 
-export default makeCustomTextarea(Textarea);
+export default textareaFactory(Textarea);

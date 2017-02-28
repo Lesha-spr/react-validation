@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { makeCustomInput } from './../CustomInput/CustomInput';
+import inputFactory from './../../factories/inputFactory';
 
 class Input extends Component {
     render() {
@@ -20,4 +20,4 @@ class Input extends Component {
     }
 }
 
-export default makeCustomInput(Input);
+export default inputFactory(Input);

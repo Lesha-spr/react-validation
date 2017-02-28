@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import { makeCustomSelect } from './../CustomSelect/CustomSelect';
+import selectFactory from './../../factories/selectFactory';
 
 class Select extends Component {
     render() {
@@ -22,4 +22,4 @@ class Select extends Component {
     }
 }
 
-export default makeCustomSelect(Select);
+export default selectFactory(Select);

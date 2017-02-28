@@ -36,7 +36,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            expect(node.find('select').html()).toBe(`<select name="mock_name" class=""><option value="">Choose</option><option selected="" value="mock_value">Value 1</option><option value="mock_other_value">Value 2</option></select>`);
+            expect(node.dive().find('select').html()).toBe(`<select class="" name="mock_name"><option value="">Choose</option><option selected="" value="mock_value">Value 1</option><option value="mock_other_value">Value 2</option></select>`);
         });
 
         it('should be wrapped by div', () => {
@@ -49,7 +49,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            expect(node.find('select').parent().is('div')).toBe(true);
+            expect(node.dive().find('select').parent().is('div')).toBe(true);
         });
 
         it('should render with proper error on context with errors and been used & changed', () => {
@@ -62,7 +62,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            expect(node.find('.error').length).toBe(1);
+            expect(node.dive().find('.error').length).toBe(1);
         });
 
         it('should re-render without error on non error context', () => {
@@ -82,7 +82,7 @@ describe('<Select/>', () => {
                 errors: {}
             });
 
-            expect(node.find('.error').length).toBe(0);
+            expect(node.dive().find('.error').length).toBe(0);
         });
     });
 
@@ -148,7 +148,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('change', {
+            node.dive().find('select').simulate('change', {
                 target: {
                     value: 'mock_value'
                 },
@@ -168,7 +168,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('change', {
+            node.dive().find('select').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -188,7 +188,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('change', {
+            node.dive().find('select').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -215,7 +215,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('change', eventData);
+            node.dive().find('select').simulate('change', eventData);
 
             expect(onChange).toHaveBeenCalledWith(eventData);
         });
@@ -232,7 +232,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('blur', {
+            node.dive().find('select').simulate('blur', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -252,7 +252,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('blur', {
+            node.dive().find('select').simulate('blur', {
                 persist
             });
 
@@ -273,7 +273,7 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            node.find('select').simulate('blur', eventData);
+            node.dive().find('select').simulate('blur', eventData);
 
             expect(onBlur).toHaveBeenCalled();
         });
@@ -290,13 +290,13 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            expect(node.find('select').prop('value')).toBe('');
+            expect(node.dive().find('select').prop('value')).toBe('');
 
             node.setProps({
                 value: 'mock_other_value'
             });
 
-            expect(node.find('select').prop('value')).toBe('mock_other_value');
+            expect(node.dive().find('select').prop('value')).toBe('mock_other_value');
             expect(node.state('isChanged')).toBe(true);
         });
 
@@ -310,9 +310,9 @@ describe('<Select/>', () => {
                 { context }
             );
 
-            expect(node.find('select').prop('value')).toBe('mock_value');
+            expect(node.dive().find('select').prop('value')).toBe('mock_value');
 
-            node.find('select').simulate('change', {
+            node.dive().find('select').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },

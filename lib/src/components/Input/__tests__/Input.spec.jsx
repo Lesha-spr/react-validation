@@ -33,7 +33,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            expect(node.find('input').html()).toBe(`<input type="checkbox" name="mock_name" value="mock_value" class=""/>`);
+            expect(node.dive().find('input').html()).toBe(`<input type="checkbox" class="" value="mock_value" name="mock_name"/>`);
         });
 
         it('should be wrapped by div', () => {
@@ -42,7 +42,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            expect(node.find('input').parent().is('div')).toBe(true);
+            expect(node.dive().find('input').parent().is('div')).toBe(true);
         });
 
         it('should prefer to render state.value', () => {
@@ -51,13 +51,13 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            expect(node.find('input').get(0).props.value).toBe('mock_value');
+            expect(node.dive().find('input').get(0).props.value).toBe('mock_value');
 
             node.setState({
                 value: 'mock_other_value'
             });
 
-            expect(node.find('input').get(0).props.value).toBe('mock_other_value');
+            expect(node.dive().find('input').get(0).props.value).toBe('mock_other_value');
         });
 
         it('should render without error on unused or unchanged state', () => {
@@ -92,7 +92,7 @@ describe('<Input/>', () => {
                 isChanged: true
             });
 
-            expect(node.find('.error').length).toBe(1);
+            expect(node.dive().find('.error').length).toBe(1);
         });
 
         it('should clear error on context update without error', () => {
@@ -106,7 +106,7 @@ describe('<Input/>', () => {
                 isChanged: true
             });
 
-            expect(node.find('.error').length).toBe(1);
+            expect(node.dive().find('.error').length).toBe(1);
 
             node.setContext({
                 ...context,
@@ -220,7 +220,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', {
+            node.dive().find('input').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -236,7 +236,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', {
+            node.dive().find('input').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -252,7 +252,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', {
+            node.dive().find('input').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -274,11 +274,11 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', eventData);
+            node.dive().find('input').simulate('change', eventData);
 
             expect(node.state('isChecked')).toBe(false);
 
-            node.find('input').simulate('change', eventData);
+            node.dive().find('input').simulate('change', eventData);
 
             expect(node.state('isChecked')).toBe(true);
         });
@@ -295,11 +295,11 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', eventData);
+            node.dive().find('input').simulate('change', eventData);
 
             expect(node.state('value')).toBe('');
 
-            node.find('input').simulate('change', eventData);
+            node.dive().find('input').simulate('change', eventData);
 
             expect(node.state('value')).toBe('value');
         });
@@ -317,7 +317,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('change', eventData);
+            node.dive().find('input').simulate('change', eventData);
 
             expect(onChange).toHaveBeenCalledWith(eventData);
         });
@@ -338,7 +338,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('blur', {
+            node.dive().find('input').simulate('blur', {
                 persist
             });
 
@@ -351,7 +351,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('blur', {
+            node.dive().find('input').simulate('blur', {
                 persist
             });
 
@@ -364,7 +364,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('blur', {
+            node.dive().find('input').simulate('blur', {
                 persist
             });
 
@@ -381,7 +381,7 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            node.find('input').simulate('blur', eventData);
+            node.dive().find('input').simulate('blur', eventData);
 
             expect(onBlur).toHaveBeenCalled();
         });
@@ -394,13 +394,13 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            expect(node.find('input').prop('value')).toBe('');
+            expect(node.dive().find('input').prop('value')).toBe('');
 
             node.setProps({
                 value: 'mock_other_value'
             });
 
-            expect(node.find('input').prop('value')).toBe('mock_other_value');
+            expect(node.dive().find('input').prop('value')).toBe('mock_other_value');
             expect(node.state('isChanged')).toBe(true);
         });
 
@@ -410,9 +410,9 @@ describe('<Input/>', () => {
                 { context }
             );
 
-            expect(node.find('input').prop('value')).toBe('mock_value');
+            expect(node.dive().find('input').prop('value')).toBe('mock_value');
 
-            node.find('input').simulate('change', {
+            node.dive().find('input').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },

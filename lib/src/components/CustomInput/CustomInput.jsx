@@ -86,5 +86,7 @@ export function makeCustomInput(WrappedComponent) {
         }
     }
 
+    CustomInput.WrappedComponent = WrappedComponent;
+
     return hoistStatics(CustomInput, WrappedComponent);
 }

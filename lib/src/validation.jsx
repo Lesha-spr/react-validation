@@ -18,8 +18,8 @@ export default {
         Button
     },
     factories: {
-      inputFactory,
-      selectFactory,
-      textareaFactory
+        inputFactory,
+        selectFactory,
+        textareaFactory
     }
 };

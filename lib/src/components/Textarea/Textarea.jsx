@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import textareaFactory from './../../factories/textareaFactory';
 
 class Textarea extends Component {

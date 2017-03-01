@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import inputFactory from './../../factories/inputFactory';
 
 class Input extends Component {

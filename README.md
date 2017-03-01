@@ -293,6 +293,58 @@ Validation.components.Button
 
 A wrapper around the native ```button```. React-validation disables (adds ```disabled``` prop) the button on error occurrences. This behavior could be suppressed by passing the ```disabled``` prop directly to a component.
 
+## Custom components
+
+If the components provided by react-validation don't quite fit your needs for markup structure (for instance, you
+might want the ```hint``` to show before an ```<input>```), you can create your own versions
+of ```input```, ```select```, and ```textarea```. (```button``` and ```form``` are simple single-element
+components, and shouldn't need further customisation).
+
+Here is an example that would render an ```<input>``` compatible with the [Bootstrap](http://getbootstrap.com)
+CSS framework:
+
+```javascript
+import React, { Component } from 'react';
+import { inputFactory } from 'react-validation/lib/build/validation.rc';
+
+// If you are using ES7 decorators, you can use:
+// @inputFactory
+class MyBootstrapInput extends Component {
+    render() {
+        return (
+            <div className={`form-group ${this.props.hint && 'has-error'} ${this.props.containerClassName}`}>
+                <label className="control-label" htmlFor={this.props.id}>
+                    {this.props.label}{/* You can use your own props */}
+                </label>
+                {/* "onChange", "onBlur", and "value/checked" are important, don't forget them: */}
+                <input
+                    className={`form-control ${this.props.className}`}
+                    id={this.props.id}
+                    type={this.props.type}
+
+                    onChange={this.props.onChange}
+                    onBlur={this.props.onBlur}
+                    value={this.props.value}
+                    checked={this.props.checked}
+                />
+                { this.props.hint && <div className="help-block">{this.props.hint}</div> }
+            </div>
+        );
+    }
+}
+
+// Wrap the component in the factory (if not using ES7 decorators)
+export default inputFactory(MyBootstrapInput);
+```
+
+You can then use your custom component like the other react-validation components:
+
+```javascript
+import BootstrapInput from 'path/to/my/component/file';
+
+<BootstrapInput label="Email" value='email@email.com' name='email' validations={['required', 'email']}/>
+```
+
 ## Migration from 1.*
 
 #### extendErrors API

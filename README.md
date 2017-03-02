@@ -300,13 +300,16 @@ might want the ```hint``` to show before an ```<input>```), you can create your 
 of ```input```, ```select```, and ```textarea```. (```button``` and ```form``` are simple single-element
 components, and shouldn't need further customisation).
 
-Here is an example that would render an ```<input>``` compatible with the [Bootstrap](http://getbootstrap.com)
+Here is an example that would render an ```<input>``` according to the [Bootstrap](http://getbootstrap.com)
 CSS framework:
 
 ```javascript
 import React, { Component } from 'react';
 import { inputFactory } from 'react-validation/lib/build/validation.rc';
 
+// Not using ES6 classes? Then you'd write instead:
+// const MyBootstrapInput = React.createClass(...)
+//
 // If you are using ES7 decorators, you can use:
 // @inputFactory
 class MyBootstrapInput extends Component {

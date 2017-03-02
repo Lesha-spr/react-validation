@@ -33,7 +33,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('textarea').html()).toBe(`<textarea name="mock_name" class="">mock_value</textarea>`);
+            expect(node.dive().find('textarea').html()).toBe(`<textarea class="" name="mock_name">mock_value</textarea>`);
         });
 
         it('should be wrapped by div', () => {
@@ -42,7 +42,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('textarea').parent().is('div')).toBe(true);
+            expect(node.dive().find('textarea').parent().is('div')).toBe(true);
         });
 
         it('should prefer to render state.value', () => {
@@ -51,13 +51,13 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('textarea').get(0).props.value).toBe('mock_value');
+            expect(node.dive().find('textarea').get(0).props.value).toBe('mock_value');
 
             node.setState({
                 value: 'mock_other_value'
             });
 
-            expect(node.find('textarea').get(0).props.value).toBe('mock_other_value');
+            expect(node.dive().find('textarea').get(0).props.value).toBe('mock_other_value');
         });
 
         it('should render without error on unused or unchanged state', () => {
@@ -66,14 +66,14 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('.error').length).toBe(0);
+            expect(node.dive().find('.error').length).toBe(0);
 
             node.setState({
                 isChanged: true,
                 isUsed: false
             });
 
-            expect(node.find('.error').length).toBe(0);
+            expect(node.dive().find('.error').length).toBe(0);
 
             node.setState({
                 isChanged: false,
@@ -92,7 +92,7 @@ describe('<Textarea/>', () => {
                 isChanged: true
             });
 
-            expect(node.find('.error').length).toBe(1);
+            expect(node.dive().find('.error').length).toBe(1);
         });
 
         it('should clear error on context update without error', () => {
@@ -106,14 +106,14 @@ describe('<Textarea/>', () => {
                 isChanged: true
             });
 
-            expect(node.find('.error').length).toBe(1);
+            expect(node.dive().find('.error').length).toBe(1);
 
             node.setContext({
                 ...context,
                 errors: {}
             });
 
-            expect(node.find('.error').length).toBe(0);
+            expect(node.dive().find('.error').length).toBe(0);
         });
     });
 
@@ -185,7 +185,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('change', {
+            node.dive().find('textarea').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -201,7 +201,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('change', {
+            node.dive().find('textarea').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -217,7 +217,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('change', {
+            node.dive().find('textarea').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },
@@ -240,7 +240,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('change', eventData);
+            node.dive().find('textarea').simulate('change', eventData);
 
             expect(onChange).toHaveBeenCalledWith(eventData);
         });
@@ -260,7 +260,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('blur', {
+            node.dive().find('textarea').simulate('blur', {
                 persist
             });
 
@@ -273,7 +273,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('blur', {
+            node.dive().find('textarea').simulate('blur', {
                 persist
             });
 
@@ -286,7 +286,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('blur', {
+            node.dive().find('textarea').simulate('blur', {
                 persist
             });
 
@@ -303,7 +303,7 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            node.find('textarea').simulate('blur', eventData);
+            node.dive().find('textarea').simulate('blur', eventData);
 
             expect(onBlur).toHaveBeenCalled();
         });
@@ -316,13 +316,13 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('textarea').prop('value')).toBe('');
+            expect(node.dive().find('textarea').prop('value')).toBe('');
 
             node.setProps({
                 value: 'mock_other_value'
             });
 
-            expect(node.find('textarea').prop('value')).toBe('mock_other_value');
+            expect(node.dive().find('textarea').prop('value')).toBe('mock_other_value');
             expect(node.state('isChanged')).toBe(true);
         });
 
@@ -332,9 +332,9 @@ describe('<Textarea/>', () => {
                 { context }
             );
 
-            expect(node.find('textarea').prop('value')).toBe('mock_value');
+            expect(node.dive().find('textarea').prop('value')).toBe('mock_value');
 
-            node.find('textarea').simulate('change', {
+            node.dive().find('textarea').simulate('change', {
                 target: {
                     value: 'mock_other_value'
                 },

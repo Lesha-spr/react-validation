@@ -1,8 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import Button from './../Button/Button';
-import Input from './../Input/Input';
-import Select from './../Select/Select';
-import Textarea from './../Textarea/Textarea';
+import Base from './../Base/Base';
 import rules from './../../rules';
 
 export default class Form extends Component {
@@ -14,12 +11,7 @@ export default class Form extends Component {
         register: PropTypes.func.isRequired,
         unregister: PropTypes.func.isRequired,
         validateState: PropTypes.func.isRequired,
-        components: PropTypes.objectOf(PropTypes.oneOfType([
-            PropTypes.instanceOf(Button),
-            PropTypes.instanceOf(Input),
-            PropTypes.instanceOf(Select),
-            PropTypes.instanceOf(Textarea)
-        ])),
+        components: PropTypes.objectOf(PropTypes.instanceOf(Base)),
         errors: PropTypes.objectOf(PropTypes.array)
     };
 

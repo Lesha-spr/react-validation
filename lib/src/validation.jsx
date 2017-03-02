@@ -4,6 +4,9 @@ import Input from './components/Input/Input';
 import Select from './components/Select/Select';
 import Textarea from './components/Textarea/Textarea';
 import Button from './components/Button/Button';
+import inputFactory from './factories/inputFactory';
+import selectFactory from './factories/selectFactory';
+import textareaFactory from './factories/textareaFactory';
 
 export default {
     rules,
@@ -13,5 +16,10 @@ export default {
         Select,
         Textarea,
         Button
+    },
+    factories: {
+        inputFactory,
+        selectFactory,
+        textareaFactory
     }
 };

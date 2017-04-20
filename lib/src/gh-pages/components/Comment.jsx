@@ -33,7 +33,6 @@ export default class Comment extends Component {
                           type="text"
                           errorClassName="is-invalid-input"
                           containerClassName=""
-                          value="Username"
                           name="username"
                           validations={['required', 'alpha']}
                         />
@@ -45,7 +44,6 @@ export default class Comment extends Component {
                           placeholder="Leave your comment..."
                           errorClassName="is-invalid-input"
                           containerClassName=""
-                          value="Comment"
                           name="comment"
                           validations={['required']}
                         />

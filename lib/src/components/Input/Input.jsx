@@ -7,14 +7,14 @@ class Input extends Component {
 
         return (
             <div className={containerClassName}>
-                <input
-                  {...rest}
-                  className={this.props.className}
-                  onChange={this.props.onChange}
-                  onBlur={this.props.onBlur}
-                  value={this.props.value}
-                />
-                {hint}
+              <input
+                {...rest}
+                className={this.props.className}
+                onChange={this.props.onChange}
+                onBlur={this.props.onBlur}
+                value={this.props.value}
+              />
+              {hint}
             </div>
         );
     }

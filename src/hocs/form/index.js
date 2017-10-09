@@ -4,8 +4,10 @@ import omit from 'lodash.omit';
 
 const _isCheckable = (component) => (component.props.type === 'radio' || component.props.type === 'checkbox');
 
-export default function form (WrappedComponent = form) {
+export default function form (WrappedComponent) {
   return class extends PureComponent {
+    static displayName = `Form(${WrappedComponent.name})`;
+
     static propTypes = {};
 
     static childContextTypes = {
@@ -193,6 +195,27 @@ export default function form (WrappedComponent = form) {
       }), this._setErrors);
     };
 
+    validateAll = () => {
+      this.setState(state => ({
+        byId: {
+          ...state.byId,
+          ...Object.keys(state.byName).reduce((byId, name) => {
+            state.byName[name].reduce((components, id) => {
+              byId[id] = {
+                ...state.byId[id],
+                isChanged: true,
+                isUsed: true
+              };
+
+              return components;
+            }, {});
+
+            return byId;
+          }, {})
+        }
+      }), this._setErrors);
+    };
+
     showError = (component, error) => {
       if (component) {
         setTimeout(() => {
@@ -229,6 +252,7 @@ export default function form (WrappedComponent = form) {
         <WrappedComponent
           {...this.props}
           validate={this.validate}
+          validateAll={this.validateAll}
           getValues={this.getValues}
           showError={this.showError}
           hideError={this.hideError}

@@ -4,7 +4,9 @@ import control from '../../hocs/control';
 
 const Input = ({ error, isChanged, isUsed, ...props }) => (
   <div>
-    <input {...props} />
+    <input {...props} {...( isChanged && isUsed && error ? {
+      className: `is-invalid-input ${props.className}`
+    } : { className: props.className } )} />
     {isChanged && isUsed && error}
   </div>
 );

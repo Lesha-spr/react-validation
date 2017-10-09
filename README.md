@@ -73,8 +73,8 @@ const password = (value, props, components) => {
 That's it. We can now use it in our React components:
 
 ```javascript
-import Form from 'react-validation/components/form';
-import Input from 'react-validation/components/input';
+import Form from 'react-validation/build/form';
+import Input from 'react-validation/build/input';
 import React, { Component } from 'react';
 
 export default class Login extends Component {
@@ -127,9 +127,11 @@ Any valid props can easily be passed to ```Form```, such ```onSubmit``` and ```m
 
 1. ```validate(name)``` - validates control(s) with the passed name. The difference between this method and default validation is that ```validate``` marks the input as ```isUsed``` and ```isChanged```. ```name``` - name of the corresponding component(s).
 
-2. ```showError(component [,error])``` - helps to handle async API errors. ```component``` - ref to the React Component to validate. ```error``` - error to show. Can be string or jsx.
+2. ```validateAll()``` - validates all controls by marking all controls as ```isUsed``` and ```isChanged```. 
 
-3. ```hideError(component)``` - hides a corresponding component's error. ```component``` - ref to the React Component.
+3. ```showError(component [,error])``` - helps to handle async API errors. ```component``` - ref to the React Component to validate. ```error``` - error to show. Can be string or jsx.
+
+4. ```hideError(component)``` - hides a corresponding component's error. ```component``` - ref to the React Component.
 
 
 ```javascript
@@ -193,12 +195,10 @@ export default class Comment extends Component {
 
 react-validations also provides HOC (High Order Component) for each component. That made to have an ability to define own render logic, use mixed props, etc.
 ```javascript
-import form from 'react-validation/hocs/form';
-import control from 'react-validation/hocs/control';
-import button from 'react-validation/hocs/button';
+import { form, control, button } from 'react-validation';
 
 // Define own Form component
-const Form = ({ getValues, validate, showError, hideError, children, ...props }) => ( // destruct non-valid props
+const Form = ({ getValues, validate, validateAll, showError, hideError, children, ...props }) => ( // destruct non-valid props
   <form {...props}>{children}</form>
 );
 

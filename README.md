@@ -65,7 +65,7 @@ const password = (value, props, components) => {
   if (value !== components['confirm'][0].value) { // components['password'][0].value !== components['confirm'][0].value
     // 'confirm' - name of input
     // components['confirm'] - array of same-name components because of checkboxes and radios
-    return <span className="error">Passwords aren't equal.</span>
+    return <span className="error">Passwords are not equal.</span>
   }
 };
 ```

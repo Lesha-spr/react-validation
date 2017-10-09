@@ -94,10 +94,10 @@ module.exports = {
       amd: "prop-types",
       root: "PropTypes"
     },
-    "uuid": {
-      commonjs: "uuid",
-      commonjs2: "uuid",
-      amd: "uuid",
+    "uuid/v4": {
+      commonjs: "uuid/v4",
+      commonjs2: "uuid/v4",
+      amd: "uuid/v4",
       root: "uuid"
     }
   },

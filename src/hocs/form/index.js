@@ -132,7 +132,7 @@ export default function form (WrappedComponent) {
       }, this._setErrors);
     };
 
-    _setErrors() {
+    _setErrors = () => {
       this.setState(state => {
         return {
           byId: Object.keys(state.byId).reduce((byId, id) => {

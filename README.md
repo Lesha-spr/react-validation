@@ -51,7 +51,7 @@ const email = (value) => {
 
 const lt = (value, props) => {
   // get the maxLength from component's props
-  if (!value.toString().trim().length > props.maxLength) {
+  if (value.toString().trim().length > props.maxLength) {
     // Return jsx
     return <span className="error">The value exceeded {props.maxLength} symbols.</span>
   }

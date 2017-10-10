@@ -73,8 +73,8 @@ const password = (value, props, components) => {
 That's it. We can now use it in our React components:
 
 ```javascript
-import Form from 'react-validation/components/form';
-import Input from 'react-validation/components/input';
+import Form from 'react-validation/build/form';
+import Input from 'react-validation/build/input';
 import React, { Component } from 'react';
 
 export default class Login extends Component {
@@ -193,9 +193,7 @@ export default class Comment extends Component {
 
 react-validations also provides HOC (High Order Component) for each component. That made to have an ability to define own render logic, use mixed props, etc.
 ```javascript
-import form from 'react-validation/hocs/form';
-import control from 'react-validation/hocs/control';
-import button from 'react-validation/hocs/button';
+import { form, control, button } from 'react-validation;
 
 // Define own Form component
 const Form = ({ getValues, validate, showError, hideError, children, ...props }) => ( // destruct non-valid props

@@ -1,6 +1,6 @@
 {
   "name": "react-validation",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": false,
   "main": "build/main.js",
   "dependencies": {
@@ -36,6 +36,7 @@
     "react": "^16.0.0",
     "react-dev-utils": "^4.1.0",
     "react-dom": "^16.0.0",
+    "shallow-equal": "^1.0.0",
     "style-loader": "0.18.2",
     "sw-precache-webpack-plugin": "0.11.4",
     "url-loader": "0.5.9",

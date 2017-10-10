@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import shallowEqualArrays from 'shallow-equal/arrays';
+import shallowEqualObjects from 'shallow-equal/objects';
 import uuidv4 from 'uuid/v4';
 
 export default class Base extends Component {
@@ -30,8 +32,10 @@ export default class Base extends Component {
     this.context._unregister(this, this.id);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps !== this.props) {
+  componentWillReceiveProps({ validations: nextValidations, ...nextProps }) {
+    const { validations, ...props } = this.props;
+
+    if (!shallowEqualObjects(props, nextProps) || !shallowEqualArrays(validations, nextValidations)) {
       this.context._setProps(nextProps, this.id);
     }
   }

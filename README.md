@@ -193,7 +193,7 @@ export default class Comment extends Component {
 
 react-validations also provides HOC (High Order Component) for each component. That made to have an ability to define own render logic, use mixed props, etc.
 ```javascript
-import { form, control, button } from 'react-validation;
+import { form, control, button } from 'react-validation';
 
 // Define own Form component
 const Form = ({ getValues, validate, showError, hideError, children, ...props }) => ( // destruct non-valid props

@@ -166,7 +166,7 @@ export default function form (WrappedComponent) {
           }, {})
         };
       });
-    }
+    };
 
     getValues = () => Object.keys(this.state.byName).reduce((values, name) => {
       if (this.state.byName[name].length > 1) {

@@ -39,6 +39,10 @@ class Registration extends Component {
     console.log(event);
   };
 
+  handleChange = (event) => {
+    console.log(event.target.value);
+  };
+
   render() {
     return (
       <Form ref={c => { this.form = c }} onSubmit={this.handleSubmit}>
@@ -77,6 +81,7 @@ class Registration extends Component {
             <label>
               Email*
               <Input
+                onChange={this.handleChange}
                 placeholder="Email"
                 type="email"
                 name="email"

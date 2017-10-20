@@ -15,7 +15,9 @@ export default class Base extends Component {
   };
 
   static propTypes = {
-    validations: PropTypes.arrayOf(PropTypes.func)
+    validations: PropTypes.arrayOf(PropTypes.func),
+    onChange: PropTypes.func,
+    onBlur: PropTypes.func
   };
 
   static defaultProps = {
@@ -48,12 +50,14 @@ export default class Base extends Component {
     event.persist();
 
     this.context._handleChange(event, this.id);
+    this.props.onChange && this.props.onChange(event);
   };
 
   handleBlur = (event) => {
     event.persist();
 
     this.context._handleBlur(event, this.id);
+    this.props.onBlur && this.props.onBlur(event);
   };
 
   render() {

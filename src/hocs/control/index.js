@@ -11,8 +11,16 @@ export default function control (WrappedComponent) {
       if (!props) {
         return null;
       }
+      
+      const { onChange, onBlur } = props
 
-      return <WrappedComponent {...props} onChange={this.handleChange} onBlur={this.handleBlur} />
+      return <WrappedComponent {...props} onChange={(e) => {
+        this.handleChange(e)
+        onChange && onChange(e)
+      }} onBlur={(e) => {
+        this.handleBlur(e)
+        onBlur && onBlur(e)
+      }} />
     }
   }
 }

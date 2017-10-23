@@ -132,7 +132,7 @@ export default function form (WrappedComponent) {
       }, this._setErrors);
     };
 
-    _setErrors = () => {
+    _setErrors = (callback) => {
       this.setState(state => {
         return {
           byId: Object.keys(state.byId).reduce((byId, id) => {
@@ -165,7 +165,7 @@ export default function form (WrappedComponent) {
 
           }, {})
         };
-      });
+      }, callback);
     };
 
     getValues = () => Object.keys(this.state.byName).reduce((values, name) => {
@@ -178,7 +178,13 @@ export default function form (WrappedComponent) {
       return values;
     }, {});
 
-    validate = (name) => {
+    hasErrors = () => Object.keys(this.state.byName).reduce((error, name) => {
+        return error || this.state.byName[name].reduce((error, id) => {
+            return error || !!(this.state.byId[id].error);
+        }, false);
+    }, false);
+
+    validate = (name, callback) => {
       this.setState(state => ({
         byId: {
           ...state.byId,
@@ -192,10 +198,18 @@ export default function form (WrappedComponent) {
             return byId;
           }, {})
         }
-      }), this._setErrors);
+      }), () => {
+        this._setErrors(() => {
+          if (typeof callback !== 'function') {
+            return;
+          }
+          const err = this.hasErrors();
+          callback(err);
+        });
+      });
     };
 
-    validateAll = () => {
+    validateAll = (callback) => {
       this.setState(state => ({
         byId: {
           ...state.byId,
@@ -213,7 +227,15 @@ export default function form (WrappedComponent) {
             return byId;
           }, {})
         }
-      }), this._setErrors);
+      }), () => {
+        this._setErrors(() => {
+          if (typeof callback !== 'function') {
+            return;
+          }
+          const err = this.hasErrors();
+          callback(err);
+        });
+      });
     };
 
     showError = (component, error) => {

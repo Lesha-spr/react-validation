@@ -178,6 +178,12 @@ export default function form (WrappedComponent) {
       return values;
     }, {});
 
+    hasErrors = () => Object.keys(this.state.byName).reduce((error, name) => {
+        return error || this.state.byName[name].reduce((error, id) => {
+            return error || !!(this.state.byId[id].error);
+        }, false);
+    }, false);
+
     validate = (name) => {
       this.setState(state => ({
         byId: {
@@ -193,6 +199,8 @@ export default function form (WrappedComponent) {
           }, {})
         }
       }), this._setErrors);
+
+      return !this.hasErrors();
     };
 
     validateAll = () => {
@@ -214,6 +222,8 @@ export default function form (WrappedComponent) {
           }, {})
         }
       }), this._setErrors);
+
+      return !this.hasErrors();
     };
 
     showError = (component, error) => {

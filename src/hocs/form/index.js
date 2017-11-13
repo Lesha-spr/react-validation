@@ -168,6 +168,10 @@ export default function form (WrappedComponent) {
       });
     }
 
+    hasErrors = () => {
+      return Object.keys(this.state.byId).filter(id => this.state.byId[id].error).length > 0;
+    }
+
     getValues = () => Object.keys(this.state.byName).reduce((values, name) => {
       if (this.state.byName[name].length > 1) {
         values[name] = this.state.byName[name].map(id => this.state.byId[id].value);
@@ -214,6 +218,8 @@ export default function form (WrappedComponent) {
           }, {})
         }
       }), this._setErrors);
+
+      return Object.keys(this.state.byId).filter(id => this.state.byId[id].error).length > 0;
     };
 
     showError = (component, error) => {
@@ -254,6 +260,7 @@ export default function form (WrappedComponent) {
           validate={this.validate}
           validateAll={this.validateAll}
           getValues={this.getValues}
+          hasErrors={this.hasErrors}
           showError={this.showError}
           hideError={this.hideError}
         />

@@ -219,7 +219,7 @@ export default function form (WrappedComponent) {
         }
       }), this._setErrors);
 
-      return Object.keys(this.state.byId).filter(id => this.state.byId[id].error).length > 0;
+      return !(Object.keys(this.state.byId).filter(id => this.state.byId[id].error).length > 0);
     };
 
     showError = (component, error) => {

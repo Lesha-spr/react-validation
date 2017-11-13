@@ -5,6 +5,7 @@ import form from '../../hocs/form';
 class Form extends Component {
   static propTypes = {
     getValues: PropTypes.func.isRequired,
+    hasErrors: PropTypes.func.isRequired,
     validate: PropTypes.func.isRequired,
     validateAll: PropTypes.func.isRequired,
     showError: PropTypes.func.isRequired,
@@ -12,7 +13,7 @@ class Form extends Component {
   };
 
   render() {
-    const { getValues, validate, validateAll, showError, hideError, ...props } = this.props;
+    const { getValues, hasErrors, validate, validateAll, showError, hideError, ...props } = this.props;
 
     return (
       <form {...props} />

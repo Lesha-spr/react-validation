@@ -40,6 +40,10 @@ export default function form (WrappedComponent) {
         _errors: Object.keys(this.state.byId).filter(id => this.state.byId[id].error)
       };
     }
+  
+    getChild() {
+      return this._child; 
+    }
 
     _register = (component, id) => {
       this.setState(state => ({
@@ -251,6 +255,7 @@ export default function form (WrappedComponent) {
       return (
         <WrappedComponent
           {...this.props}
+          ref={r=>this._child=r}
           validate={this.validate}
           validateAll={this.validateAll}
           getValues={this.getValues}

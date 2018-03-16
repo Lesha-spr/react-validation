@@ -8,7 +8,9 @@ export default function form (WrappedComponent) {
   return class extends PureComponent {
     static displayName = `Form(${WrappedComponent.name})`;
 
-    static propTypes = {};
+    static propTypes = {
+      existingState: PropTypes.object,
+    };
 
     static childContextTypes = {
       _register: PropTypes.func.isRequired,
@@ -42,6 +44,11 @@ export default function form (WrappedComponent) {
     }
 
     _register = (component, id) => {
+      const { existingState } = this.props;
+      const value =
+        component.props.value ||
+        (existingState && existingState[component.props.name]) ||
+        '';
       this.setState(state => ({
         byName: {
           ...state.byName,
@@ -52,7 +59,7 @@ export default function form (WrappedComponent) {
           [id]: {
             ...component.props,
             isCheckable: _isCheckable(component),
-            value: component.props.value || '',
+            value,
             ...(_isCheckable(component) ? { checked: !!component.props.checked } : {})
           }
         }

@@ -9,10 +9,11 @@ class Form extends Component {
     validateAll: PropTypes.func.isRequired,
     showError: PropTypes.func.isRequired,
     hideError: PropTypes.func.isRequired,
+    existingState: PropTypes.object,
   };
 
   render() {
-    const { getValues, validate, validateAll, showError, hideError, ...props } = this.props;
+    const { getValues, validate, validateAll, showError, hideError, existingState, ...props } = this.props;
 
     return (
       <form {...props} />

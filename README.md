@@ -75,6 +75,7 @@ That's it. We can now use it in our React components:
 ```javascript
 import Form from 'react-validation/build/form';
 import Input from 'react-validation/build/input';
+import Button from 'react-validation/build/button';
 import React, { Component } from 'react';
 
 export default class Login extends Component {

@@ -4,9 +4,9 @@ import control from '../../hocs/control';
 
 const Textarea = ({ error, isChanged, isUsed, wrapperClassName, labelComponent, ...props }) => (
   <div className={wrapperClassName}>
+    {labelComponent}
     <textarea {...props} />
     {isChanged && isUsed && error}
-    {labelComponent}
   </div>
 );
 

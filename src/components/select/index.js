@@ -4,9 +4,9 @@ import control from '../../hocs/control';
 
 const Select = ({ error, isChanged, isUsed, wrapperClassName, labelComponent, ...props }) => (
   <div className={wrapperClassName}>
+    {labelComponent}
     <select {...props} />
     {isChanged && isUsed && error}
-    {labelComponent}
   </div>
 );
 

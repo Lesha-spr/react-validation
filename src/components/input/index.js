@@ -4,11 +4,11 @@ import control from '../../hocs/control';
 
 const Input = ({ error, isChanged, isUsed, wrapperClassName, labelComponent, ...props }) => (
   <div className={wrapperClassName}>
+    {labelComponent}
     <input {...props} {...( isChanged && isUsed && error ? {
       className: `is-invalid-input ${props.className}`
     } : { className: props.className } )} />
     {isChanged && isUsed && error}
-    {labelComponent}
   </div>
 );
 
